@@ -1,0 +1,7 @@
+Flask
+Flask-Cors # Cross Origin Resources - Allows communication with vue
+Flask-Session
+psycopg2-binary # Postgres Adapter
+python-dotenv
+SQLAlchemy
+
