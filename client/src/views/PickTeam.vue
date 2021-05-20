@@ -65,7 +65,8 @@ export default {
       const position= e.path[2].className;
       
       axios.get('http://localhost:5000/getplayers/' + position)
-      .then(res => this.players = res.data.players);
+      // .then(res => this.players = res.data.players);
+      .then(res => console.log(res.data));
     },
   },
 };
