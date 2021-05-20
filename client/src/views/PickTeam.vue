@@ -5,7 +5,13 @@
       <div id="transfer_field">
         <div class="goalkeepers">
           <i></i>
-          <fa class="i" icon="user" size="7x" />
+          <fa
+            @click="getPlayers"
+            data-position="gk"
+            class="i"
+            icon="user"
+            size="7x"
+          />
           <fa class="i" icon="user" size="7x" />
           <i></i>
         </div>
@@ -26,13 +32,43 @@
           <i></i>
         </div>
       </div>
-      <div id="transfer_sidebar"></div>
+      <div id="transfer_sidebar">
+        <ul>
+          <li v-for="(player, index) in players" :key="index">
+            <span>{{ player.name }}</span>
+            <span>{{ player.price }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      myTeam: {
+        gk: [],
+        def: [],
+        mid: [],
+        stk: [],
+      },
+      players: [],
+    };
+  },
+
+  methods: {
+    getPlayers(e){
+      const position= e.path[2].className;
+      
+      axios.get('http://localhost:5000/getplayers/' + position)
+      .then(res => this.players = res.data.players);
+    },
+  },
+};
 </script>
 
 <style scoped>
