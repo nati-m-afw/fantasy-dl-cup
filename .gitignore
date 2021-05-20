@@ -29,7 +29,7 @@ client/*.njsproj
 client/*.sln
 client/*.sw?
 client/node_modules
-client/package-lock.json
+# client/package-lock.json
 
 
 ############### Flask #################
