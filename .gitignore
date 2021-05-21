@@ -34,7 +34,7 @@ client/node_modules
 
 ############### Flask #################
 server/env
-# server/.env
+server/.env
 /server/__pycache__
 
 
