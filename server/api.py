@@ -1,8 +1,8 @@
-from flask import Flask, session, render_template, request, redirect, url_for, jsonify
+from flask import Flask, session, render_template, request, redirect, url_for, jsonify, json
 from dotenv import load_dotenv
-from flask_marshmallow import Marshmallow
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
 load_dotenv()
@@ -11,7 +11,7 @@ load_dotenv()
 
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
-
+# app.config['CORS_HEADERS']=''
 
 PLAYERS = [
     {
@@ -24,11 +24,9 @@ PLAYERS = [
     }
 ]
 # sqllite db uri
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:6549@localhost/FantasyDL'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 #db instance
 db = SQLAlchemy(app)
-# marshmallow app created
-# ma = Marshmallow(app)
 
 # player table model
 class Players(db.Model):
@@ -38,6 +36,19 @@ class Players(db.Model):
     position = db.Column(db.String(20), nullable=False)
     # price = db.Column(db.Decimal(5,5), nullable=False)
     dept_id = db.Column(db.Integer, db.ForeignKey('dept.id'), nullable=False)
+
+    def __init__(self, fname, lname, position, dept_id):
+        self.fname = fname
+        self.lname = lname
+        self.position = position
+        self.dept_id = dept_id
+    def serialize(self):
+        return {
+            'id': self.id,
+            'fname': self.fname,
+            'lname': self.lname,
+            'position': self.position,
+        }
 
 
     def __repr__(self):
@@ -53,27 +64,16 @@ class Dept(db.Model):
     def __repr__(self):
         return f"Dept('{self.dName}')"
 
-
-
-#marshmallow output schema
-# class playerSchema(ma.Schema):
-#     class Meta:
-#         model = Players
-#         #if foreign key
-#         # include_fk=True 
-
-# #schema to dump and load ORM objects
-
-# player_schema = playerSchema()
-
-
+###########################################################################################################################################
 @app.route('/getplayers/<pos>')
+@cross_origin()
 def getPlayers(pos):
-    # response = { 'status': 'success'}
-    # response['players'] = PLAYERS
-    
-    player =  Players.query.filter_by(position = pos).first()
-    return str(player)
+    response = { 'status': 'success'}
+   
+    player =  Players.query.filter_by(position = pos).all()
+    response['players'] = list(map(lambda p: p.serialize(), player))
+   
+    return response
     
 
 

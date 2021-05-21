@@ -4,5 +4,3 @@ Flask-Session
 psycopg2-binary # Postgres Adapter
 python-dotenv
 SQLAlchemy
-Flask-Marshmallow
-
