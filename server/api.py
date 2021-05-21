@@ -13,24 +13,24 @@ load_dotenv()
 CORS(app, resources={r'/*': {'origins': '*'}})
 
 # DEMO ARRAY OF PLAYERS LIST
-PLAYERS = [
-    {
-        'name': 'gk',
-        'price': '3.5',
-        'position': 'gk'
-    },
-    {
-        'name': 'Bguy',
-        'price': '4.5',
-        'position': 'mid'
+# PLAYERS = [
+#     {
+#         'name': 'gk',
+#         'price': '3.5',
+#         'position': 'gk'
+#     },
+#     {
+#         'name': 'Bguy',
+#         'price': '4.5',
+#         'position': 'mid'
     
-    },
-    {
-        'name': 'Bguy',
-        'price': '4.5',
-        'position': 'stk'
-    }
-]
+#     },
+#     {
+#         'name': 'Bguy',
+#         'price': '4.5',
+#         'position': 'stk'
+#     }
+# ]
 # sqllite db uri
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 #db instance

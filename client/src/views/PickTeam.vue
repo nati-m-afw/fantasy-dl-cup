@@ -19,8 +19,6 @@
           <fa @click="getPlayers" class="i" icon="user" size="7x" />
           <fa @click="getPlayers" class="i" icon="user" size="7x" />
           <fa @click="getPlayers" class="i" icon="user" size="7x" />
-          <span>p = Players(fname='Sportsguy', lname='A', position='goalkeeper', dept_id=1)</span>
-          <span>d = Dept(dName='IT')</span>
         </div>
         <div class="striker">
           <i></i>
@@ -31,11 +29,11 @@
       </div>
       <div id="transfer_sidebar">
         <ul>
-          <li v-for="(player, index) in players" :key="index">
+          <li v-for="(player, index) in playersApi" :key="index">
             <span>{{ player.fname }}</span>
             <span>{{ player.lname }}</span>
             <span>{{ player.position }}</span>
-            <button @click="addPlayer($event, player.fname, player.position)">+</button>
+            <button @click="addPlayer($event, player.id, player.position)">+</button>
           </li>
         </ul>
       </div>
@@ -49,13 +47,16 @@ import axios from "axios";
 export default {
   data() {
     return {
+      // Stores users selection
       myTeam: {
         goalkeeper: [],
         defender: [],
-        mid: [],
-        stk: [],
+        midfielder: [],
+        striker: [],
       },
-      players: [],
+
+      // Players from api based on position
+      playersApi: [],
       activePosition: "",
     };
   },
@@ -65,20 +66,17 @@ export default {
       const position= e.path[2].className;
       
       axios.get('http://localhost:5000/getplayers/' + position)
-      .then(res => this.players = res.data.players);
+      .then(res => this.playersApi = res.data.players);
       // .then(res => console.log(res.data));
     },
 
     addPlayer(e, playerId, playerPosition){
+      // check if user has already added current player
+      // 
       this.myTeam[playerPosition].includes(playerId) ? 0 : this.myTeam[playerPosition].push(playerId);
     }
 
   },
-
-  created() {
-    const fa = document.querySelectorAll('fa');
-    console.log(fa);
-  }
 };
 </script>
 
