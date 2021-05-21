@@ -11,16 +11,24 @@ load_dotenv()
 
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
-# app.config['CORS_HEADERS']=''
 
+# DEMO ARRAY OF PLAYERS LIST
 PLAYERS = [
     {
-        'name': 'Sportsguy',
-        'price': '3.5'
+        'name': 'gk',
+        'price': '3.5',
+        'position': 'gk'
     },
     {
         'name': 'Bguy',
-        'price': '4.5'
+        'price': '4.5',
+        'position': 'mid'
+    
+    },
+    {
+        'name': 'Bguy',
+        'price': '4.5',
+        'position': 'stk'
     }
 ]
 # sqllite db uri

@@ -1,42 +1,41 @@
 <template>
-  <div>
+  <div class="body">
     <div id="info"></div>
+    <pre>{{ $data }}</pre>
     <div id="team_selection">
       <div id="transfer_field">
-        <div class="goalkeepers">
+        <div class="goalkeeper">
           <i></i>
-          <fa
-            @click="getPlayers"
-            data-position="gk"
-            class="i"
-            icon="user"
-            size="7x"
-          />
-          <fa class="i" icon="user" size="7x" />
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
           <i></i>
         </div>
-        <div class="defenders">
-          <fa class="i" icon="user" size="7x" />
-          <fa class="i" icon="user" size="7x" />
-          <fa class="i" icon="user" size="7x" />
+        <div class="defender">
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
         </div>
-        <div class="midfielders">
-          <fa class="i" icon="user" size="7x" />
-          <fa class="i" icon="user" size="7x" />
-          <fa class="i" icon="user" size="7x" />
+        <div class="midfielder">
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <span>p = Players(fname='Sportsguy', lname='A', position='goalkeeper', dept_id=1)</span>
+          <span>d = Dept(dName='IT')</span>
         </div>
-        <div class="strikers">
+        <div class="striker">
           <i></i>
-          <fa class="i" icon="user" size="7x" />
-          <fa class="i" icon="user" size="7x" />
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <fa @click="getPlayers" class="i" icon="user" size="7x" />
           <i></i>
         </div>
       </div>
       <div id="transfer_sidebar">
         <ul>
           <li v-for="(player, index) in players" :key="index">
-            <span>{{ player.name }}</span>
-            <span>{{ player.price }}</span>
+            <span>{{ player.fname }}</span>
+            <span>{{ player.lname }}</span>
+            <span>{{ player.position }}</span>
+            <button @click="addPlayer($event, player.fname, player.position)">+</button>
           </li>
         </ul>
       </div>
@@ -51,12 +50,13 @@ export default {
   data() {
     return {
       myTeam: {
-        gk: [],
-        def: [],
+        goalkeeper: [],
+        defender: [],
         mid: [],
         stk: [],
       },
       players: [],
+      activePosition: "",
     };
   },
 
@@ -65,10 +65,20 @@ export default {
       const position= e.path[2].className;
       
       axios.get('http://localhost:5000/getplayers/' + position)
-      // .then(res => this.players = res.data.players);
-      .then(res => console.log(res.data));
+      .then(res => this.players = res.data.players);
+      // .then(res => console.log(res.data));
     },
+
+    addPlayer(e, playerId, playerPosition){
+      this.myTeam[playerPosition].includes(playerId) ? 0 : this.myTeam[playerPosition].push(playerId);
+    }
+
   },
+
+  created() {
+    const fa = document.querySelectorAll('fa');
+    console.log(fa);
+  }
 };
 </script>
 
@@ -77,7 +87,7 @@ export default {
   box-sizing: border-box;
 }
 
-body {
+.body {
   margin: 0;
   min-height: 100vh;
 
@@ -119,5 +129,6 @@ body {
 
 #transfer_sidebar {
   background-color: white;
+  display: flex;
 }
 </style>
