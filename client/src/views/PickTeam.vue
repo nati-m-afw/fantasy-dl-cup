@@ -29,11 +29,11 @@
       </div>
       <div id="transfer_sidebar">
         <ul>
-          <li v-for="(player, index) in playersApi" :key="index">
+          <li v-for="(player, index) in playersApi" :key="index" :class="checkSelected(player.id, player.position) ? 'disabled' : 'active'">
             <span>{{ player.fname }}</span>
             <span>{{ player.lname }}</span>
             <span>{{ player.position }}</span>
-            <button @click="addPlayer($event, player.id, player.position)">+</button>
+            <button @click="addPlayer($event, player.id, player.position)" :disabled="checkSelected(player.id, player.position)">+</button>
           </li>
         </ul>
       </div>
@@ -57,11 +57,11 @@ export default {
 
       // Players from api based on position
       playersApi: [],
-      activePosition: "",
     };
   },
 
   methods: {
+    // Get players from api
     getPlayers(e){
       const position= e.path[2].className;
       
@@ -70,11 +70,16 @@ export default {
       // .then(res => console.log(res.data));
     },
 
+    // Add selected player to myTeam based on position
     addPlayer(e, playerId, playerPosition){
       // check if user has already added current player
-      // 
       this.myTeam[playerPosition].includes(playerId) ? 0 : this.myTeam[playerPosition].push(playerId);
-    }
+    },
+
+    // Check if player is in data
+    checkSelected(playerId, playerPosition){
+      return this.myTeam[playerPosition].includes(playerId) ? true : false
+    },
 
   },
 };
@@ -128,5 +133,10 @@ export default {
 #transfer_sidebar {
   background-color: white;
   display: flex;
+}
+
+li.disabled{
+  background-color: #696969;
+  color: black;
 }
 </style>
