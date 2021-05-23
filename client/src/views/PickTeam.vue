@@ -6,31 +6,36 @@
       <div id="transfer_field">
         <div class="goalkeeper">
           <i></i>
-            <div v-for="i in [0,1]" :key="i">
-              <fa @click="getPlayers" class="i" icon="user" size="7x" />
+            <!-- Render two placeholders -->
+            <div v-for="i in [0,1]" :key="i" :class="{active:selected[0] == i && selected[1] == 'gk'}" @click="toggleActive($event, i, 'gk')">
+              <!-- Set selectedPlayerIndex when clicked -->
+              <fa @click="getPlayers($event, i)" class="i" icon="user" size="7x" />
               <span>GK</span>
+              <!-- Check if any selected players in myTeam -->
+              <!-- If so display name -->
               <span v-if="myTeam.goalkeeper[i]">{{ myTeam.goalkeeper[i].fname }}</span>
             </div>
           <i></i>
         </div>
         <div class="defender">
-          <div v-for="i in [0,1,2]" :key="i">
-              <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <!-- Render three placeholders -->
+          <div v-for="i in [0,1,2]" :key="i"  :class="{active:selected[0] == i && selected[1] == 'df'}" @click="toggleActive($event, i, 'df')">
+              <fa @click="getPlayers($event, i)" class="i" icon="user" size="7x" />
               <span>DEF</span>
               <span v-if="myTeam.defender[i]">{{ myTeam.defender[i].fname }}</span>
           </div>
         </div>
         <div class="midfielder">
-          <div v-for="i in [0,1,2]" :key="i">
-              <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <div v-for="i in [0,1,2]" :key="i"  :class="{active:selected[0] == i && selected[1] == 'md'}" @click="toggleActive($event, i, 'md')">
+              <fa @click="getPlayers($event, i)" class="i" icon="user" size="7x" />
               <span>MID</span>
               <span v-if="myTeam.midfielder[i]">{{ myTeam.midfielder[i].fname }}</span>
             </div>
         </div>
         <div class="striker">
           <i></i>
-          <div v-for="i in [0,1]" :key="i">
-              <fa @click="getPlayers" class="i" icon="user" size="7x" />
+          <div v-for="i in [0,1]" :key="i"  :class="{active:selected[0] == i && selected[1] == 'st'}" @click="toggleActive($event, i, 'st')">
+              <fa @click="getPlayers($event, i)" class="i" icon="user" size="7x" />
               <span>ST</span>
               <span v-if="myTeam.striker[i]">{{ myTeam.striker[i].fname }}</span>
           </div>
@@ -38,9 +43,10 @@
         </div>
       </div>
       <div id="transfer_sidebar">
+        <!-- Show if server status is false or down -->
         <h2 v-if="!serverStatus">Server could not be reached.</h2>
         <ul>
-          <li v-for="(player, index) in playersApi" :key="index" :class="checkSelected(player) ? 'disabled' : 'active'">
+          <li v-for="(player, index) in playersApi" :key="index" :class="checkSelected(player) ? 'disabled' : ''">
             <span>{{ player.fname }}</span>
             <span>{{ player.lname }}</span>
             <span>{{ player.position }}</span>
@@ -60,10 +66,10 @@ export default {
     return {
       // Stores users selection
       myTeam: {
-        goalkeeper: [],
-        defender: [],
-        midfielder: [],
-        striker: [],
+        goalkeeper: [null, null],
+        defender: [null, null, null],
+        midfielder: [null, null, null],
+        striker: [null, null],
       },
 
       // Players from api based on position
@@ -71,12 +77,18 @@ export default {
 
       // Server status Up == True
       serverStatus: true,
+
+      // Player being replaced in myTeam.<position>
+      selectedPlayerIndex : null,
+
+      // Active player order number and playing position
+      selected: [],
     };
   },
 
   methods: {
     // Get players from api
-    getPlayers(e){
+    getPlayers(e, selectedPlayerIndex){
       const position= e.path[3].className;
       // console.log(e.path);
       
@@ -84,6 +96,7 @@ export default {
       .then(res => {
         this.playersApi = res.data.players;
         this.serverStatus = true;
+        this.selectedPlayerIndex = selectedPlayerIndex;
       })
       .catch(err => {
         this.serverStatus = false;
@@ -94,15 +107,24 @@ export default {
 
     // Add selected player to myTeam based on position
     addPlayer(e, player){
-      // check if user has already added current player
-      this.myTeam[player.position].includes(player) ? 0 : this.myTeam[player.position].push(player);
+      this.$set(this.myTeam[player.position], this.selectedPlayerIndex, player);
     },
 
     // Check if player is in myTeam.<position>
     checkSelected(player){
-      return this.myTeam[player.position].includes(player) ? true : false
+      let check = false;
+      this.myTeam[player.position].filter(function (myPlayer){
+        if (myPlayer && myPlayer.id == player.id)
+          check = true;
+      });
+      return check
     },
 
+    // Add active player to selected
+    toggleActive(e, playerNo, playerPos){
+      this.$set(this.selected, 0, playerNo);
+      this.$set(this.selected, 1, playerPos);
+    }
   },
 };
 </script>
@@ -161,5 +183,9 @@ export default {
 li.disabled{
   background-color: #696969;
   color: black;
+}
+
+.active{
+  background-color: tomato;
 }
 </style>
