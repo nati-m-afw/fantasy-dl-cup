@@ -5,3 +5,5 @@ Flask-SQLAlchemy
 psycopg2-binary # Postgres Adapter
 python-dotenv
 SQLAlchemy
+
+flask-blueprint==1.3.0

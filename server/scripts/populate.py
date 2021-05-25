@@ -1,4 +1,4 @@
-from api import db, Players, Dept, Users, userPlayers
+from main import db, Players, Dept, Users, userPlayers
 
 def populate():
     userPlayers.query.delete()
@@ -23,7 +23,7 @@ def populate():
     p7 = Players(id=7,fname="Chang", lname="MD", position="midfielder", dept_id=2)
     p8 = Players(id=8,fname="Meh", lname="MD", position="striker", dept_id=3)
     p9 = Players(id=9,fname="Dude", lname="ST", position="striker", dept_id=1)
-    p10 = Players(id=10,fname="Sportsguy", lname="ST", position="", dept_id=2)
+    p10 = Players(id=10,fname="Sportsguy", lname="ST", position="striker", dept_id=2)
     p11 = Players(id=11,fname="Sportsguys'sBrother", lname="MD", position="midfielder", dept_id=4)
     p12 = Players(id=12,fname="Ranjit", lname="GK", position="goalkeeper", dept_id=4)
     p13 = Players(id=13,fname="Kumal", lname="GK", position="goalkeeper", dept_id=5)
