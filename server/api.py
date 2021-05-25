@@ -45,8 +45,9 @@ class Players(db.Model):
     position = db.Column(db.String(20), nullable=False)
     # price = db.Column(db.Decimal(5,5), nullable=False)
     dept_id = db.Column(db.Integer, db.ForeignKey('dept.id'), nullable=False)
-
-    def __init__(self, fname, lname, position, dept_id):
+    userPlayers = db.relationship('userPlayers', backref = 'user_player', lazy=True)
+    def __init__(self,id, fname, lname, position, dept_id):
+        self.id=id
         self.fname = fname
         self.lname = lname
         self.position = position
@@ -73,6 +74,31 @@ class Dept(db.Model):
     def __repr__(self):
         return f"Dept('{self.dName}')"
 
+#user table model
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    fname = db.Column(db.String(20),  nullable=False)
+    lname = db.Column(db.String(20),  nullable=False)
+    teamname = db.Column(db.String(20),  unique=True, nullable=False)
+    userPlayers = db.relationship('userPlayers', backref = 'user_user', lazy=True)
+
+    def __repr__(self):
+        return f"User('{self.id}','{self.fname}', '{self.lname}', '{self.teamname}')"
+
+#joint user and players table
+class userPlayers(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=False)
+
+    def __repr__(self):
+        return f"userPlayers('{self.user_id}', '{self.players_id}')"
+
+
+db.create_all()
+from populate import populate
+populate()
+
 ###########################################################################################################################################
 @app.route('/getplayers/<pos>')
 @cross_origin()
@@ -84,6 +110,25 @@ def getPlayers(pos):
    
     return response
     
+# MOCK_DATA = {
+#     "user_id" : 1, 
+#     "myTeam":{
+#         "goalkeeper":[
+#             {
+#                 "fname":"Manu",
+#                 "id":1,
+#                 "lname":"GK"
+
+#             }
+#         ]
+#     }
+# }
+# @app.route('/saveteam', methods=['POST'])
+# def save_team():
+#     if request.method=='POST':
+#         requestbody = request.get_json()
+        # 
+         
 
 
 if __name__ == '__main__':
