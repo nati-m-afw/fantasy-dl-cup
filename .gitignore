@@ -36,5 +36,7 @@ client/node_modules
 server/env
 server/.env
 /server/__pycache__
-
-
+/server/api/__pycache__
+/server/auth/__pycache__
+/server/models/__pycache__
+/server/scripts/__pycache__
