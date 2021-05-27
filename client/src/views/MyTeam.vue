@@ -1,21 +1,29 @@
 <template>
   <div class="body">
     <div id="info"></div>
+    <pre>{{ $data }}</pre>
     <div id="team_selection">
       <div class="team">
         <div class="starting_team">
-          <div><i class="fas fa-user"></i></div>
+          <div><fa icon="user" size="7x" /></div>
           <div>
-            <i class="fas fa-user"></i><i class="fas fa-user"></i
-            ><i class="fas fa-user"></i>
+            <fa icon="user" size="7x" />
+            <fa icon="user" size="7x" />
+            <fa icon="user" size="7x" />
           </div>
-          <div><i class="fas fa-user"></i><i class="fas fa-user"></i></div>
-          <div><i class="fas fa-user"></i></div>
+          <div>
+            <fa icon="user" size="7x" />
+            <fa icon="user" size="7x" />
+          </div>
+          <div>
+            <fa icon="user" size="7x" />
+          </div>
         </div>
         <div class="substitutes">
           <div>
-            <i class="fas fa-user"></i><i class="fas fa-user"></i
-            ><i class="fas fa-user"></i>
+            <fa icon="user" size="7x" />
+            <fa icon="user" size="7x" />
+            <fa icon="user" size="7x" />
           </div>
         </div>
       </div>
@@ -25,7 +33,30 @@
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      myTeam: {},
+    };
+  },
+
+  methods: {
+    getTeam() {
+      let userId = this.$store.state.userId;
+
+      axios
+        .get("http://localhost:5000/getteam/" + userId)
+        .then((res) => (this.myTeam = res.data.team))
+        .catch((err) => console.error(err));
+    },
+  },
+
+  created() {
+    this.getTeam();
+  },
+};
 </script>
 
 <style>

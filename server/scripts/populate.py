@@ -1,10 +1,10 @@
 from main import db, Players, Dept, Users, userPlayers
 
 def populate():
+    userPlayers.query.delete()
     Players.query.delete()
     Dept.query.delete()
     Users.query.delete()
-    userPlayers.query.delete()
 
     dept1 = Dept(dName='IT')
     dept2 = Dept(dName='Mech')

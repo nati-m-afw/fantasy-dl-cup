@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import PickTeam from "../views/PickTeam.vue";
 import Registration from "../views/Registration.vue";
+import MyTeam from "../views/MyTeam.vue";
 
 Vue.use(VueRouter);
 
@@ -30,13 +31,13 @@ const routes = [
     meta: { title: 'Registration' },
     // Add navigation guard
     // Allow only registering users
-  }
-  // {
-  //   path: "/myteam",
-  //   name: "MyTeam",
-  //   component: MyTeam,
-  //   meta: { title: 'Manage your team' },
-  // },
+  },
+  {
+    path: "/myteam",
+    name: "MyTeam",
+    component: MyTeam,
+    meta: { title: 'Manage your team' },
+  },
 ];
 
 const router = new VueRouter({
