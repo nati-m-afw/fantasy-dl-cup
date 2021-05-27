@@ -1,6 +1,8 @@
 <template>
   <div class="body">
-    <div id="info"></div>
+    <div id="info">
+      <h1>{{ myTeamName }}</h1>
+    </div>
     <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
       <div id="transfer_field">
@@ -132,6 +134,8 @@ export default {
         striker: [null, null],
       },
 
+      myTeamName: '',
+
       // Players from api based on position
       playersApi: [],
 
@@ -204,6 +208,10 @@ export default {
       alert("You need to complete your team before registration!");
     },
   },
+
+  created() {
+    this.myTeamName = this.$store.state.myTeamName;
+  },
 };
 </script>
 
@@ -266,4 +274,5 @@ li.disabled {
 .active {
   background-color: tomato;
 }
+
 </style>
