@@ -1,7 +1,9 @@
 # Importing
-from flask import Blueprint
+from models.user_players import userPlayers
+from flask import Blueprint, request, jsonify
 from models.players import Players
 from flask_cors import cross_origin
+from main import db
 
 #Creating Blueprint for api
 api_app = Blueprint("api",__name__)
@@ -44,22 +46,19 @@ def getPlayers(pos):
 
 
 # MOCK_DATA = {
-#     "user_id" : 1, 
-#     "myTeam":{
-#         "goalkeeper":[
-#             {
-#                 "fname":"Manu",
-#                 "id":1,
-#                 "lname":"GK"
-
-#             }
-#         ]
-#     }
+#     "userId" : 1, 
+#     "team": [1,10,2,3,4,5,6,7,8,9],
+#     "gameweekId": 1
 # }
 
-# Route to save user selected team
-# @app.route('/saveteam', methods=['POST'])
-# def save_team():
-#     if request.method=='POST':
-#         requestbody = request.get_json()
-        # 
+# Route to update user_players table
+@api_app.route('/update_user_players', methods=['POST'])
+def save_team():
+    if request.method=='POST':
+        requestBody = request.get_json()
+        for playerId in requestBody['team']:
+            up = userPlayers(user_id=1, players_id=playerId)
+            db.session.add(up)
+        db.session.commit()
+        return "201"
+        

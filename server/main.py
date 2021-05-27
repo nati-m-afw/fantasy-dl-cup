@@ -43,7 +43,7 @@ db.create_all()
 
 # Populate with Data
 from scripts.populate import populate
-populate()
+# populate()
 
 
 @app.route("/")

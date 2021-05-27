@@ -2,7 +2,7 @@ from main import db
 
 #user table model
 class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     fname = db.Column(db.String(20),  nullable=False)
     lname = db.Column(db.String(20),  nullable=False)
     teamname = db.Column(db.String(20),  unique=True, nullable=False)

@@ -2,7 +2,7 @@ from main import db
 
 #joint user and players table
 class userPlayers(db.Model):
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=False)
 

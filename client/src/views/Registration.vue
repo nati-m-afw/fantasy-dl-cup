@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pre>{{ $store.state.myTeam }}</pre>
+    <!-- <pre>{{ $store.state.myTeam }}</pre> -->
     <alert :msg="msg" v-if="showMsg" />
   </div>
 </template>
@@ -26,12 +26,20 @@ export default {
     // prepare payload
     const payload = {
       userId: this.$store.state.userId,
-      team: this.$store.state.myTeam,
+      team: [],
+      gameweekId: 1,
     };
 
+    for (const position in this.$store.state.myTeam) {
+        // payload.team[position] = [];
+        for(const player of this.$store.state.myTeam[position]){
+          payload.team.push(player.id);
+        }
+    }
+    console.log(payload);
     // Send myTeam to api
     axios
-      .post("http://localhost:5000/", payload)
+      .post("http://localhost:5000/update_user_players", payload)
       .then(() => {
         this.isRegistered = true;
         this.msg = "Successfully registered!";
