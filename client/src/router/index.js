@@ -31,6 +31,12 @@ const routes = [
     // Add navigation guard
     // Allow only registering users
   }
+  // {
+  //   path: "/myteam",
+  //   name: "MyTeam",
+  //   component: MyTeam,
+  //   meta: { title: 'Manage your team' },
+  // },
 ];
 
 const router = new VueRouter({
