@@ -36,14 +36,15 @@ export default {
           payload.team.push(player.id);
         }
     }
-    console.log(payload);
+    
     // Send myTeam to api
     axios
-      .post("http://localhost:5000/update_user_players", payload)
+      .post("http://localhost:5000/updateuserplayers", payload)
       .then(() => {
         this.isRegistered = true;
         this.msg = "Successfully registered!";
         this.showMsg = true;
+        // this.$router.go();
       })
       .catch((err) => {
         console.error(err);

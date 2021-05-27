@@ -1,7 +1,8 @@
 # Importing
-from models.user_players import userPlayers
 from flask import Blueprint, request, jsonify
 from models.players import Players
+from models.users import Users
+from models.user_players import userPlayers
 from flask_cors import cross_origin
 from main import db
 
@@ -52,7 +53,7 @@ def getPlayers(pos):
 # }
 
 # Route to update user_players table
-@api_app.route('/update_user_players', methods=['POST'])
+@api_app.route('/updateuserplayers', methods=['POST'])
 def save_team():
     if request.method=='POST':
         requestBody = request.get_json()
@@ -61,4 +62,18 @@ def save_team():
             db.session.add(up)
         db.session.commit()
         return "201"
-        
+
+
+# Get users team
+@api_app.route('/getteam/<userId>')
+def get_team(userId):
+    response = { 'status': 'success'}
+
+    team = (db.session.query(userPlayers, Players, Users)
+    .join(Users)
+    # .join(userPlayers)
+    .join(Players)
+    .filter(Users.id==userId)).all()
+    
+    response['team'] = list(map(lambda p: p[1].serialize(), team))
+    return response
