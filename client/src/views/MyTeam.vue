@@ -1,29 +1,81 @@
 <template>
   <div class="body">
     <div id="info"></div>
-    <pre>{{ $data }}</pre>
+    <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
       <div class="team">
         <div class="starting_team">
-          <div><fa icon="user" size="7x" /></div>
-          <div>
-            <fa icon="user" size="7x" />
-            <fa icon="user" size="7x" />
-            <fa icon="user" size="7x" />
+          <!-- GK -->
+          <div class="goalkeeper">
+            <div
+              v-for="(player, i) in myTeam.goalkeeper.filter(
+                (player) => player.status == 'active'
+              )"
+              :key="i"
+            >
+              <fa icon="user" size="7x" />
+              <span>GK{{ player.fname }}</span>
+            </div>
           </div>
-          <div>
-            <fa icon="user" size="7x" />
-            <fa icon="user" size="7x" />
+          <!-- DEF -->
+          <div class="defender">
+            <div
+              v-for="(player, i) in myTeam.defender.filter(
+                (player) => player.status == 'active'
+              )"
+              :key="i"
+            >
+              <fa icon="user" size="7x" />
+              <span>DEF{{ player.fname }}</span>
+            </div>
           </div>
-          <div>
-            <fa icon="user" size="7x" />
+          <!-- MID -->
+          <div class="midfielder">
+            <div
+              v-for="(player, i) in myTeam.midfielder.filter(
+                (player) => player.status == 'active'
+              )"
+              :key="i"
+            >
+              <fa icon="user" size="7x" />
+              <span>MID{{ player.fname }}</span>
+            </div>
+          </div>
+          <!-- ST -->
+          <div class="striker">
+            <div
+              v-for="(player, i) in myTeam.striker.filter(
+                (player) => player.status == 'active'
+              )"
+              :key="i"
+            >
+              <fa icon="user" size="7x" />
+              <span>ST{{ player.fname }}</span>
+            </div>
           </div>
         </div>
+        <!-- SUB -->
         <div class="substitutes">
           <div>
-            <fa icon="user" size="7x" />
-            <fa icon="user" size="7x" />
-            <fa icon="user" size="7x" />
+            <!-- SUB GK -->
+            <div
+              v-for="(player, i) in myTeam.goalkeeper.filter(
+                (player) => player.status == 'bench'
+              )"
+              :key="i"
+            >
+              <fa icon="user" size="7x" />
+              <span>GK{{ player.fname }}</span>
+            </div>
+            
+            <!-- SUB Players -->
+            <div
+              v-for="(player, i) in benchedPlayers"
+              :key="i"
+            >
+              <fa icon="user" size="7x" />
+              <span>{{ player.position }}{{ player.fname }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -47,16 +99,22 @@ export default {
     };
   },
 
+  computed: {
+    benchedPlayers() {
+        return  this.myTeam.defender.concat(this.myTeam.midfielder.concat(this.myTeam.striker)).filter( player => player.status == 'bench' );
+      }, 
+  },
+
   methods: {
     getTeam() {
       let userId = this.$store.state.userId;
 
-      axios  
+      axios
         .get("http://localhost:5000/getteam/" + userId)
         .then((res) => {
-          for (const player of res.data.team){
+          for (const player of res.data.team) {
             this.myTeam[player.position].push(player);
-          };
+          }
           // this.myTeam = res.data.team
         })
         .catch((err) => console.error(err));
@@ -104,7 +162,6 @@ export default {
 
 .team > div > div {
   display: flex;
-
   justify-content: space-around;
   align-items: center;
 }

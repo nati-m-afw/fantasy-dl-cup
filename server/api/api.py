@@ -57,7 +57,13 @@ def getPlayers(pos):
 def update_team():
     if request.method=='POST':
         requestBody = request.get_json()
+        
+        ### Until GAMEWEEK is implemented
+        # Delete old team
+        db.session.query(userPlayers).filter(userPlayers.user_id == 1).delete()
+        
         for player in requestBody['team']:
+            ### Add GAMEWEEK column
             up = userPlayers(user_id=1, players_id=player['playerId'], status=player['status'])
             db.session.add(up)
         db.session.commit()
@@ -65,6 +71,7 @@ def update_team():
 
 
 # Get users team
+### Add GAMEWEEK parameter
 @api_app.route('/getteam/<userId>')
 def get_team(userId):
     response = { 'status': 'success'}
