@@ -34,9 +34,9 @@ def populate():
     p19 = Players(fname="Pla", lname="ST", position="striker", dept_id=4)
     p20 = Players(fname="Finally", lname="ST", position="striker", dept_id=5)
 
-    u1 = Users(fname="User1",lname="first",teamname="hope")
-    u2 = Users(fname="User2",lname="second",teamname="cope")
-    u3 = Users(fname="Users3",lname="third",teamname="rope")
+    u1 = Users(fname="Swift",lname="Books",teamname="satellites")
+    u2 = Users(fname="Dean",lname="Smith",teamname="this_team")
+    # u3 = Users(fname="Users3",lname="third",teamname="rope")
 
 
     # up1 = userPlayers(user_id=1,players_id=4)
@@ -46,11 +46,11 @@ def populate():
   
 
 
-    up5 = userPlayers(user_id=2,players_id=4,status="active")
-    up6 = userPlayers(user_id=2,players_id=5, status="active")
-    up7 = userPlayers(user_id=2,players_id=6, status="active")
-    up8 = userPlayers(user_id=3,players_id=7, status="active")
-    up9 = userPlayers(user_id=3,players_id=8, status="active")
+    # up5 = userPlayers(user_id=2,players_id=4,status="active")
+    # up6 = userPlayers(user_id=2,players_id=5, status="active")
+    # up7 = userPlayers(user_id=2,players_id=6, status="active")
+    # up8 = userPlayers(user_id=3,players_id=7, status="active")
+    # up9 = userPlayers(user_id=3,players_id=8, status="active")
 
 
 
@@ -59,6 +59,9 @@ def populate():
 
 
 
-    db.session.add_all([dept1, dept2, dept3, dept4, dept5, dept6, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20,u1,u2,u3,up5,up6,up7,up8,up9])
+    db.session.add_all([dept1, dept2, dept3, dept4, dept5, dept6
+                        , p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20
+                        # ,u1,u2,u3,up5,up6,up7,up8,up9
+                        ])
     # up1,up2,up3,up4,up5,up6,up7,up8,up9
     db.session.commit()

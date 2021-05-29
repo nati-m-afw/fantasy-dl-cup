@@ -23,7 +23,13 @@ export default new Vuex.Store({
     updateMyTeamName(state, newTeamName) {
       state.myTeam = newTeamName;
       console.log("Store--> Team Name Updated Successfully!");
-    }
+    },
+
+    // Updater for User ID (AUTH)
+    setCurrentUserID(state, currentUserId) {
+      state.userId = currentUserId;
+      console.log("Store--> User ID Updated Successfully!");
+    },
   },
   actions: {},
   modules: {},
