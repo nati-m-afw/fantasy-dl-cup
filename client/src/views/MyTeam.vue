@@ -12,8 +12,10 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              :class="{ active: selected[0] == i && selected[1] == 'goalkeeper' }"
+              @click="toggleActive($event, i, 'goalkeeper', player.id)"
             >
-              <fa icon="user" size="7x" />
+              <fa class="i" icon="user" size="7x" />
               <span>GK{{ player.fname }}</span>
             </div>
           </div>
@@ -24,8 +26,10 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              :class="{ active: selected[0] == i && selected[1] == 'defender' }"
+              @click="toggleActive($event, i, 'defender', player.id)"
             >
-              <fa icon="user" size="7x" />
+              <fa class="i" icon="user" size="7x" />
               <span>DEF{{ player.fname }}</span>
             </div>
           </div>
@@ -36,8 +40,10 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              :class="{ active: selected[0] == i && selected[1] == 'midfielder' }"
+              @click="toggleActive($event, i, 'midfielder', player.id)"
             >
-              <fa icon="user" size="7x" />
+              <fa class="i" icon="user" size="7x" />
               <span>MID{{ player.fname }}</span>
             </div>
           </div>
@@ -48,8 +54,10 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              :class="{ active: selected[0] == i && selected[1] == 'striker' }"
+              @click="toggleActive($event, i, 'striker', player.id)"
             >
-              <fa icon="user" size="7x" />
+              <fa class="i" icon="user" size="7x" />
               <span>ST{{ player.fname }}</span>
             </div>
           </div>
@@ -64,17 +72,20 @@
               )"
               :key="i"
             >
-              <fa icon="user" size="7x" />
+              <fa class="i" icon="user" size="7x" />
               <span>GK{{ player.fname }}</span>
+              <span v-if="selected[1] == 'goalkeeper'">
+                <button @click="changePlayer($event, player.id, player.position)"><fa icon="exchange-alt" /></button>
+              </span>
             </div>
-            
+
             <!-- SUB Players -->
-            <div
-              v-for="(player, i) in benchedPlayers"
-              :key="i"
-            >
-              <fa icon="user" size="7x" />
+            <div v-for="(player, i) in benchedPlayers" :key="i">
+              <fa class="i" icon="user" size="7x" />
               <span>{{ player.position }}{{ player.fname }}</span>
+              <span v-if="selected[1] != 'goalkeeper' && selected[1]">
+                <button @click="changePlayer($event, player.id, player.position)"><fa icon="exchange-alt" /></button>
+              </span>
             </div>
           </div>
         </div>
@@ -96,21 +107,30 @@ export default {
         midfielder: [],
         striker: [],
       },
+
+      // Player being replaced in myTeam.<position>
+      selectedPlayerIndex: null,
+
+      // Active player order number and playing position
+      selected: [],
     };
   },
 
   computed: {
     benchedPlayers() {
-        return  this.myTeam.defender.concat(this.myTeam.midfielder.concat(this.myTeam.striker)).filter( player => player.status == 'bench' );
-      }, 
+      return this.myTeam.defender
+        .concat(this.myTeam.midfielder.concat(this.myTeam.striker))
+        .filter((player) => player.status == "bench");
+    },
   },
 
   methods: {
+    // Get user Team
     getTeam() {
-      let userId = this.$store.state.userId;
+      // let userId = this.$store.state.userId;
 
       axios
-        .get("http://localhost:5000/getteam/" + userId)
+        .get("http://localhost:5000/getteam/" + "17")
         .then((res) => {
           for (const player of res.data.team) {
             this.myTeam[player.position].push(player);
@@ -118,6 +138,29 @@ export default {
           // this.myTeam = res.data.team
         })
         .catch((err) => console.error(err));
+    },
+
+    // Change player status
+    changePlayer(e, playerId, playerPos) {
+      // Make bench player active
+      for (const player of this.myTeam[playerPos]){
+        if (player.id == playerId)
+          player.status = 'active';
+      };
+
+      // Bench active player
+      for (const player of this.myTeam[this.selected[1]]){
+        console.log(player.fname);
+        if (player.id == this.selected[2])
+          player.status = 'bench';
+      };
+    },
+
+    // Add active player to selected
+    toggleActive(e, playerNo, playerPos, playerId) {
+      this.$set(this.selected, 0, playerNo);
+      this.$set(this.selected, 1, playerPos);
+      this.$set(this.selected, 2, playerId);
     },
   },
 
@@ -176,7 +219,7 @@ export default {
   grid-row: -1;
 }
 
-i {
+.i {
   color: white;
   cursor: pointer;
 
@@ -186,5 +229,9 @@ i {
 .sidebar {
   background-color: white;
   display: flex;
+}
+
+.active {
+  background-color: tomato;
 }
 </style>

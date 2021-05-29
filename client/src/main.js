@@ -8,6 +8,7 @@ import {
   faUnlock,
   faUsers,
   faEnvelope,
+  faExchangeAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueProgressBar from 'vue-progressbar'
@@ -43,6 +44,7 @@ library.add(faUser);
 library.add(faUnlock);
 library.add(faUsers);
 library.add(faEnvelope);
+library.add(faExchangeAlt)
 
 Vue.component("fa", FontAwesomeIcon);
 

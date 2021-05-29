@@ -64,7 +64,7 @@ def update_team():
         
         for player in requestBody['team']:
             ### Add GAMEWEEK column
-            up = userPlayers(user_id=1, players_id=player['playerId'], status=player['status'])
+            up = userPlayers(user_id=requestBody['userId'], players_id=player['playerId'], status=player['status'])
             db.session.add(up)
         db.session.commit()
         return "201"
