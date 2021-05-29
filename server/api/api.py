@@ -54,11 +54,11 @@ def getPlayers(pos):
 
 # Route to update user_players table
 @api_app.route('/updateuserplayers', methods=['POST'])
-def save_team():
+def update_team():
     if request.method=='POST':
         requestBody = request.get_json()
-        for playerId in requestBody['team']:
-            up = userPlayers(user_id=1, players_id=playerId)
+        for player in requestBody['team']:
+            up = userPlayers(user_id=1, players_id=player['playerId'], status=player['status'])
             db.session.add(up)
         db.session.commit()
         return "201"
@@ -69,11 +69,18 @@ def save_team():
 def get_team(userId):
     response = { 'status': 'success'}
 
-    team = (db.session.query(userPlayers, Players, Users)
+    team = (db.session.query(userPlayers, Players, Users).with_entities(Players, userPlayers.status)
     .join(Users)
     # .join(userPlayers)
     .join(Players)
     .filter(Users.id==userId)).all()
     
-    response['team'] = list(map(lambda p: p[1].serialize(), team))
+    response['team'] = list(map(lambda p: addStatusToResponse(p[0].serialize(), p[1]), team))
     return response
+
+# Helper Function
+# Add status to player data in get_team response
+def addStatusToResponse(player, status):
+    result = player
+    result.update( {'status': status} )
+    return result

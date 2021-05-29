@@ -38,7 +38,12 @@ import axios from "axios";
 export default {
   data() {
     return {
-      myTeam: {},
+      myTeam: {
+        goalkeeper: [],
+        defender: [],
+        midfielder: [],
+        striker: [],
+      },
     };
   },
 
@@ -46,9 +51,14 @@ export default {
     getTeam() {
       let userId = this.$store.state.userId;
 
-      axios
+      axios  
         .get("http://localhost:5000/getteam/" + userId)
-        .then((res) => (this.myTeam = res.data.team))
+        .then((res) => {
+          for (const player of res.data.team){
+            this.myTeam[player.position].push(player);
+          };
+          // this.myTeam = res.data.team
+        })
         .catch((err) => console.error(err));
     },
   },

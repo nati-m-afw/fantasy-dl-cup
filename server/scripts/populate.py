@@ -46,11 +46,11 @@ def populate():
   
 
 
-    up5 = userPlayers(user_id=2,players_id=4)
-    up6 = userPlayers(user_id=2,players_id=5)
-    up7 = userPlayers(user_id=2,players_id=6)
-    up8 = userPlayers(user_id=3,players_id=7)
-    up9 = userPlayers(user_id=3,players_id=8)
+    up5 = userPlayers(user_id=2,players_id=4,status="active")
+    up6 = userPlayers(user_id=2,players_id=5, status="active")
+    up7 = userPlayers(user_id=2,players_id=6, status="active")
+    up8 = userPlayers(user_id=3,players_id=7, status="active")
+    up9 = userPlayers(user_id=3,players_id=8, status="active")
 
 
 
