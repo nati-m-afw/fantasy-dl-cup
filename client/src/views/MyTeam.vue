@@ -2,6 +2,7 @@
   <div class="body">
     <div id="info"></div>
     <!-- <pre>{{ $data }}</pre> -->
+    <alert :msg="msg" v-if="showMsg" />
     <div id="team_selection">
       <div class="team">
         <div class="starting_team">
@@ -12,7 +13,9 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
-              :class="{ active: selected[0] == i && selected[1] == 'goalkeeper' }"
+              :class="{
+                active: selected[0] == i && selected[1] == 'goalkeeper',
+              }"
               @click="toggleActive($event, i, 'goalkeeper', player.id)"
             >
               <fa class="i" icon="user" size="7x" />
@@ -40,7 +43,9 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
-              :class="{ active: selected[0] == i && selected[1] == 'midfielder' }"
+              :class="{
+                active: selected[0] == i && selected[1] == 'midfielder',
+              }"
               @click="toggleActive($event, i, 'midfielder', player.id)"
             >
               <fa class="i" icon="user" size="7x" />
@@ -75,7 +80,11 @@
               <fa class="i" icon="user" size="7x" />
               <span>GK{{ player.fname }}</span>
               <span v-if="selected[1] == 'goalkeeper'">
-                <button @click="changePlayer($event, player.id, player.position)"><fa icon="exchange-alt" /></button>
+                <button
+                  @click="changePlayer($event, player.id, player.position)"
+                >
+                  <fa icon="exchange-alt" />
+                </button>
               </span>
             </div>
 
@@ -84,19 +93,25 @@
               <fa class="i" icon="user" size="7x" />
               <span>{{ player.position }}{{ player.fname }}</span>
               <span v-if="selected[1] != 'goalkeeper' && selected[1]">
-                <button @click="changePlayer($event, player.id, player.position)"><fa icon="exchange-alt" /></button>
+                <button
+                  @click="changePlayer($event, player.id, player.position)"
+                >
+                  <fa icon="exchange-alt" />
+                </button>
               </span>
             </div>
           </div>
         </div>
       </div>
       <div class="sidebar"></div>
+      <button @click="updateTeamApi">SAVE</button>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Alert from "../components/Alert.vue";
 
 export default {
   data() {
@@ -113,6 +128,10 @@ export default {
 
       // Active player order number and playing position
       selected: [],
+
+      msg: "",
+
+      showMsg: false,
     };
   },
 
@@ -124,13 +143,17 @@ export default {
     },
   },
 
+  components: {
+    alert: Alert,
+  },
+
   methods: {
     // Get user Team
     getTeam() {
-      // let userId = this.$store.state.userId;
+      let userId = this.$store.state.userId;
 
       axios
-        .get("http://localhost:5000/getteam/" + "17")
+        .get("http://localhost:5000/getteam/" + userId)
         .then((res) => {
           for (const player of res.data.team) {
             this.myTeam[player.position].push(player);
@@ -143,17 +166,14 @@ export default {
     // Change player status
     changePlayer(e, playerId, playerPos) {
       // Make bench player active
-      for (const player of this.myTeam[playerPos]){
-        if (player.id == playerId)
-          player.status = 'active';
-      };
+      for (const player of this.myTeam[playerPos]) {
+        if (player.id == playerId) player.status = "active";
+      }
 
       // Bench active player
-      for (const player of this.myTeam[this.selected[1]]){
-        console.log(player.fname);
-        if (player.id == this.selected[2])
-          player.status = 'bench';
-      };
+      for (const player of this.myTeam[this.selected[1]]) {
+        if (player.id == this.selected[2]) player.status = "bench";
+      }
     },
 
     // Add active player to selected
@@ -161,6 +181,45 @@ export default {
       this.$set(this.selected, 0, playerNo);
       this.$set(this.selected, 1, playerPos);
       this.$set(this.selected, 2, playerId);
+    },
+
+    // Update team API
+    updateTeamApi() {
+      this.$store.commit("updateMyTeam", this.myTeam);
+    
+      const payload = {
+        userId: this.$store.state.userId,
+        team: [],
+        gameweekId: 1,
+      };
+
+      console.log(this.$store.state.userId);
+
+      // push player id into payload
+      for (const position in this.$store.state.myTeam) {
+        // payload.team[position] = [];
+        for (const player of this.$store.state.myTeam[position]) {
+          payload.team.push({ 
+            'playerId': player.id,
+            'status': player.status,
+          });
+        }
+      }
+
+      // Send myTeam to api
+      axios
+        .post("http://localhost:5000/updateuserplayers", payload)
+        .then(() => {
+          this.isRegistered = true;
+          this.msg = "Team Updated!";
+          this.showMsg = true;
+          this.$router.push("/myteam");
+        })
+        .catch((err) => {
+          console.error(err);
+          this.msg = "An error occured. Please try again!";
+          this.showMsg = true;
+        });
     },
   },
 

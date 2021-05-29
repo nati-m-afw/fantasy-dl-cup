@@ -44,7 +44,7 @@ library.add(faUser);
 library.add(faUnlock);
 library.add(faUsers);
 library.add(faEnvelope);
-library.add(faExchangeAlt)
+library.add(faExchangeAlt);
 
 Vue.component("fa", FontAwesomeIcon);
 

@@ -58,9 +58,8 @@ def update_team():
     if request.method=='POST':
         requestBody = request.get_json()
         
-        ### Until GAMEWEEK is implemented
         # Delete old team
-        db.session.query(userPlayers).filter(userPlayers.user_id == 1).delete()
+        db.session.query(userPlayers).filter(userPlayers.user_id == requestBody['userId']).delete()
         
         for player in requestBody['team']:
             ### Add GAMEWEEK column
