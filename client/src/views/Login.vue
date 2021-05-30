@@ -360,7 +360,6 @@ export default {
     update_api: function (user_info) {
       axios
         .post(`${path}/signuser`, { user_info })
-        // return user's status new or existing
         .then(() => {})
         .catch((err) => {
           this.flashMessage.error({
@@ -376,12 +375,17 @@ export default {
         .then(async (response) => {
           this.user_id = await response.data.id;
 
-          // Add User ID to local storage
-          console.log(this.user_id);
-          localStorage.setItem('user-id', this.user_id)
-          // this.$store.commit("setCurrentUserID", this.user_id);
-
           // Add User ID to local storage or cookies
+          localStorage.setItem('user-id', this.user_id)
+          
+          // Update store state
+          this.$store.commit("setCurrentUserID");
+
+          // Redirect to myTeam
+          console.log(this.$store.state.userId);
+          this.$router.push("/myteam");
+
+
         })
         .catch((err) => {
           this.flashMessage.error({
@@ -414,11 +418,10 @@ export default {
                 team_name: randomWords(),
               });
 
-              // Redirect to Pick Team Component
-              this.$router.push({ name: "PickTeam" });
-
               // GET USER ID
+              // Redirect to MyTeam Component in get_user_id
               this.get_user_id(this.firebase_id);
+
               // Flash Success Message at Login
             },
             // If User email is already in use in firebase

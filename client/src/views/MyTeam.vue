@@ -1,6 +1,8 @@
 <template>
   <div class="body">
-    <div id="info"></div>
+    <div id="info">
+      <button @click="logout">LOGOUT</button>
+    </div>
     <!-- <pre>{{ $data }}</pre> -->
     <alert :msg="msg" v-if="showMsg" />
     <div id="team_selection">
@@ -221,6 +223,13 @@ export default {
           this.showMsg = true;
         });
     },
+
+    // Logout
+    logout(){
+      localStorage.removeItem("user-id");
+      this.$store.commit("setCurrentUserID");
+      this.$router.push("/");
+    }
   },
 
   created() {

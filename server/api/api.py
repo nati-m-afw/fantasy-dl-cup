@@ -73,7 +73,7 @@ def update_team():
 ### Add GAMEWEEK parameter
 @api_app.route('/getteam/<userId>')
 def get_team(userId):
-    response = { 'status': 'success'}
+    response = { 'status': 'success' }
 
     team = (db.session.query(userPlayers, Players, Users).with_entities(Players, userPlayers.status)
     .join(Users)

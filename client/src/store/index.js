@@ -13,6 +13,7 @@ export default new Vuex.Store({
     },
     myTeamName: 'Replace With Actual Team Name',
     userId: localStorage.getItem('user-id') || null,
+    isAuthenticated: localStorage.getItem('user-id') ? true : false,
   },
   mutations: {
     updateMyTeam(state, myTeamUpdate) {
@@ -26,8 +27,10 @@ export default new Vuex.Store({
     },
 
     // Updater for User ID (AUTH)
-    setCurrentUserID(state, currentUserId) {
-      state.userId = currentUserId;
+    setCurrentUserID(state) {
+      // update state
+      state.userId = localStorage.getItem('user-id') || null;
+      state.isAuthenticated = localStorage.getItem('user-id') ? true : false;
       console.log("Store--> User ID Updated Successfully!");
     },
   },
