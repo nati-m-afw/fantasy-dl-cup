@@ -157,6 +157,10 @@ export default {
       axios
         .get("http://localhost:5000/getteam/" + userId)
         .then((res) => {
+          
+          // Check if user has picked team
+          if (res.data.team.length == 0)
+            this.$router.push("/pickteam")
           for (const player of res.data.team) {
             this.myTeam[player.position].push(player);
           }
