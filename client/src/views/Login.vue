@@ -360,6 +360,7 @@ export default {
     update_api: function (user_info) {
       axios
         .post(`${path}/signuser`, { user_info })
+        // return user's status new or existing
         .then(() => {})
         .catch((err) => {
           this.flashMessage.error({
@@ -375,8 +376,12 @@ export default {
         .then(async (response) => {
           this.user_id = await response.data.id;
 
-          // Add User ID to vue store
-          this.$store.commit("setCurrentUserID", this.user_id);
+          // Add User ID to local storage
+          console.log(this.user_id);
+          localStorage.setItem('user-id', this.user_id)
+          // this.$store.commit("setCurrentUserID", this.user_id);
+
+          // Add User ID to local storage or cookies
         })
         .catch((err) => {
           this.flashMessage.error({

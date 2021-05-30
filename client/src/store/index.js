@@ -12,7 +12,7 @@ export default new Vuex.Store({
       striker: [null, null],
     },
     myTeamName: 'Replace With Actual Team Name',
-    userId: null,
+    userId: localStorage.getItem('user-id') || null,
   },
   mutations: {
     updateMyTeam(state, myTeamUpdate) {
