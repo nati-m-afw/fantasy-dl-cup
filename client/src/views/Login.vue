@@ -154,6 +154,7 @@ input:focus {
   margin-top: 2%;
   color: gray;
   opacity: 60%;
+  width:22px !important;
 }
 .email-input,
 .password-input {
