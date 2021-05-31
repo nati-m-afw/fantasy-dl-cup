@@ -29,7 +29,6 @@
             class="email-input"
             type="text"
             name="full-name"
-            placeholder="Full Name"
             v-model="full_name"
             @keyup="validate_name_live"
           />
@@ -447,12 +446,11 @@ input:focus {
 }
 .body {
   width: 100%;
-  padding-botton:5%;
-  /* background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
-    url("../../public/img/5273776.jpg"); */
+  padding-botton: 5%;
+
   background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
     url("../../public/img/4799045.jpg");
-  /* background-image: url("../../public/img/5295526.jpg"); */
+
   color: black;
   background-repeat: no-repeat;
   background-position: center;
@@ -463,15 +461,14 @@ input:focus {
 .form-container {
   width: 500px;
   height: fit-content;
-  /* height: 640px; */
-  /* background-color: rgba(255, 255, 255, 0.7);
-   */
+
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
 
   margin-left: auto;
   margin-right: auto;
-  margin-top: 8%;
+  margin-top: 3%;
+  margin-bottom: 2%;
   padding: 5%;
   padding-bottom: 2%;
 }
@@ -484,7 +481,6 @@ input:focus {
 
 .email-area,
 .password-area {
-  /* background-color: yellow; */
   margin-bottom: 5%;
   margin-top: 5%;
   padding: 1%;
@@ -493,7 +489,6 @@ input:focus {
 }
 
 .label {
-  /* background-color: yellow; */
   font-family: "Poppins";
   font-size: 16px;
   margin-bottom: 2%;
@@ -507,15 +502,14 @@ input:focus {
   margin-top: 2%;
   color: gray;
   opacity: 60%;
-  width:22px !important;
+  width: 18px !important;
+  height: auto;
 }
 .email-input,
 .password-input {
   background-color: rgba(255, 255, 255, 0);
-  /* background-color: inherit; */
   outline: none;
   border-inline-color: none;
-  /* backdrop-filter: blur(10px); */
   border: none;
   border-bottom: 1px solid black;
   width: 100%;
@@ -531,15 +525,13 @@ input:focus {
   font-style: italic;
 }
 .submit-container {
-  /* background-color: green; */
   display: flex;
   flex-direction: column;
 }
 .forgot-password {
-  /* background-color: brown; */
   width: 94%;
   text-align: right;
-  /* padding-right: 5%; */
+
   margin-left: 6%;
   font-family: "Poppins";
   font-size: 14px;
@@ -548,7 +540,6 @@ input:focus {
   margin-bottom: 10%;
 }
 .login-button {
-  /* background-color: blue; */
   outline: none;
   background-color: rgba(255, 255, 255, 0);
   backdrop-filter: blur(5px);
@@ -572,7 +563,6 @@ input:focus {
 }
 
 .sso-container {
-  /* background-color: green; */
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -623,10 +613,7 @@ input:focus {
   text-decoration: none;
   color: black;
   margin-right: 1%;
-  /* margin-top: 5%; */
-  /* text-un */
 }
 .redirect-link {
-  /* background-color: violet; */
 }
 </style>

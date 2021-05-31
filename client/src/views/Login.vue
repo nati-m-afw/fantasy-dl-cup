@@ -96,7 +96,8 @@ input:focus {
 }
 .body {
   width: 100%;
-  padding-botton:5%;
+  padding-botton: 5%;
+
   /* background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
     url("../../public/img/5273776.jpg"); */
   background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
@@ -111,7 +112,7 @@ input:focus {
 }
 .form-container {
   width: 500px;
-  height: 640px;
+  min-height: 640px;
   /* background-color: rgba(255, 255, 255, 0.7);
    */
   background-color: rgba(255, 255, 255, 0.1);
@@ -119,8 +120,9 @@ input:focus {
 
   margin-left: auto;
   margin-right: auto;
-  margin-top: 8%;
+  margin-top: 3%;
   padding: 5%;
+  margin-bottom: 3%;
 }
 .header {
   font-family: "Poppins";
@@ -131,7 +133,6 @@ input:focus {
 
 .email-area,
 .password-area {
-  /* background-color: yellow; */
   margin-bottom: 5%;
   margin-top: 5%;
   padding: 1%;
@@ -140,7 +141,6 @@ input:focus {
 }
 
 .label {
-  /* background-color: yellow; */
   font-family: "Poppins";
   font-size: 16px;
   margin-bottom: 2%;
@@ -154,15 +154,16 @@ input:focus {
   margin-top: 2%;
   color: gray;
   opacity: 60%;
-  width:22px !important;
+  width: 18px !important;
+  height: auto;
 }
 .email-input,
 .password-input {
   background-color: rgba(255, 255, 255, 0);
-  /* background-color: inherit; */
+
   outline: none;
   border-inline-color: none;
-  /* backdrop-filter: blur(10px); */
+
   border: none;
   border-bottom: 1px solid black;
   width: 100%;
@@ -178,15 +179,13 @@ input:focus {
   font-style: italic;
 }
 .submit-container {
-  /* background-color: green; */
   display: flex;
   flex-direction: column;
 }
 .forgot-password {
-  /* background-color: brown; */
   width: 94%;
   text-align: right;
-  /* padding-right: 5%; */
+
   margin-left: 6%;
   font-family: "Poppins";
   font-size: 14px;
@@ -195,7 +194,6 @@ input:focus {
   margin-bottom: 10%;
 }
 .login-button {
-  /* background-color: blue; */
   background-color: rgba(255, 255, 255, 0);
   backdrop-filter: blur(5px);
   font-family: "Poppins";
@@ -217,7 +215,6 @@ input:focus {
 }
 
 .sso-container {
-  /* background-color: green; */
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -268,11 +265,8 @@ input:focus {
   text-decoration: none;
   color: black;
   margin-right: 1%;
-  /* margin-top: 5%; */
-  /* text-un */
 }
 .redirect-link {
-  /* background-color: violet; */
 }
 </style>
 
@@ -376,16 +370,14 @@ export default {
           this.user_id = await response.data.id;
 
           // Add User ID to local storage or cookies
-          localStorage.setItem('user-id', this.user_id)
-          
+          localStorage.setItem("user-id", this.user_id);
+
           // Update store state
           this.$store.commit("setCurrentUserID");
 
           // Redirect to myTeam
           console.log(this.$store.state.userId);
           this.$router.push("/myteam");
-
-
         })
         .catch((err) => {
           this.flashMessage.error({
