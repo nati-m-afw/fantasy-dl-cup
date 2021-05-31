@@ -13,11 +13,15 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueProgressBar from 'vue-progressbar'
 
+// Custom CSS
+// import "@/assets"
 
 // Auth Config
 import firebase from "firebase";
 import randomWords from "random-words";
 import FlashMessage from "@smartweb/vue-flash-message";
+
+
 Vue.use(FlashMessage);
 Vue.use(randomWords);
 // Your web app's Firebase configuration

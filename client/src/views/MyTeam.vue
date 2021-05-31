@@ -1,5 +1,9 @@
 <template>
   <div class="body">
+    <nav>
+        <h1>DL Cup Fantasy</h1>
+    </nav>
+    <navigation :activePage="'MyTeam'" />
     <div id="info">
       <button @click="logout">LOGOUT</button>
     </div>
@@ -20,8 +24,8 @@
               }"
               @click="toggleActive($event, i, 'goalkeeper', player.id)"
             >
-              <fa class="i" icon="user" size="7x" />
-              <span>GK{{ player.fname }}</span>
+              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <!-- <span>GK{{ player.fname }}</span> -->
             </div>
           </div>
           <!-- DEF -->
@@ -34,8 +38,8 @@
               :class="{ active: selected[0] == i && selected[1] == 'defender' }"
               @click="toggleActive($event, i, 'defender', player.id)"
             >
-              <fa class="i" icon="user" size="7x" />
-              <span>DEF{{ player.fname }}</span>
+              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <!-- <span>DEF{{ player.fname }}</span> -->
             </div>
           </div>
           <!-- MID -->
@@ -50,8 +54,8 @@
               }"
               @click="toggleActive($event, i, 'midfielder', player.id)"
             >
-              <fa class="i" icon="user" size="7x" />
-              <span>MID{{ player.fname }}</span>
+              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <!-- <span>MID{{ player.fname }}</span> -->
             </div>
           </div>
           <!-- ST -->
@@ -64,8 +68,8 @@
               :class="{ active: selected[0] == i && selected[1] == 'striker' }"
               @click="toggleActive($event, i, 'striker', player.id)"
             >
-              <fa class="i" icon="user" size="7x" />
-              <span>ST{{ player.fname }}</span>
+              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <!-- <span>ST{{ player.fname }}</span> -->
             </div>
           </div>
         </div>
@@ -79,8 +83,8 @@
               )"
               :key="i"
             >
-              <fa class="i" icon="user" size="7x" />
-              <span>GK{{ player.fname }}</span>
+              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <!-- <span>GK{{ player.fname }}</span> -->
               <span v-if="selected[1] == 'goalkeeper'">
                 <button
                   @click="changePlayer($event, player.id, player.position)"
@@ -92,8 +96,8 @@
 
             <!-- SUB Players -->
             <div v-for="(player, i) in benchedPlayers" :key="i">
-              <fa class="i" icon="user" size="7x" />
-              <span>{{ player.position }}{{ player.fname }}</span>
+              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <!-- <span>{{ player.position }}{{ player.fname }}</span> -->
               <span v-if="selected[1] != 'goalkeeper' && selected[1]">
                 <button
                   @click="changePlayer($event, player.id, player.position)"
@@ -114,6 +118,7 @@
 <script>
 import axios from "axios";
 import Alert from "../components/Alert.vue";
+import Navigation from "../components/Navigation.vue";
 
 export default {
   data() {
@@ -147,6 +152,7 @@ export default {
 
   components: {
     alert: Alert,
+    navigation: Navigation,
   },
 
   methods: {
@@ -245,9 +251,39 @@ export default {
 <style>
 * {
   box-sizing: border-box;
+} 
+
+@import "../assets/css/styles.css";
+
+#team_selection img {
+    width: 15vw;
+    cursor: pointer;
 }
 
-.body {
+#team_selection {
+    padding: 2% 7%;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-column-gap: 2rem;
+}
+
+.starting_team{
+    display: grid;
+    grid-template-rows: repeat(4, 150px);
+    /* justify-items: center; */
+}
+
+.starting_team > div, .substitutes > div {
+    display: flex;
+    justify-content: center;
+}
+
+.active {
+  background-color: tomato;
+  border-radius: 10%;
+}
+
+/* .body {
   margin: 0;
   min-height: 100vh;
 
@@ -260,13 +296,9 @@ export default {
   display: flex;
 }
 
-#team_selection {
-  display: grid;
-  grid-template-columns: 65vw 20vw;
-  grid-template-rows: 800px;
-  grid-column-gap: 2vw;
+#team_selection img {
+    width: 20%;
 }
-
 .team {
   background-color: black;
   display: grid;
@@ -305,5 +337,5 @@ export default {
 
 .active {
   background-color: tomato;
-}
+} */
 </style>

@@ -376,7 +376,7 @@ export default {
           this.$store.commit("setCurrentUserID");
 
           // Redirect to myTeam
-          console.log(this.$store.state.userId);
+          // console.log(this.$store.state.userId);
           this.$router.push("/myteam");
         })
         .catch((err) => {

@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 from models.players import Players
 from models.users import Users
 from models.user_players import userPlayers
+from models.department import Dept
 from flask_cors import cross_origin
 from main import db
 
@@ -75,18 +76,20 @@ def update_team():
 def get_team(userId):
     response = { 'status': 'success' }
 
-    team = (db.session.query(userPlayers, Players, Users).with_entities(Players, userPlayers.status)
+    team = (db.session.query(userPlayers, Players, Users, Dept).with_entities(Players, userPlayers.status, Dept.dName)
     .join(Users)
     # .join(userPlayers)
     .join(Players)
+    .join(Dept)
     .filter(Users.id==userId)).all()
     
-    response['team'] = list(map(lambda p: addStatusToResponse(p[0].serialize(), p[1]), team))
+    response['team'] = list(map(lambda p: addStatusToResponse(p[0].serialize(), p[1], p[2]), team))
     return response
 
 # Helper Function
 # Add status to player data in get_team response
-def addStatusToResponse(player, status):
+def addStatusToResponse(player, status, department):
     result = player
-    result.update( {'status': status} )
+    result.update( {'status': status } )
+    result.update( {'department': department} )
     return result
