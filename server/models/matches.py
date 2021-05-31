@@ -10,6 +10,8 @@ class Match(db.Model):
     date = db.Column(db.String(20),nullable=False)
     state = db.Column(db.Integer,nullable=False)
     score = db.Column(db.String(20),nullable=True)
+    event = db.relationship('Event', backref='match_event', lazy=True)
+
     
     
     def __init__(self, team,opponent,game_week,time,date,state,score):
