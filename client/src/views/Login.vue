@@ -96,7 +96,7 @@ input:focus {
 }
 .body {
   width: 100%;
-  height: 100vh;
+  padding-botton:5%;
   /* background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
     url("../../public/img/5273776.jpg"); */
   background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
