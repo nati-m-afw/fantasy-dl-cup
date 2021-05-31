@@ -22,6 +22,7 @@ db = SQLAlchemy(app)
 # Import - to avoid circular Import
 from api.api import api_app
 from auth.auth import auth_app
+from admin.admin import admin_app
 
 
 # Enable CORS
@@ -37,6 +38,7 @@ from models.department import Dept
 from models.players import Players
 from models.user_players import userPlayers
 from models.users import Users
+from models.matches import Match
 
 # Create Tables 
 db.create_all()
@@ -52,7 +54,7 @@ def test():
 #Registering Blueprints
 app.register_blueprint(api_app,url_prefix="")
 app.register_blueprint(auth_app,url_prefix="/auth")
-        
+app.register_blueprint(admin_app,url_prefix="/admin")
 # Run From Main only
 if __name__ == '__main__':
     app.run()
