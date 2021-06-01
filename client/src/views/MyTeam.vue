@@ -177,6 +177,11 @@ export default {
 
     // Change player status
     changePlayer(e, playerId, playerPos) {
+      if (this.selected[1] == 'striker' && this.myTeam.striker.filter( player => player.status == 'active' ).length == 1){
+        this.msg = "Minimum of one striker required!";
+        this.showMsg = true;
+        return;
+      }
       // Make bench player active
       for (const player of this.myTeam[playerPos]) {
         if (player.id == playerId) player.status = "active";
