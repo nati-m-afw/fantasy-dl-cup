@@ -1,6 +1,7 @@
 # Importing
 from flask import Blueprint, request, jsonify,json
 from models.matches import Match
+from models.players import Players
 from flask_cors import cross_origin
 from main import db
 
@@ -61,5 +62,13 @@ def update_schedule():
        db.session.commit()
     return ""
 
+
+@admin_app.route("/players/<dept_id>")
+def get_players_by_dept(dept_id):
+    curr_players = Players.query.filter_by(dept_id=dept_id).all()
+    curr_players = list(map(lambda p: p.serialize(), curr_players))
+    
+    return json.dumps(curr_players)
+    
 
     

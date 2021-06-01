@@ -25,6 +25,7 @@ class Players(db.Model):
             'fname': self.fname,
             'lname': self.lname,
             'position': self.position,
+            'dept_id':self.dept_id
         }
 
 

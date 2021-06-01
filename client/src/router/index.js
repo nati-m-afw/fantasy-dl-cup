@@ -10,24 +10,28 @@ import Login from "../views/Login.vue";
 import RegisterUser from "../views/RegisterUser.vue";
 import Reset from "../views/Reset.vue";
 
+// Imports for Admin
+import AdminMain from "../views/AdminMain.vue";
 
 // If authenticated continue / Else goto login
 const ifAuthenticated = (to, from, next) => {
   // next()
-  if (store.state.isAuthenticated)
-    next()
-  else
-    next("/")
+  if (store.state.isAuthenticated) {
+    next();
+  } else {
+    next("/");
+  }
 };
 
 // If not authenticated continue / Else goto myteam
 // For Login % Register route
 const ifNotAuthenticated = (to, from, next) => {
   // next()
-  if (!store.state.isAuthenticated)
-    next()
-  else
-    next("/myteam")
+  if (!store.state.isAuthenticated) {
+    next();
+  } else {
+    next("/myteam");
+  }
 };
 
 const routes = [
@@ -77,6 +81,14 @@ const routes = [
     meta: { title: "Reset" },
     // add nav guard
   },
+
+  // Route for Admin
+  {
+    path: "/admin",
+    name: "Admin Dash",
+    component: AdminMain,
+    meta: { title: "Admin Dashboard" },
+  },
 ];
 
 Vue.use(VueRouter);
@@ -86,7 +98,6 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-
 
 // Add page title
 router.afterEach((to, from, next) => {

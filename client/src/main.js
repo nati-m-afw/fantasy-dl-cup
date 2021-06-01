@@ -2,17 +2,24 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faUser,
   faUnlock,
   faUsers,
   faEnvelope,
   faExchangeAlt,
+  faClock,
+  faSync,
+  faBuilding,
+  faSignOutAlt,
+  faPlayCircle,
+  faEdit,
+  faArrowCircleRight,
+  faArrowCircleLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import VueProgressBar from 'vue-progressbar'
-
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import VueProgressBar from "vue-progressbar";
 
 // Auth Config
 import firebase from "firebase";
@@ -35,8 +42,6 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
-
-
 Vue.config.productionTip = false;
 
 // Add Font Awesome Icons
@@ -45,20 +50,28 @@ library.add(faUnlock);
 library.add(faUsers);
 library.add(faEnvelope);
 library.add(faExchangeAlt);
+library.add(faClock);
+library.add(faSync);
+library.add(faBuilding);
+library.add(faSignOutAlt);
+library.add(faPlayCircle);
+library.add(faEdit);
+library.add(faArrowCircleRight);
+library.add(faArrowCircleLeft);
 
 Vue.component("fa", FontAwesomeIcon);
 
 const progressBarOptions = {
-  color: 'rgb(255, 0, 140)',
-  failedColor: 'grey',
-  thickness: '7px',
+  color: "rgb(255, 0, 140)",
+  failedColor: "grey",
+  thickness: "7px",
   transition: {
-    speed: '0.5s',
-    opacity: '0.1s',
-    termination: 1000
+    speed: "0.5s",
+    opacity: "0.1s",
+    termination: 1000,
   },
   autoRevert: true,
-  location: 'top',
+  location: "top",
   inverse: false,
   autoFinish: true,
 };
