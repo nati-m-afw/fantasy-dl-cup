@@ -373,7 +373,8 @@ export default {
           localStorage.setItem("user-id", this.user_id);
 
           // Update store state
-          this.$store.commit("setCurrentUserID");
+          if (this.user_id)
+            this.$store.commit("setCurrentUserID");
 
           // Redirect to myTeam
           // console.log(this.$store.state.userId);

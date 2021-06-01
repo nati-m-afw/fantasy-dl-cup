@@ -40,3 +40,4 @@ server/.env
 /server/auth/__pycache__
 /server/models/__pycache__
 /server/scripts/__pycache__
+/server/admin/__pycache__

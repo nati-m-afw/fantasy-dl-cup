@@ -7,6 +7,13 @@
         <router-link to="" :class="this.activePage == 'myTeam' ? active : ''">Table</router-link>
         <router-link to="" :class="this.activePage == 'myTeam' ? 'active' : ''">Fixtures</router-link>
         <router-link to="" :class="this.activePage == 'myTeam' ? 'active' : ''">Stats</router-link>
+        <div class="dropdown">
+            <div class="dropdiv"></div>
+            <div class="dropdown-content">
+                <a href="#">Profile</a>
+                <a href="#">Log Out</a>
+            </div>
+        </div>
     </div>
 </template>
 
