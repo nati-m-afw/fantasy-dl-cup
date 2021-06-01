@@ -1,30 +1,35 @@
 <template>
   <div class="sub-body">
-    <h1 class="header-title">Gameweek Fix</h1>
+    <h1 class="header-title">Gameweek {{ current_gameweek }}</h1>
     <div class="main-container">
       <div class="main-info" v-if="all_matches">
         {{ teams[current_match.team - 1] }} vs
         {{ teams[current_match.opponent - 1] }}
       </div>
-      <div class="edit" @click="edit" v-show="!showScoring">
-        <fa class="i" icon="edit" size="1x" />
-      </div>
+
       <div class="players-main-container">
         <div class="team-main-container">
           <div class="player-info" v-for="player in team" :key="player.id">
-            <div class="player-container" @click="edit_2" v-bind:id="player.id">
+            <div
+              class="player-container"
+              @click="get_scoring_system"
+              v-bind:id="player.id"
+            >
               <span class="player-position">{{ player.position }}</span
               >{{ player.fname }}
             </div>
             <div v-show="showScoring" class="scoring-form-container">
               <div class="left-scoring-container">
                 <!-- Goals Scored -->
-                <div class="goals-scored-container">
+                <div
+                  class="goals-scored-container"
+                  v-if="current_player.goals_scored"
+                >
                   <label for="goals-scored">Goals Scored:</label>
                   <input
                     type="number"
                     name="goals-scored"
-                    v-bind:value="current_player[0]"
+                    v-model="current_goal_scored"
                   />
                 </div>
 
@@ -34,7 +39,7 @@
                   <input
                     type="number"
                     name="goals-conceeded"
-                    v-bind:value="current_player[1]"
+                    v-model="current_goals_conceded"
                   />
                 </div>
 
@@ -44,7 +49,7 @@
                   <input
                     type="number"
                     name="goals-conceeded"
-                    v-bind:value="current_player[2]"
+                    v-model="assists_provided"
                   />
                 </div>
               </div>
@@ -52,20 +57,12 @@
                 <!--Minutes Played  -->
                 <div class="minutes-played">
                   <label for="minutes-played">Minutes Played:</label>
-                  <select
-                    name="minutes-played"
-                    id=""
-                    v-if="current_player[3] > 45"
-                  >
+                  <select name="minutes-played" v-if="minutes_played > 45">
                     <option value="45">1-45</option>
                     <option value="90" selected>46-90</option>
                   </select>
 
-                  <select
-                    name="minutes-played"
-                    id=""
-                    v-if="current_player[3] <= 45"
-                  >
+                  <select name="minutes-played" v-if="minutes_played <= 45">
                     <option value="45" selected>1-45</option>
                     <option value="90">46-90</option>
                   </select>
@@ -78,13 +75,13 @@
                     type="checkbox"
                     checked
                     name="yellow-card"
-                    v-if="current_player[4] == 1"
+                    v-if="yellow_cards == 1"
                   />
 
                   <input
                     type="checkbox"
                     name="yellow-card"
-                    v-if="current_player[4] == 0"
+                    v-if="yellow_cards == 0"
                   />
                 </div>
 
@@ -95,34 +92,43 @@
                     checked
                     type="checkbox"
                     name="yellow-card"
-                    v-if="current_player[5] == 1"
+                    v-if="red_cards == 1"
                   />
 
                   <input
                     type="checkbox"
                     name="yellow-card"
-                    v-if="current_player[5] == 0"
+                    v-if="red_cards == 0"
                   />
                 </div>
+
+                <button class="save" @click="save_data">Save</button>
               </div>
             </div>
           </div>
         </div>
         <div class="opponent-main-container">
           <div class="player-info" v-for="player in opponent" :key="player.id">
-            <div class="player-container" v-bind:id="player.id" @click="edit_2">
+            <div
+              class="player-container"
+              v-bind:id="player.id"
+              @click="get_scoring_system"
+            >
               <span class="player-position">{{ player.position }}</span
               >{{ player.fname }}
             </div>
             <div v-show="showScoring" class="scoring-form-container">
               <div class="left-scoring-container">
                 <!-- Goals Scored -->
-                <div class="goals-scored-container">
+                <div
+                  class="goals-scored-container"
+                  v-if="current_player.goals_scored"
+                >
                   <label for="goals-scored">Goals Scored:</label>
                   <input
                     type="number"
                     name="goals-scored"
-                    v-bind:value="current_player[0]"
+                    v-model="current_goal_scored"
                   />
                 </div>
 
@@ -132,7 +138,7 @@
                   <input
                     type="number"
                     name="goals-conceeded"
-                    v-bind:value="current_player[1]"
+                    v-model="current_goals_conceded"
                   />
                 </div>
 
@@ -142,7 +148,7 @@
                   <input
                     type="number"
                     name="goals-conceeded"
-                    v-bind:value="current_player[2]"
+                    v-model="assists_provided"
                   />
                 </div>
               </div>
@@ -150,20 +156,12 @@
                 <!--Minutes Played  -->
                 <div class="minutes-played">
                   <label for="minutes-played">Minutes Played:</label>
-                  <select
-                    name="minutes-played"
-                    id=""
-                    v-if="current_player[3] > 45"
-                  >
+                  <select name="minutes-played" v-if="minutes_played > 45">
                     <option value="45">1-45</option>
                     <option value="90" selected>46-90</option>
                   </select>
 
-                  <select
-                    name="minutes-played"
-                    id=""
-                    v-if="current_player[3] <= 45"
-                  >
+                  <select name="minutes-played" v-if="minutes_played <= 45">
                     <option value="45" selected>1-45</option>
                     <option value="90">46-90</option>
                   </select>
@@ -176,13 +174,13 @@
                     type="checkbox"
                     checked
                     name="yellow-card"
-                    v-if="current_player[4] == 1"
+                    v-if="yellow_cards == 1"
                   />
 
                   <input
                     type="checkbox"
                     name="yellow-card"
-                    v-if="current_player[4] == 0"
+                    v-if="yellow_cards == 0"
                   />
                 </div>
 
@@ -193,21 +191,23 @@
                     checked
                     type="checkbox"
                     name="yellow-card"
-                    v-if="current_player[5] == 1"
+                    v-if="red_cards == 1"
                   />
 
                   <input
                     type="checkbox"
                     name="yellow-card"
-                    v-if="current_player[5] == 0"
+                    v-if="red_cards == 0"
                   />
                 </div>
+
+                <button class="save" @click="save_data">Save</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <button @click="save_data" class="save" v-show="showScoring">Save</button>
+
       <div class="navigation-container">
         <div class="previous-container" @click="get_prev_page">
           <fa
@@ -231,10 +231,18 @@ let path = "http://localhost:5000/admin";
 export default {
   data() {
     return {
+      // Keep track of current gameweek
       current_gameweek: "",
+
+      // Keep track of all matches
       all_matches: [""],
+
+      // Match info of the current page
       current_match: "",
+      // team names
       teams: [],
+
+      // Counter to display each detail on current page
       counter: 0,
       team_id: "",
       opponent_id: "",
@@ -243,6 +251,13 @@ export default {
       showScoring: "",
       current_player_id: "",
       current_player: "",
+      // Keep track of each players Stat
+      current_goal_scored: 0,
+      current_goals_conceded: 0,
+      assists_provided: 0,
+      minutes_played: 0,
+      yellow_cards: 0,
+      red_cards: 0,
     };
   },
   async mounted() {
@@ -256,14 +271,47 @@ export default {
   },
 
   methods: {
-    edit_2: function (e) {
+    // Function to save data after edit
+    save_data: function () {
+      let updated_stats = {
+        player_id: this.current_player_id,
+        gameweek_id: this.current_gameweek,
+        goals_conceded: this.current_goals_conceded,
+        goals_scored: this.current_goal_scored,
+        assists_provided: this.assists_provided,
+        minutes_played: this.minutes_played,
+        yellow_cards: this.yellow_cards,
+        red_cards: this.red_cards,
+      };
+
+      axios
+        .post(`${path}/event/matches/${this.current_gameweek}`, {
+          updated_stats,
+        })
+        .then(() => {
+          this.get_player_event();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // Method for setting up score form for clicks
+    get_scoring_system: function (e) {
+      // Hide all other forms if showing
+      let all_scoring_forms = document.querySelectorAll(
+        ".scoring-form-container"
+      );
+      all_scoring_forms.forEach((scoring_form) => {
+        scoring_form.classList.remove("show");
+        scoring_form.classList.add("hide");
+      });
       let target_elem_main;
       if (e.target.classList.contains("player-container")) {
         target_elem_main = e.target;
       } else {
         target_elem_main = e.target.parentElement;
       }
-      this.current_player_id = target_elem_main.getAttribute("id");
+      this.current_player_id = parseInt(target_elem_main.getAttribute("id"));
       target_elem_main = target_elem_main.nextSibling;
       target_elem_main.classList.toggle("hide");
       target_elem_main.classList.toggle("show");
@@ -275,6 +323,7 @@ export default {
     },
     // Method to get all matches
     get_all_matches: function () {
+      // Get Matches by ID
       axios
         .get(`${path}/schedule/${this.current_gameweek}`)
         .then((response) => {
@@ -286,7 +335,7 @@ export default {
           this.get_players(this.opponent_id, "");
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err, "Errrrrrr");
         });
     },
     // Method to get team names
@@ -299,24 +348,6 @@ export default {
         "Chemical",
         "Biomedical",
       ];
-    },
-    edit: function (e) {
-      let target_elem_main;
-      if (e.target.classList.contains("player-container")) {
-        target_elem_main = e.target;
-      } else {
-        target_elem_main = e.target.parentElement;
-      }
-      console.log(target_elem_main.getAttribute("id"));
-      this.showScoring = true;
-    },
-    save_data: function () {
-      this.showScoring = false;
-    },
-    set_id: function () {
-      this.team_id = this.current_match.team;
-      this.opponent_id = this.current_match.opponent;
-      console.log(this.team_id);
     },
 
     // Method to get players
@@ -331,15 +362,26 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err, "Errrr");
         });
     },
-
     // Method to get player event info
     get_player_event: function () {
-      console.log("Data for " + this.current_player_id);
-      this.current_player = ["2", "2", "1", "75", "1", "0"];
-      console.log(this.current_player);
+      axios
+        .get(`${path}/event/player/${this.current_player_id}`)
+        .then((response) => {
+          let data = response.data[0];
+          this.current_player = data;
+          this.current_goal_scored = data.goals_scored;
+          this.current_goals_conceded = data.goals_conceded;
+          this.assists_provided = data.assists_provided;
+          this.minutes_played = data.minutes_played;
+          this.yellow_cards = data.yellow_cards;
+          this.red_cards = data.red_cards;
+        })
+        .catch((err) => {
+          console.log(err, "Errrrrrrr");
+        });
     },
 
     // Function to get next page
@@ -356,6 +398,7 @@ export default {
         this.set_id();
         this.get_players(this.team_id, "team");
         this.get_players(this.opponent_id, "");
+        this.get_player_event();
       }
     },
     // Function to get prev page
@@ -371,6 +414,7 @@ export default {
         this.set_id();
         this.get_players(this.team_id, "team");
         this.get_players(this.opponent_id, "");
+        this.get_player_event();
       }
     },
   },
@@ -386,8 +430,9 @@ export default {
   display: flex !important;
 }
 .unclickable {
-  color: red !important;
+  color: gray !important;
   cursor: auto;
+  opacity: 0.55;
 }
 /* Dynamic Class */
 .sub-body {
@@ -442,14 +487,14 @@ export default {
   width: 50%;
   display: flex;
   flex-direction: column;
-  padding: 0 0 0 5%;
+  padding: 0 0 0 1%;
 }
 .opponent-main-container {
   width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 5% 0 0;
+  padding: 0 1% 0 0;
   margin-left: 0.5%;
 }
 .player-info {
@@ -483,24 +528,37 @@ export default {
   /* background-color: red; */
   display: flex;
   padding: 2%;
+  /* background-color: #9c27b0; */
 }
 .left-scoring-container {
-  /* background-color: green; */
   margin-right: 5%;
 }
 .right-scoring-container {
-  /* background-color: purple; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin-top: auto;
   margin-bottom: auto;
+}
+.save {
+  width: 65%;
+  margin-left: 35%;
+  margin-top: 15%;
+  background-color: #9c27b0;
+  padding-top: 0.25%;
+  padding-bottom: 0.25%;
+  font-family: "Poppins";
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
+  outline: none !important;
+  border: none !important;
 }
 label {
   font-family: "SourceSans";
   font-weight: 300;
   font-size: 18px;
 }
-label[type="number"] {
-  background-color: red;
-}
+
 .goals-scored-container,
 .goals-conceeded-container,
 .assist-container,
@@ -511,15 +569,15 @@ label[type="number"] {
 }
 .goals-scored-container,
 .goals-conceeded-container,
-.assist-container,
-.minutes-played-container {
+.assist-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-top: 8%;
 }
 .yellow-card-container,
-.red-card-container {
+.red-card-container,
+.minutes-played-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -533,22 +591,12 @@ input {
   padding: 1% 5% 1% 5%;
   font-size: 18px;
 }
-.save {
-  width: 12%;
-  margin-left: 88%;
-  margin-top: 3%;
-  background-color: #9c27b0;
-  padding-top: 0.25%;
-  padding-bottom: 0.25%;
-  font-family: "Poppins";
-  font-size: 22px;
-  color: rgba(255, 255, 255, 0.8);
-  outline: none !important;
-  border: none !important;
+input[type="number"] {
+  width: 50%;
 }
+
 .navigation-container {
   width: 100%;
-  background-color: aqua;
   margin-top: 6%;
   display: flex;
   align-items: center;

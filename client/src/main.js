@@ -18,22 +18,17 @@ import {
   faArrowCircleRight,
   faArrowCircleLeft,
 } from "@fortawesome/free-solid-svg-icons";
-<<<<<<< HEAD
+
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueProgressBar from "vue-progressbar";
-=======
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import VueProgressBar from 'vue-progressbar'
 
 // Custom CSS
 // import "@/assets"
->>>>>>> e4b51b944cd78e0b365b3e50567e2baa9cfb77c7
 
 // Auth Config
 import firebase from "firebase";
 import randomWords from "random-words";
 import FlashMessage from "@smartweb/vue-flash-message";
-
 
 Vue.use(FlashMessage);
 Vue.use(randomWords);
