@@ -25,7 +25,7 @@
               @click="toggleActive($event, i, 'goalkeeper', player.id)"
             >
               <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
-              <!-- <span>GK{{ player.fname }}</span> -->
+              <span class="player-details">GK{{ player.fname }}</span>
             </div>
           </div>
           <!-- DEF -->
@@ -39,7 +39,7 @@
               @click="toggleActive($event, i, 'defender', player.id)"
             >
               <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
-              <!-- <span>DEF{{ player.fname }}</span> -->
+              <span class="player-details">DEF{{ player.fname }}</span>
             </div>
           </div>
           <!-- MID -->
@@ -55,7 +55,7 @@
               @click="toggleActive($event, i, 'midfielder', player.id)"
             >
               <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
-              <!-- <span>MID{{ player.fname }}</span> -->
+              <span class="player-details">MID{{ player.fname }}</span>
             </div>
           </div>
           <!-- ST -->
@@ -69,7 +69,7 @@
               @click="toggleActive($event, i, 'striker', player.id)"
             >
               <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
-              <!-- <span>ST{{ player.fname }}</span> -->
+              <span class="player-details">ST{{ player.fname }}</span>
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@
               :key="i"
             >
               <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
-              <!-- <span>GK{{ player.fname }}</span> -->
+              <span class="player-details">GK{{ player.fname }}</span>
               <span v-if="selected[1] == 'goalkeeper'">
                 <button
                   @click="changePlayer($event, player.id, player.position)"
@@ -97,7 +97,7 @@
             <!-- SUB Players -->
             <div v-for="(player, i) in benchedPlayers" :key="i">
               <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
-              <!-- <span>{{ player.position }}{{ player.fname }}</span> -->
+              <span class="player-details">{{ player.position }}{{ player.fname }}</span>
               <span v-if="selected[1] != 'goalkeeper' && selected[1]">
                 <button
                   @click="changePlayer($event, player.id, player.position)"
@@ -283,59 +283,14 @@ export default {
   border-radius: 10%;
 }
 
-/* .body {
-  margin: 0;
-  min-height: 100vh;
-
-  background-color: #696969;
-  padding: 5%;
+.starting_team div, .substitutes div {
+  position: relative; 
 }
 
-#info {
-  width: 100%;
-  display: flex;
+.player-details {
+    position: absolute;
+    bottom: -10px;
+    left: 37%;
 }
 
-#team_selection img {
-    width: 20%;
-}
-.team {
-  background-color: black;
-  display: grid;
-  color: white;
-
-  grid-template-rows: auto 1fr;
-}
-
-.team > div > div {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.starting_team {
-  display: grid;
-  grid-template-rows: repeat(4, 1fr);
-  grid-row-gap: 64px;
-}
-
-.substitutes {
-  grid-row: -1;
-}
-
-.i {
-  color: white;
-  cursor: pointer;
-
-  font-size: 112px;
-}
-
-.sidebar {
-  background-color: white;
-  display: flex;
-}
-
-.active {
-  background-color: tomato;
-} */
 </style>

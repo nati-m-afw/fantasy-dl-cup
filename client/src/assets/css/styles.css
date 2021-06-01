@@ -58,7 +58,7 @@ nav {
     z-index: 10;
 }
 
-.sticky-nav > a {
+.sticky-nav > * {
     color: unset;
     cursor: pointer;
     display: inline-block;
@@ -81,3 +81,36 @@ a.active {
     color: var(--secondary-color)
 }
 
+.dropdiv {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    background-image: url("../img/user_icon_placeholder.png");
+    background-size: cover;
+  }
+  
+  .dropdown {
+    position: relative;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    top: 100%;
+  }
+  
+  .dropdown-content a {
+    display: block;
+    text-decoration: none;
+    background-color: var(--secondary-color);
+    color: var(--accent-color);
+    padding: 1rem;
+    width: 100px;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
