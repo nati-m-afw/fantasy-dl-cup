@@ -1,11 +1,13 @@
-from main import db, Players, Dept, Users, userPlayers,Match
+from main import db, Players, Dept, Users, userPlayers,Match, Gameweek, Event
 
 def populate():
     userPlayers.query.delete()
+    Event.query.delete()
     Players.query.delete()
     Dept.query.delete()
     Users.query.delete()
     Match.query.delete()
+    Gameweek.query.delete()
 
     dept1 = Dept(id=1,dName='IT')
     dept2 = Dept(id=2,dName='Mech')
@@ -14,26 +16,26 @@ def populate():
     dept5 = Dept(id=5,dName='Chemical')
     dept6 = Dept(id=6,dName='BioMed')
 
-    p1 = Players(fname="Manu", lname="GK", position="goalkeeper", dept_id=1)
-    p2 = Players(fname="Fanny", lname="Gk", position="goalkeeper", dept_id=2)
-    p3 = Players(fname="Lola", lname="DF", position="defender", dept_id=1)
-    p4 = Players(fname="Abe", lname="DF", position="defender", dept_id=2)
-    p5 = Players(fname="Dube", lname="DF", position="defender", dept_id=3)
-    p6 = Players(fname="Ni", lname="MD", position="midfielder", dept_id=1)
-    p7 = Players(fname="Chang", lname="MD", position="midfielder", dept_id=2)
-    p8 = Players(fname="Meh", lname="MD", position="striker", dept_id=3)
-    p9 = Players(fname="Dude", lname="ST", position="striker", dept_id=1)
-    p10 = Players(fname="Sportsguy", lname="ST", position="striker", dept_id=2)
-    p11 = Players(fname="Sportsguys'sBrother", lname="MD", position="midfielder", dept_id=4)
-    p12 = Players(fname="Ranjit", lname="GK", position="goalkeeper", dept_id=4)
-    p13 = Players(fname="Kumal", lname="GK", position="goalkeeper", dept_id=5)
-    p14 = Players(fname="Dud", lname="DF", position="defender", dept_id=4)
-    p15 = Players(fname="Kman", lname="DF", position="defender", dept_id=5)
-    p16 = Players(fname="Malik", lname="DF", position="defender", dept_id=6)
-    p17 = Players(fname="Jman", lname="MD", position="midfielder", dept_id=5)
-    p18 = Players(fname="Q", lname="MD", position="midfielder", dept_id=6)
-    p19 = Players(fname="Pla", lname="ST", position="striker", dept_id=4)
-    p20 = Players(fname="Finally", lname="ST", position="striker", dept_id=5)
+    p1 = Players(id=1,fname="Manu", lname="GK", position="goalkeeper", dept_id=1)
+    p2 = Players(id=2,fname="Fanny", lname="Gk", position="goalkeeper", dept_id=2)
+    p3 = Players(id=3,fname="Lola", lname="DF", position="defender", dept_id=1)
+    p4 = Players(id=4,fname="Abe", lname="DF", position="defender", dept_id=2)
+    p5 = Players(id=5,fname="Dube", lname="DF", position="defender", dept_id=3)
+    p6 = Players(id=6,fname="Ni", lname="MD", position="midfielder", dept_id=1)
+    p7 = Players(id=7,fname="Chang", lname="MD", position="midfielder", dept_id=2)
+    p8 = Players(id=8,fname="Meh", lname="MD", position="striker", dept_id=3)
+    p9 = Players(id=9,fname="Dude", lname="ST", position="striker", dept_id=1)
+    p10 = Players(id=10,fname="Sportsguy", lname="ST", position="striker", dept_id=2)
+    p11 = Players(id=11,fname="Sportsguys'sBrother", lname="MD", position="midfielder", dept_id=4)
+    p12 = Players(id=12,fname="Ranjit", lname="GK", position="goalkeeper", dept_id=4)
+    p13 = Players(id=13,fname="Kumal", lname="GK", position="goalkeeper", dept_id=5)
+    p14 = Players(id=14,fname="Dud", lname="DF", position="defender", dept_id=4)
+    p15 = Players(id=15,fname="Kman", lname="DF", position="defender", dept_id=5)
+    p16 = Players(id=16,fname="Malik", lname="DF", position="defender", dept_id=6)
+    p17 = Players(id=17,fname="Jman", lname="MD", position="midfielder", dept_id=5)
+    p18 = Players(id=18,fname="Q", lname="MD", position="midfielder", dept_id=6)
+    p19 = Players(id=19,fname="Pla", lname="ST", position="striker", dept_id=4)
+    p20 = Players(id=20,fname="Finally", lname="ST", position="striker", dept_id=5)
 
     # u1 = Users(fname="Swift",lname="Books",teamname="satellites")
     # u2 = Users(fname="Dean",lname="Smith",teamname="this_team")
@@ -52,6 +54,14 @@ def populate():
     # up7 = userPlayers(user_id=2,players_id=6, status="active")
     # up8 = userPlayers(user_id=3,players_id=7, status="active")
     # up9 = userPlayers(user_id=3,players_id=8, status="active")
+
+    #Gameweeks
+    gw1 =Gameweek(id=1,status='ALL_UPCOMING')
+    gw2 =Gameweek(id=2,status='ALL_UPCOMING')
+    gw3 =Gameweek(id=3,status='ALL_UPCOMING')
+    gw4 =Gameweek(id=4,status='ALL_UPCOMING')
+    gw5 =Gameweek(id=5,status='ALL_UPCOMING')
+
 
 
 

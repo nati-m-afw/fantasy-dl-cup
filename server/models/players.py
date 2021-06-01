@@ -10,9 +10,10 @@ class Players(db.Model):
     # price = db.Column(db.Decimal(5,5), nullable=False)
     dept_id = db.Column(db.Integer, db.ForeignKey('dept.id'), nullable=False)
     userPlayers = db.relationship('userPlayers', backref = 'user_player', lazy=True)
+    event = db.relationship('Event', backref='player_event', lazy=True)
     
-    
-    def __init__(self, fname, lname, position, dept_id):
+    def __init__(self,id, fname, lname, position, dept_id):
+        self.id = id
         self.fname = fname
         self.lname = lname
         self.position = position

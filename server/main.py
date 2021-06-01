@@ -39,7 +39,8 @@ from models.players import Players
 from models.user_players import userPlayers
 from models.users import Users
 from models.matches import Match
-
+from models.gameweek import Gameweek
+from models.event import Event
 # Create Tables 
 db.create_all()
 
