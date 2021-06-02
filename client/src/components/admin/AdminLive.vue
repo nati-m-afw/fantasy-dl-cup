@@ -1,8 +1,14 @@
 <template>
   <div class="sub-body">
+    <FlashMessage :position="'top'"></FlashMessage>
     <h1 class="header-title">Gameweek {{ current_gameweek }}</h1>
     <div class="main-container">
-      <div class="main-info" v-if="all_matches">
+      <div
+        class="main-info"
+        v-if="all_matches"
+        v-bind:team_id="current_match.team"
+        v-bind:opponent_id="current_match.opponent"
+      >
         {{ teams[current_match.team - 1] }} vs
         {{ teams[current_match.opponent - 1] }}
       </div>
@@ -271,6 +277,11 @@ export default {
   },
 
   methods: {
+    set_id: function () {
+      let main_info = document.querySelectorAll(".main-info")[0];
+      this.team_id = main_info.getAttribute("team_id");
+      this.opponent_id = main_info.getAttribute("opponent_id");
+    },
     // Function to save data after edit
     save_data: function () {
       let updated_stats = {
@@ -290,6 +301,9 @@ export default {
         })
         .then(() => {
           this.get_player_event();
+          this.flashMessage.success({
+            message: "Information Updated Successfully",
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -335,7 +349,7 @@ export default {
           this.get_players(this.opponent_id, "");
         })
         .catch((err) => {
-          console.log(err, "Errrrrrr");
+          console.log(err);
         });
     },
     // Method to get team names
@@ -362,7 +376,7 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err, "Errrr");
+          console.log(err);
         });
     },
     // Method to get player event info
@@ -380,7 +394,7 @@ export default {
           this.red_cards = data.red_cards;
         })
         .catch((err) => {
-          console.log(err, "Errrrrrrr");
+          console.log(err);
         });
     },
 

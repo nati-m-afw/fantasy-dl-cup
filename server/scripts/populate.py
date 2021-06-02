@@ -86,9 +86,9 @@ def populate():
 
 
      # GW1
-    m1 =Match(id=1,team=1,opponent=2,game_week=1,time="16:00",date="2021-23-03",state=0,score="")
-    m2 =Match(id=2,team=3,opponent=4,game_week=1,time="16:00",date="2021-23-03",state=0,score="")
-    m3 =Match(id=3,team=5,opponent=6,game_week=1,time="16:00",date="2021-23-03",state=0,score="")
+    m1 =Match(id=1,team=1,opponent=2,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
+    m2 =Match(id=2,team=3,opponent=4,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
+    m3 =Match(id=3,team=5,opponent=6,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
     
      # GW2
     m4 =Match(id=4,team=6,opponent=1,game_week=2,time="16:00",date="2021-04-04",state=0,score="")
