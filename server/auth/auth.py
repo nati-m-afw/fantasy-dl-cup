@@ -51,7 +51,8 @@ def get_user_id(firebase_id):
     if(user):
         response_object = {
             "code": "Success",
-            "id": user.id
+            "id": user.id,
+            "team_name": user.teamname
         }
         return json.dumps(response_object)
     response_object = {"code":"Error"}

@@ -11,26 +11,31 @@ export default new Vuex.Store({
       midfielder: [null, null, null],
       striker: [null, null],
     },
-    myTeamName: 'Replace With Actual Team Name',
+    myTeamName: localStorage.getItem('team-name') || '',
     userId: localStorage.getItem('user-id') || null,
-    isAuthenticated: localStorage.getItem('user-id') ? true : false,
   },
+  
+  getters: {
+    isAuthenticated(state) {
+        return state.userId && state.userId != "undefined" ? true : false;
+      }
+  },
+
   mutations: {
     updateMyTeam(state, myTeamUpdate) {
       state.myTeam = myTeamUpdate;
       console.log("Store--> MyTeam Updated Successfully!");
     },
 
-    updateMyTeamName(state, newTeamName) {
-      state.myTeam = newTeamName;
+    setMyTeamName(state, newTeamName) {
+      localStorage.setItem("team-name", newTeamName);
       console.log("Store--> Team Name Updated Successfully!");
     },
 
     // Updater for User ID (AUTH)
-    setCurrentUserID(state) {
+    setCurrentUserID(state, userId) {
       // update state
-      state.userId = localStorage.getItem('user-id') || null;
-      state.isAuthenticated = localStorage.getItem('user-id') ? true : false;
+      localStorage.setItem("user-id", userId);
       console.log("Store--> User ID Updated Successfully!");
     },
   },

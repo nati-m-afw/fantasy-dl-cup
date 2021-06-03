@@ -4,6 +4,7 @@ import store from "../store/index.js";
 import PickTeam from "../views/PickTeam.vue";
 import Registration from "../views/Registration.vue";
 import MyTeam from "../views/MyTeam.vue";
+import Points from "../views/Points.vue";
 
 // Imports for Auth
 import Login from "../views/Login.vue";
@@ -14,7 +15,7 @@ import Reset from "../views/Reset.vue";
 // If authenticated continue / Else goto login
 const ifAuthenticated = (to, from, next) => {
   // next()
-  if (store.state.isAuthenticated)
+  if (store.getters.isAuthenticated)
     next()
   else
     next("/")
@@ -24,7 +25,7 @@ const ifAuthenticated = (to, from, next) => {
 // For Login % Register route
 const ifNotAuthenticated = (to, from, next) => {
   // next()
-  if (!store.state.isAuthenticated)
+  if (!store.getters.isAuthenticated)
     next()
   else
     next("/myteam")
@@ -51,6 +52,13 @@ const routes = [
     name: "MyTeam",
     component: MyTeam,
     meta: { title: "Manage your team" },
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: "/points",
+    name: "Points",
+    component: Points,
+    meta: { title: "Points" },
     beforeEnter: ifAuthenticated,
   },
 
@@ -89,7 +97,7 @@ const router = new VueRouter({
 
 
 // Add page title
-router.afterEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
   document.title = to.meta.title
     ? to.meta.title + " - " + "Fantasy DL"
     : "Fantasy DL";

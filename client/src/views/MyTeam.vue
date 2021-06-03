@@ -5,7 +5,7 @@
     </nav>
     <navigation :activePage="'MyTeam'" />
     <div id="info">
-      <button @click="logout">LOGOUT</button>
+      {{ myTeamName }}
     </div>
     <!-- <pre>{{ $data }}</pre> -->
     <alert :msg="msg" v-if="showMsg" />
@@ -130,6 +130,8 @@ export default {
         striker: [],
       },
 
+      myTeamName: '',
+
       // Player being replaced in myTeam.<position>
       selectedPlayerIndex: null,
 
@@ -177,7 +179,10 @@ export default {
 
     // Change player status
     changePlayer(e, playerId, playerPos) {
-      if (this.selected[1] == 'striker' && this.myTeam.striker.filter( player => player.status == 'active' ).length == 1){
+      // Check if selected(sub out) player is striker
+      // Check if selected(sub out) player is the last striker
+      // Show error if selected(sub out) player is not a striker
+      if (this.selected[1] == 'striker' && this.myTeam.striker.filter( player => player.status == 'active' ).length == 1 && playerPos != 'striker'){
         this.msg = "Minimum of one striker required!";
         this.showMsg = true;
         return;
@@ -244,10 +249,11 @@ export default {
       localStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");
-    }
+    },
   },
 
   created() {
+    this.myTeamName = this.$store.state.myTeamName;
     this.getTeam();
   },
 };
@@ -296,6 +302,14 @@ export default {
     position: absolute;
     bottom: -10px;
     left: 37%;
+}
+
+#info{
+  display: inline-flex;
+  font-size: 3rem;
+  font-weight: bold;
+  background-color: cadetblue;
+  margin: 0 6rem;
 }
 
 </style>

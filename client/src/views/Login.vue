@@ -368,13 +368,14 @@ export default {
         .post(`${path}/getUserID/${this.firebase_id}`)
         .then(async (response) => {
           this.user_id = await response.data.id;
+          this.team_name = await response.data.team_name
 
           // Add User ID to local storage or cookies
-          localStorage.setItem("user-id", this.user_id);
-
           // Update store state
-          if (this.user_id)
-            this.$store.commit("setCurrentUserID");
+          if (this.user_id){
+            this.$store.commit("setCurrentUserID", this.user_id);
+            this.$store.commit("setMyTeamName", this.team_name);
+          }
 
           // Redirect to myTeam
           // console.log(this.$store.state.userId);
