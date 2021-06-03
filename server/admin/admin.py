@@ -1,13 +1,16 @@
 # Importing
-from flask import Blueprint, request, jsonify,json
+from flask import Blueprint, request,json
+from flask_restful import Resource, Api
 from models.matches import Match
 from models.players import Players
 from models.event import Event
+from models.department import Dept
 from flask_cors import cross_origin
 from main import db
 
 #Creating Blueprint for Admin
 admin_app = Blueprint("admin",__name__)
+admin = Api(admin_app)
 
 
 # ####################
@@ -105,5 +108,56 @@ def update_match_stats(gameweek_id):
     
 
     
+    
+# # End point to get all teams from dept table
+@admin_app.route("/teams")
+def get_all_teams():
+    all_teams = Dept.query.all()
+    all_teams =  list(map(lambda p: p.serialize(), all_teams))
+    return json.dumps(all_teams)
+    # return "Here"
+    
+# End point to update player info
+@admin_app.route("/player/update",methods=["POST"])
+def update_player():
+    if request.method == "POST":
+        response_data = request.get_json()['updated_player_data']
+        current_player = Players.query.filter_by(id=response_data['id']).all()
+        current_player[0].fname = response_data['fname']
+        current_player[0].lname = response_data['lname']
+        current_player[0].position = response_data['position']
+        db.session.commit()
+        current_player =  list(map(lambda p: p.serialize(), current_player))
+        print(current_player)
+        return "Done"
+    
+#end point to add new Player
+#end point to add new Player
+class AddNewPlayer(Resource):
+    def post(self):
+        response_data = request.get_json()['new_player']
+        check_player = Players.query.filter_by(fname=response_data['fname'],lname=response_data['lname']).first()
+        # If Duplicate Data
+        if(check_player):
+            return {"message":"Player '{} {}' Exsists".format(check_player.fname,check_player.lname)} , 209
+        
+      
+        new_player = Players(fname=response_data['fname'],lname=response_data['lname'],position=response_data['position'],dept_id=response_data['team'])
+        db.session.add(new_player)
+        db.session.commit()
+       
+        return {"message":"Player '{} {}' added Successfully".format(new_player.fname,new_player.lname)}
+     
+class RemovePlayer(Resource):
+    def delete(self,id):
+        Players.query.filter_by(id=id).delete()
+        db.session.commit()
+        
+        print("Invoked for",id)  
+        return {"message":"Player Successfully Deleted"} , 204
+        
+        
+admin.add_resource(AddNewPlayer,"/player/new")
+admin.add_resource(RemovePlayer,"/player/delete/<id>")
     
     

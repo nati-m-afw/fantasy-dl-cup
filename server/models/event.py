@@ -12,8 +12,8 @@ class Event(db.Model):
     red_cards = db.Column(db.Integer,nullable=False)
     
     
-    def __init__(self,id , players_id,match_id,gameweek_id,goals_scored,goals_conceded,assists_provided,minutes_played,yellow_cards,red_cards, ):
-        self.id = id,
+    def __init__(self , players_id,match_id,gameweek_id,goals_scored,goals_conceded,assists_provided,minutes_played,yellow_cards,red_cards, ):
+        
         self.players_id=players_id,
         self.match_id=match_id,
         self.gameweek_id=gameweek_id,

@@ -12,8 +12,8 @@ class Players(db.Model):
     userPlayers = db.relationship('userPlayers', backref = 'user_player', lazy=True)
     event = db.relationship('Event', backref='player_event', lazy=True)
     
-    def __init__(self,id, fname, lname, position, dept_id):
-        self.id = id
+    def __init__(self, fname, lname, position, dept_id):
+        
         self.fname = fname
         self.lname = lname
         self.position = position

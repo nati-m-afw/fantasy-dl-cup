@@ -17,6 +17,9 @@ import {
   faEdit,
   faArrowCircleRight,
   faArrowCircleLeft,
+  faPlus,
+  faTrashAlt,
+  faSave,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -63,6 +66,9 @@ library.add(faPlayCircle);
 library.add(faEdit);
 library.add(faArrowCircleRight);
 library.add(faArrowCircleLeft);
+library.add(faPlus);
+library.add(faTrashAlt);
+library.add(faSave);
 
 Vue.component("fa", FontAwesomeIcon);
 
