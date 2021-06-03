@@ -2,16 +2,28 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faUser,
   faUnlock,
   faUsers,
   faEnvelope,
   faExchangeAlt,
+  faClock,
+  faSync,
+  faBuilding,
+  faSignOutAlt,
+  faPlayCircle,
+  faEdit,
+  faArrowCircleRight,
+  faArrowCircleLeft,
+  faPlus,
+  faTrashAlt,
+  faSave,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import VueProgressBar from 'vue-progressbar'
+
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import VueProgressBar from "vue-progressbar";
 
 // Custom CSS
 // import "@/assets"
@@ -20,7 +32,6 @@ import VueProgressBar from 'vue-progressbar'
 import firebase from "firebase";
 import randomWords from "random-words";
 import FlashMessage from "@smartweb/vue-flash-message";
-
 
 Vue.use(FlashMessage);
 Vue.use(randomWords);
@@ -39,8 +50,6 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
-
-
 Vue.config.productionTip = false;
 
 // Add Font Awesome Icons
@@ -49,20 +58,31 @@ library.add(faUnlock);
 library.add(faUsers);
 library.add(faEnvelope);
 library.add(faExchangeAlt);
+library.add(faClock);
+library.add(faSync);
+library.add(faBuilding);
+library.add(faSignOutAlt);
+library.add(faPlayCircle);
+library.add(faEdit);
+library.add(faArrowCircleRight);
+library.add(faArrowCircleLeft);
+library.add(faPlus);
+library.add(faTrashAlt);
+library.add(faSave);
 
 Vue.component("fa", FontAwesomeIcon);
 
 const progressBarOptions = {
-  color: 'rgb(255, 0, 140)',
-  failedColor: 'grey',
-  thickness: '7px',
+  color: "rgb(255, 0, 140)",
+  failedColor: "grey",
+  thickness: "7px",
   transition: {
-    speed: '0.5s',
-    opacity: '0.1s',
-    termination: 1000
+    speed: "0.5s",
+    opacity: "0.1s",
+    termination: 1000,
   },
   autoRevert: true,
-  location: 'top',
+  location: "top",
   inverse: false,
   autoFinish: true,
 };

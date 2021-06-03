@@ -14,7 +14,8 @@ class Match(db.Model):
 
     
     
-    def __init__(self, team,opponent,game_week,time,date,state,score):
+    def __init__(self,team,opponent,game_week,time,date,state,score):
+        
         self.team= team
         self.opponent = opponent
         self.game_week = game_week

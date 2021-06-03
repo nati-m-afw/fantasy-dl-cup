@@ -11,6 +11,8 @@ import Login from "../views/Login.vue";
 import RegisterUser from "../views/RegisterUser.vue";
 import Reset from "../views/Reset.vue";
 
+// Imports for Admin
+import AdminMain from "../views/AdminMain.vue";
 
 // If authenticated continue / Else goto login
 const ifAuthenticated = (to, from, next) => {
@@ -85,6 +87,14 @@ const routes = [
     meta: { title: "Reset" },
     // add nav guard
   },
+
+  // Route for Admin
+  {
+    path: "/admin",
+    name: "Admin Dash",
+    component: AdminMain,
+    meta: { title: "Admin Dashboard" },
+  },
 ];
 
 Vue.use(VueRouter);
@@ -94,7 +104,6 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-
 
 // Add page title
 router.beforeEach((to, from, next) => {
