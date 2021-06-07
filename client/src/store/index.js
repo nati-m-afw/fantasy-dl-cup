@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
+// import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -14,7 +14,7 @@ export default new Vuex.Store({
     },
     myTeamName: localStorage.getItem('team-name') || '',
     userId: localStorage.getItem('user-id') || null,
-    activeGameweek: 0,
+    // activeGameweek: 0,
   },
 
   getters: {
@@ -47,17 +47,18 @@ export default new Vuex.Store({
       console.log("Store--> User ID Updated Successfully!");
     },
 
-    setActiveGameweek(state, gameweek) {
-      state.gameweek = gameweek;
-      console.log("Store--> Active Gameweek Updated Successfully");
-    }
+    // setActiveGameweek(state, gameweek) {
+    //   console.log(1);
+    //   state.activeGameweek = gameweek;
+    //   console.log("Store--> Active Gameweek Updated Successfully");
+    // }
   },
   actions: {
-    getActiveGameweek(context) {
-      axios.get("http://localhost:5000/getactivegw")
-        .then(res => context.commit("setActiveGameweek", res.activeGW))
-        .catch(err => console.error(err));
-    }
+    // getActiveGameweek(context) {
+    //   axios.get("http://localhost:5000/getactivegw")
+    //     .then(res => context.commit("setActiveGameweek", res.data.activeGW))
+    //     .catch(err => console.error(err));
+    // }
   },
   modules: {},
 });

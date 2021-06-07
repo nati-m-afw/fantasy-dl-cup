@@ -134,7 +134,7 @@ export default {
 
       myTeamName: '',
 
-      activeGameweek: this.$store.state.activeGameweek + 1,
+      activeGameweek: '',
       // Player being replaced in myTeam.<position>
       selectedPlayerIndex: null,
 
@@ -161,6 +161,16 @@ export default {
   },
 
   methods: {
+    getActiveGameweek() {
+      axios.get("http://localhost:5000/getactivegw")
+        .then(res => {
+          // Team Selection for the coming Gameweek
+          this.activeGameweek = res.data.activeGW + 1;
+          this.getTeam();
+        })
+        .catch(err => console.error(err));
+    },
+
     // Get user Team API
     getTeam() {
       let userId = this.$store.state.userId;
@@ -215,7 +225,7 @@ export default {
       const payload = {
         userId: this.$store.state.userId,
         team: [],
-        gameweekId: this.$store.state.activeGameweek + 1,
+        gameweekId: this.activeGameweek,
       };
 
       console.log(this.$store.state.userId);
@@ -257,7 +267,7 @@ export default {
 
   created() {
     this.myTeamName = this.$store.state.myTeamName;
-    this.getTeam();
+    this.getActiveGameweek();
   },
 };
 </script>

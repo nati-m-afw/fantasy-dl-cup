@@ -375,7 +375,7 @@ export default {
             // Update store state
             this.$store.commit("setCurrentUserID", this.user_id);
             this.$store.commit("setMyTeamName", this.team_name);
-            this.$store.dispatch("getActiveGameweek");
+            // this.$store.dispatch("getActiveGameweek");
           }
 
           // Redirect to myTeam

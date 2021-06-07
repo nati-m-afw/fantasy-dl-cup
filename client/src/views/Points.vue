@@ -138,7 +138,7 @@ export default {
 
       myTeamName: "",
 
-      activeGameweek: this.$store.state.activeGameweek,
+      activeGameweek: "",
 
       alertMsg: "",
 
@@ -160,6 +160,15 @@ export default {
   },
 
   methods: {
+    getActiveGameweek() {
+      axios.get("http://localhost:5000/getactivegw")
+        .then(res => {
+          this.activeGameweek = res.data.activeGW;
+          this.getTeam();
+        })
+        .catch(err => console.error(err));
+    },
+
     getTeam() {
       let userId = this.$store.state.userId;
 
@@ -173,7 +182,7 @@ export default {
             this.showMsg = true;
           }
           else if(res.data.team == false){
-            this.alertMsg = '500 Server Error';
+            this.alertMsg = 'No team for current GW in DB';
             this.showMsg = true;
           };
           for (const player of res.data.team) {
@@ -187,7 +196,7 @@ export default {
 
   created() {
     this.myTeamName = this.$store.state.myTeamName;
-    this.getTeam();
+    this.getActiveGameweek();
   },
 };
 </script>
