@@ -14,7 +14,7 @@
     <router-link to="" :class="this.activePage == 'myTeam' ? 'active' : ''"
       >League</router-link
     >
-    <router-link to="" :class="this.activePage == 'myTeam' ? active : ''"
+    <router-link to="" :class="this.activePage == 'myTeam' ? 'active' : ''"
       >Table</router-link
     >
     <router-link to="" :class="this.activePage == 'myTeam' ? 'active' : ''"

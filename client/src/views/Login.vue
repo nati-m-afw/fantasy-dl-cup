@@ -370,15 +370,15 @@ export default {
           this.user_id = await response.data.id;
           this.team_name = await response.data.team_name
 
-          // Add User ID to local storage or cookies
-          // Update store state
+          // Check if valid user_id returned
           if (this.user_id){
+            // Update store state
             this.$store.commit("setCurrentUserID", this.user_id);
             this.$store.commit("setMyTeamName", this.team_name);
+            this.$store.dispatch("getActiveGameweek");
           }
 
           // Redirect to myTeam
-          // console.log(this.$store.state.userId);
           this.$router.push("/myteam");
         })
         .catch((err) => {

@@ -27,7 +27,7 @@ export default {
     const payload = {
       userId: this.$store.state.userId,
       team: [],
-      gameweekId: 1,
+      gameweekId: this.$store.state.activeGameweek + 1,
     };
 
     // push player id into payload
@@ -53,7 +53,7 @@ export default {
       }
     }
 
-    // Send myTeam to api
+    // Send myTeam to API
     axios
       .post("http://localhost:5000/updateuserplayers", payload)
       .then(() => {

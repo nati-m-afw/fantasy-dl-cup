@@ -84,7 +84,7 @@ def populate():
     # up9 = userPlayers(user_id=3,players_id=8, status="active")
 
     #Gameweeks
-    gw1 =Gameweek(status='ALL_UPCOMING')
+    gw1 =Gameweek(status='ACTIVE')
     gw2 =Gameweek(status='ALL_UPCOMING')
     gw3 =Gameweek(status='ALL_UPCOMING')
     gw4 =Gameweek(status='ALL_UPCOMING')

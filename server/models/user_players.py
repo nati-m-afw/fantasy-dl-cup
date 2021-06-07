@@ -5,7 +5,7 @@ class userPlayers(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=False)
-    # gameweek_id = db.Column(db.Integer, db.ForeignKey('gameweek.id'), nullable=False)
+    gameweek_id = db.Column(db.Integer, db.ForeignKey('gameweek.id'), nullable=False)
     status = db.Column(db.String, nullable=False)
 
     def __repr__(self):

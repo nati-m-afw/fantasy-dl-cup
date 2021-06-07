@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -13,12 +14,17 @@ export default new Vuex.Store({
     },
     myTeamName: localStorage.getItem('team-name') || '',
     userId: localStorage.getItem('user-id') || null,
+    activeGameweek: 0,
   },
-  
+
   getters: {
     isAuthenticated(state) {
-        return state.userId && state.userId != "undefined" ? true : false;
-      }
+      return state.userId && state.userId != "undefined" ? true : false;
+    },
+
+    myTeamName(state){
+      return state.myTeamName;
+    },
   },
 
   mutations: {
@@ -29,6 +35,7 @@ export default new Vuex.Store({
 
     setMyTeamName(state, newTeamName) {
       localStorage.setItem("team-name", newTeamName);
+      state.myTeamName = localStorage.getItem('team-name') || '';
       console.log("Store--> Team Name Updated Successfully!");
     },
 
@@ -36,9 +43,21 @@ export default new Vuex.Store({
     setCurrentUserID(state, userId) {
       // update state
       localStorage.setItem("user-id", userId);
+      state.userId = localStorage.getItem('user-id') || null,
       console.log("Store--> User ID Updated Successfully!");
     },
+
+    setActiveGameweek(state, gameweek) {
+      state.gameweek = gameweek;
+      console.log("Store--> Active Gameweek Updated Successfully");
+    }
   },
-  actions: {},
+  actions: {
+    getActiveGameweek(context) {
+      axios.get("http://localhost:5000/getactivegw")
+        .then(res => context.commit("setActiveGameweek", res.activeGW))
+        .catch(err => console.error(err));
+    }
+  },
   modules: {},
 });

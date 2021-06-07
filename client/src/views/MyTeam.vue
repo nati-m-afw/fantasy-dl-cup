@@ -6,6 +6,7 @@
     <navigation :activePage="'MyTeam'" />
     <div id="info">
       {{ myTeamName }}
+      |GW-> {{ activeGameweek }}
     </div>
     <!-- <pre>{{ $data }}</pre> -->
     <alert :msg="msg" v-if="showMsg" />
@@ -110,6 +111,7 @@
         </div>
       </div>
       <div class="sidebar"></div>
+      <br>
       <button @click="updateTeamApi">SAVE</button>
     </div>
   </div>
@@ -132,6 +134,7 @@ export default {
 
       myTeamName: '',
 
+      activeGameweek: this.$store.state.activeGameweek + 1,
       // Player being replaced in myTeam.<position>
       selectedPlayerIndex: null,
 
@@ -158,12 +161,12 @@ export default {
   },
 
   methods: {
-    // Get user Team
+    // Get user Team API
     getTeam() {
       let userId = this.$store.state.userId;
 
       axios
-        .get("http://localhost:5000/getteam/" + userId)
+        .get("http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek)
         .then((res) => {
           
           // Check if user has picked team
@@ -212,7 +215,7 @@ export default {
       const payload = {
         userId: this.$store.state.userId,
         team: [],
-        gameweekId: 1,
+        gameweekId: this.$store.state.activeGameweek + 1,
       };
 
       console.log(this.$store.state.userId);
@@ -259,7 +262,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 * {
   box-sizing: border-box;
 } 
@@ -306,10 +309,11 @@ export default {
 
 #info{
   display: inline-flex;
-  font-size: 3rem;
+  font-size: 1.7rem;
   font-weight: bold;
   background-color: cadetblue;
   margin: 0 6rem;
+  padding: 0.7rem;
 }
 
 </style>

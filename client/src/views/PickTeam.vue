@@ -152,7 +152,7 @@ export default {
   },
 
   methods: {
-    // Get players from api
+    // Get players from API
     getPlayers(e, selectedPlayerIndex) {
       const position = e.path[3].className;
       // console.log(e.path);

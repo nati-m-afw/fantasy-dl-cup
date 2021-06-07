@@ -4,6 +4,7 @@ from models.players import Players
 from models.users import Users
 from models.user_players import userPlayers
 from models.department import Dept
+from models.gameweek import Gameweek
 from flask_cors import cross_origin
 from main import db
 
@@ -60,11 +61,11 @@ def update_team():
         requestBody = request.get_json()
         
         # Delete old team
-        db.session.query(userPlayers).filter(userPlayers.user_id == requestBody['userId']).delete()
-        
+        db.session.query(userPlayers).filter(userPlayers.user_id == requestBody['userId'], userPlayers.gameweek_id == requestBody['gameweekId']).delete()
+        # print(a)
         for player in requestBody['team']:
             ### Add GAMEWEEK column
-            up = userPlayers(user_id=requestBody['userId'], players_id=player['playerId'], status=player['status'])
+            up = userPlayers(user_id=requestBody['userId'], players_id=player['playerId'], gameweek_id=requestBody['gameweekId'], status=player['status'])
             db.session.add(up)
         db.session.commit()
         return "201"
@@ -72,18 +73,35 @@ def update_team():
 
 # Get users team
 ### Add GAMEWEEK parameter
-@api_app.route('/getteam/<userId>')
-def get_team(userId):
+@api_app.route('/getteam/<userId>/<gameweekId>')
+def get_team(userId, gameweekId):
     response = { 'status': 'success' }
 
-    team = (db.session.query(userPlayers, Players, Users, Dept).with_entities(Players, userPlayers.status, Dept.dName)
+    team = (db.session.query(userPlayers, Players, Users, Dept, Gameweek).with_entities(Players, userPlayers.status, Dept.dName)
     .join(Users)
     # .join(userPlayers)
     .join(Players)
     .join(Dept)
-    .filter(Users.id==userId)).all()
+    .join(Gameweek)
+    .filter(Users.id==userId, Gameweek.id==gameweekId)).all()
     
     response['team'] = list(map(lambda p: addStatusToResponse(p[0].serialize(), p[1], p[2]), team))
+    response['gameweekId'] = gameweekId
+    return response
+
+
+# Get Acitve Gameweek
+@api_app.route('/getactivegw')
+def get_active_gameweek():
+    response = { 'status': 'success' }
+
+    gw = Gameweek.query.filter_by(status='ACTIVE').first()
+
+    if gw is None:
+        response['activeGW'] = 0
+    else:
+        response['activeGW'] = gw.id
+
     return response
 
 # Helper Function
