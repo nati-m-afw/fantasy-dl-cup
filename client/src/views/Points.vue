@@ -178,7 +178,7 @@ export default {
         )
         .then((res) => {
           if(res.data.team == false && this.activeGameweek == 0){
-            this.alertMsg = 'Season has not started!';
+            this.alertMsg = 'Gameweek has not started!';
             this.showMsg = true;
           }
           else if(res.data.team == false){

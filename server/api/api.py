@@ -63,10 +63,11 @@ def update_team():
         # Delete old team
         db.session.query(userPlayers).filter(userPlayers.user_id == requestBody['userId'], userPlayers.gameweek_id == requestBody['gameweekId']).delete()
         # print(a)
-        for player in requestBody['team']:
-            ### Add GAMEWEEK column
-            up = userPlayers(user_id=requestBody['userId'], players_id=player['playerId'], gameweek_id=requestBody['gameweekId'], status=player['status'])
-            db.session.add(up)
+        for gameweek in range(requestBody['gameweekId'], 6):
+            for player in requestBody['team']:
+                ### Add GAMEWEEK column
+                up = userPlayers(user_id=requestBody['userId'], players_id=player['playerId'], gameweek_id=gameweek, status=player['status'])
+                db.session.add(up)
         db.session.commit()
         return "201"
 
