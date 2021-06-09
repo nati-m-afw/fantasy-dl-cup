@@ -2,7 +2,7 @@
   <div class="sticky-nav">
     <router-link to="/myteam" :class="activePage == 'MyTeam' ? 'active' : ''">My team</router-link>
     <router-link to="/points" :class="activePage == 'Points' ? 'active' : ''">Points</router-link>
-    <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''">Transfers</router-link>
+    <router-link to="/transfers" :class="activePage == 'Transfers' ? 'active' : ''">Transfers</router-link>
     <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''">League</router-link>
     <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''">Table</router-link>
     <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''">Fixtures</router-link>

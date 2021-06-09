@@ -5,6 +5,7 @@ import PickTeam from "../views/PickTeam.vue";
 import Registration from "../views/Registration.vue";
 import MyTeam from "../views/MyTeam.vue";
 import Points from "../views/Points.vue";
+import Transfers from "../views/Transfers.vue";
 
 // Imports for Auth
 import Login from "../views/Login.vue";
@@ -61,6 +62,13 @@ const routes = [
     name: "Points",
     component: Points,
     meta: { title: "Points" },
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: "/transfers",
+    name: "Transfers",
+    component: Transfers,
+    meta: { title: "Trading Block" },
     beforeEnter: ifAuthenticated,
   },
 

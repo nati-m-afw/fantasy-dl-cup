@@ -15,21 +15,26 @@ api_app = Blueprint("api",__name__)
 # DEMO ARRAY OF PLAYERS LIST
 # PLAYERS = [
 #     {
-#         'name': 'gk',
-#         'price': '3.5',
-#         'position': 'gk'
-#     },
-#     {
-#         'name': 'Bguy',
-#         'price': '4.5',
-#         'position': 'mid'
-    
-#     },
-#     {
-#         'name': 'Bguy',
-#         'price': '4.5',
-#         'position': 'stk'
-#     }
+#      "dept_id": 1, 
+#      "fname": "Manu", 
+#      "id": 1, 
+#      "lname": "GK", 
+#      "position": "goalkeeper"
+#    }, 
+#    {
+#      "dept_id": 2, 
+#      "fname": "Fanny", 
+#      "id": 2, 
+#      "lname": "Gk", 
+#      "position": "goalkeeper"
+#    }, 
+#    {
+#      "dept_id": 4, 
+#      "fname": "Ranjit", 
+#      "id": 12, 
+#      "lname": "GK", 
+#      "position": "goalkeeper"
+#    }
 # ]
 
 
@@ -41,11 +46,18 @@ api_app = Blueprint("api",__name__)
 def getPlayers(pos):
     response = { 'status': 'success'}
    
-    player =  Players.query.filter_by(position = pos).all()
-    response['players'] = list(map(lambda p: p.serialize(), player))
+    player =  db.session.query(Players, Dept.dName).filter_by(position = pos).join(Dept).all()
+    response['players'] = list(map(lambda p: addDNameToResponse(p[0].serialize(), p[1]), player))
    
     return response
     
+
+# Helper Function
+# Add status to player data in get_team response
+def addDNameToResponse(player, department):
+    result = player
+    result.update( {'department': department} )
+    return result
 
 
 # MOCK_DATA = {

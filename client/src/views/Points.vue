@@ -192,6 +192,13 @@ export default {
         })
         .catch((err) => console.error(err));
     },
+
+    // Logout
+    logout(){
+      localStorage.removeItem("user-id");
+      this.$store.commit("setCurrentUserID");
+      this.$router.push("/");
+    },
   },
 
   created() {
