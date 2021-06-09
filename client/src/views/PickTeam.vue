@@ -16,12 +16,13 @@
             @click="toggleActive($event, i, 'gk')"
           >
             <!-- Set selectedPlayerIndex when clicked -->
-            <fa
+            <!-- <fa
               @click="getPlayers($event, i)"
               class="i"
               icon="user"
               size="7x"
-            />
+            /> -->
+            <img @click="getPlayers($event, i)" class="i" :src="require('@/assets/img/jerseys/placeholdershirt.png')" alt="">
             <span>GK</span>
             <!-- Check if any selected players in myTeam -->
             <!-- If so display name -->
@@ -39,12 +40,13 @@
             :class="{ active: selected[0] == i && selected[1] == 'df' }"
             @click="toggleActive($event, i, 'df')"
           >
-            <fa
+            <!-- <fa
               @click="getPlayers($event, i)"
               class="i"
               icon="user"
               size="7x"
-            />
+            /> -->
+            <img @click="getPlayers($event, i)" class="i" :src="require('@/assets/img/jerseys/placeholdershirt.png')" alt="">
             <span>DEF</span>
             <span v-if="myTeam.defender[i]">{{
               myTeam.defender[i].fname
@@ -58,12 +60,13 @@
             :class="{ active: selected[0] == i && selected[1] == 'md' }"
             @click="toggleActive($event, i, 'md')"
           >
-            <fa
+            <!-- <fa
               @click="getPlayers($event, i)"
               class="i"
               icon="user"
               size="7x"
-            />
+            /> -->
+            <img @click="getPlayers($event, i)" class="i" :src="require('@/assets/img/jerseys/placeholdershirt.png')" alt="">
             <span>MID</span>
             <span v-if="myTeam.midfielder[i]">{{
               myTeam.midfielder[i].fname
@@ -78,12 +81,13 @@
             :class="{ active: selected[0] == i && selected[1] == 'st' }"
             @click="toggleActive($event, i, 'st')"
           >
-            <fa
+            <!-- <fa
               @click="getPlayers($event, i)"
               class="i"
               icon="user"
               size="7x"
-            />
+            /> -->
+            <img @click="getPlayers($event, i)" class="i" :src="require('@/assets/img/jerseys/placeholdershirt.png')" alt="">
             <span>ST</span>
             <span v-if="myTeam.striker[i]">{{ myTeam.striker[i].fname }}</span>
           </div>
@@ -154,7 +158,7 @@ export default {
   methods: {
     // Get players from API
     getPlayers(e, selectedPlayerIndex) {
-      const position = e.path[3].className;
+      const position = e.path[2].className;
       // console.log(e.path);
 
       axios
@@ -256,6 +260,10 @@ export default {
   align-items: center;
 }
 
+#transfer_field > div > div > img {
+  display: block;
+}
+
 .i {
   color: white;
   cursor: pointer;
@@ -273,6 +281,10 @@ li.disabled {
 
 .active {
   background-color: tomato;
+}
+#team_selection img {
+    width: 15vw;
+    cursor: pointer;
 }
 
 </style>

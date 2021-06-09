@@ -210,7 +210,7 @@ export default {
 
 #team_selection img {
   width: 15vw;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 #team_selection {
