@@ -3,7 +3,7 @@
     <nav>
       <h1>DL Cup Fantasy</h1>
     </nav>
-    <navigation :activePage="'MyTeam'" />
+    <navigation :activePage="'Stats'" />
     <div class="grid-container">
       <div class="skewed">
         <div class="category">Top Scorer</div>

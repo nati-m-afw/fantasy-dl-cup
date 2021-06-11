@@ -145,7 +145,8 @@
           </div>
           <div>
             <p>Active GW</p>
-            <select name="gameweek" id="gameweek" v-model="activeGameweek">
+            <select name="gameweek" id="gameweek" v-model="activeGameweek" @change="getTeam">
+              <!-- <option v-for="i in availabeGameweeks" :key="i" value="i">GW {{ i }}</option> -->
               <option value="1" v-if="this.activeGameweek >= 1">Gameweek 1</option>
               <option value="2" v-if="this.activeGameweek >= 2">Gameweek 2</option>
               <option value="3" v-if="this.activeGameweek >= 3">Gameweek 3</option>
@@ -202,6 +203,11 @@ export default {
 
       return score;
     },
+
+    // Gameweeks played or currently active
+    // availabeGameweeks() {
+    //   return [1,2,3,4,5].filter(gw => gw <= this.activeGameweek);
+    // }
   },
 
   components: {
@@ -222,6 +228,14 @@ export default {
 
     getTeam() {
       let userId = this.$store.state.userId;
+
+      // Clear myTeam
+      this.myTeam = {
+        goalkeeper: [],
+        defender: [],
+        midfielder: [],
+        striker: [],
+      };
 
       axios
         .get(
