@@ -15,7 +15,7 @@ from flask_restx import Resource , Api
 api_app = Blueprint("api",__name__)
 api=Api(api_app)
 
-api = Api(api_app)
+# api = Api(api_app)
 
 
 # DEMO ARRAY OF PLAYERS LIST
