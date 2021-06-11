@@ -4,10 +4,7 @@
       <h1>DL Cup Fantasy</h1>
     </nav>
     <navigation :activePage="'Points'" />
-    <div id="info">
-      {{ myTeamName }}
-      |GW-> {{ activeGameweek }} | Score-> {{ gameweekScore }}
-    </div>
+    <div id="info"></div>
     <alert :msg="alertMsg" v-if="showMsg" />
     <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
@@ -20,6 +17,7 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              class="player-details"
             >
               <img
                 :src="
@@ -27,9 +25,10 @@
                 "
                 alt=""
               />
-              <span class="player-details"
-                >GK{{ player.fname }} Score({{ player.score }})</span
-              >
+              <div class="details">
+                <span>{{ player.score }}</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
           <!-- DEF -->
@@ -39,6 +38,7 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              class="player-details"
             >
               <img
                 :src="
@@ -46,9 +46,10 @@
                 "
                 alt=""
               />
-              <span class="player-details"
-                >DEF{{ player.fname }} Score({{ player.score }})</span
-              >
+              <div class="details">
+                <span>{{ player.score }}</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
           <!-- MID -->
@@ -58,6 +59,7 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              class="player-details"
             >
               <img
                 :src="
@@ -65,9 +67,10 @@
                 "
                 alt=""
               />
-              <span class="player-details"
-                >MID{{ player.fname }} Score({{ player.score }})</span
-              >
+              <div class="details">
+                <span>{{ player.score }}</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
           <!-- ST -->
@@ -77,6 +80,7 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              class="player-details"
             >
               <img
                 :src="
@@ -84,21 +88,23 @@
                 "
                 alt=""
               />
-              <span class="player-details"
-                >ST{{ player.fname }} Score({{ player.score }})</span
-              >
+              <div class="details">
+                <span>{{ player.score }}</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
         </div>
         <!-- SUB -->
         <div class="substitutes">
-          <div>
+          <div class="reserve-goalkeeper">
             <!-- SUB GK -->
             <div
               v-for="(player, i) in myTeam.goalkeeper.filter(
                 (player) => player.status == 'bench'
               )"
               :key="i"
+              class="player-details"
             >
               <img
                 :src="
@@ -106,29 +112,50 @@
                 "
                 alt=""
               />
-              <span class="player-details"
-                >GK{{ player.fname }} Score({{ player.score }})</span
-              >
+              <div class="details">
+                <span>{{ player.score }}</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
+          </div>
 
+          <div class="reserve-outfield">
             <!-- SUB Players -->
-            <div v-for="(player, i) in benchedPlayers" :key="i">
+            <div v-for="(player, i) in benchedPlayers" :key="i" class="player-details">
               <img
                 :src="
                   require('@/assets/img/jerseys/' + player.department + '.png')
                 "
                 alt=""
               />
-              <span class="player-details"
-                >{{ player.position }}{{ player.fname }} Score({{
-                  player.score
-                }})</span
-              >
+              <div class="details">
+                <span>{{ player.score }}</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="sidebar"></div>
+      <div class="sidebar">
+        <h3>{{ myTeamName }}</h3>
+        <div class="quick-info">
+          <div>
+            <span>{{ gameweekScore }}</span>
+            <p>points</p>
+          </div>
+          <div>
+            <p>Active GW</p>
+            <select name="gameweek" id="gameweek" v-model="activeGameweek">
+              <option value="1" v-if="this.activeGameweek >= 1">Gameweek 1</option>
+              <option value="2" v-if="this.activeGameweek >= 2">Gameweek 2</option>
+              <option value="3" v-if="this.activeGameweek >= 3">Gameweek 3</option>
+              <option value="4" v-if="this.activeGameweek >= 4">Gameweek 4</option>
+              <option value="5" v-if="this.activeGameweek >= 5">Gameweek 5</option>
+            </select>
+          </div>
+        </div>
+        <div class="skewed"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -258,6 +285,7 @@ export default {
 }
 
 @import "../assets/css/styles.css";
+@import "../assets/css/sidebar.css";
 
 #team_selection img {
   width: 15vw;
@@ -271,10 +299,28 @@ export default {
   grid-column-gap: 2rem;
 }
 
+.team {
+  display: grid;
+  grid-row-gap: 5rem;
+}
+
 .starting_team {
   display: grid;
   grid-template-rows: repeat(4, 150px);
-  /* justify-items: center; */
+  grid-gap: 1rem;
+  background-color: var(--secondary-color);
+  background-image: url("../assets/img/fields/Field4.0.png");
+  background-repeat: no-repeat;
+  animation: rise 1s forwards;
+}
+
+@keyframes rise {
+  0% {
+    background-position: 50% -50%;
+  }
+  100% {
+    background-position: 50%;
+  }
 }
 
 .starting_team > div,
@@ -282,29 +328,48 @@ export default {
   display: flex;
   justify-content: center;
 }
-
-.active {
-  background-color: tomato;
-  border-radius: 10%;
-}
-
 .starting_team div,
 .substitutes div {
   position: relative;
 }
 
 .player-details {
-  position: absolute;
-  bottom: -10px;
-  left: 37%;
+  position: relative;
+  text-align: center;
 }
 
-#info {
-  display: inline-flex;
-  font-size: 1.7rem;
-  font-weight: bold;
-  background-color: cadetblue;
-  margin: 0 6rem;
-  padding: 0.7rem;
+.details {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
+
+#team_selection .player-details img {
+  width: 200px;
+  /* cursor: pointer; */
+}
+
+.details > span {
+  display: block;
+  background-color: var(--accent-color);
+  color: var(--secondary-color);
+}
+
+.details > p {
+  background-color: var(--secondary-color);
+  color: var(--accent-color);
+}
+
+.substitutes,
+.reserve-outfield {
+  display: flex;
+}
+
+.substitutes {
+  justify-content: space-around;
 }
 </style>

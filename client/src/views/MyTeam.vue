@@ -4,10 +4,7 @@
       <h1>DL Cup Fantasy</h1>
     </nav>
     <navigation :activePage="'MyTeam'" />
-    <div id="info">
-      {{ myTeamName }}
-      |GW-> {{ activeGameweek }}
-    </div>
+    <div id="info"></div>
     <!-- <pre>{{ $data }}</pre> -->
     <alert :msg="msg" v-if="showMsg" />
     <div id="team_selection">
@@ -20,6 +17,7 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              class="player-details"
               :class="{
                 active: selected[0] == i && selected[1] == 'goalkeeper',
               }"
@@ -31,7 +29,10 @@
                 "
                 alt=""
               />
-              <span class="player-details">GK{{ player.fname }}</span>
+              <div class="details">
+                <span>GK</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
           <!-- DEF -->
@@ -41,6 +42,7 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              class="player-details"
               :class="{ active: selected[0] == i && selected[1] == 'defender' }"
               @click="toggleActive($event, i, 'defender', player.id)"
             >
@@ -50,7 +52,10 @@
                 "
                 alt=""
               />
-              <span class="player-details">DEF{{ player.fname }}</span>
+              <div class="details">
+                <span>DEF</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
           <!-- MID -->
@@ -60,6 +65,7 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              class="player-details"
               :class="{
                 active: selected[0] == i && selected[1] == 'midfielder',
               }"
@@ -71,7 +77,10 @@
                 "
                 alt=""
               />
-              <span class="player-details">MID{{ player.fname }}</span>
+              <div class="details">
+                <span>MID</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
           <!-- ST -->
@@ -81,6 +90,7 @@
                 (player) => player.status == 'active'
               )"
               :key="i"
+              class="player-details"
               :class="{ active: selected[0] == i && selected[1] == 'striker' }"
               @click="toggleActive($event, i, 'striker', player.id)"
             >
@@ -90,19 +100,23 @@
                 "
                 alt=""
               />
-              <span class="player-details">ST{{ player.fname }}</span>
+              <div class="details">
+                <span>ST</span>
+                <p>{{ player.fname }}</p>
+              </div>
             </div>
           </div>
         </div>
         <!-- SUB -->
         <div class="substitutes">
-          <div>
+          <div class="reserve-goalkeeper">
             <!-- SUB GK -->
             <div
               v-for="(player, i) in myTeam.goalkeeper.filter(
                 (player) => player.status == 'bench'
               )"
               :key="i"
+              class="player-details"
             >
               <img
                 :src="
@@ -110,41 +124,61 @@
                 "
                 alt=""
               />
-              <span class="player-details">GK{{ player.fname }}</span>
-              <span v-if="selected[1] == 'goalkeeper'">
-                <button
-                  @click="changePlayer($event, player.id, player.position)"
-                >
-                  <fa icon="exchange-alt" />
-                </button>
-              </span>
+              <div class="details">
+                <span>GK</span>
+                <p>{{ player.fname }}</p>
+                <span v-if="selected[1] == 'goalkeeper'">
+                  <button
+                    @click="changePlayer($event, player.id, player.position)"
+                  >
+                    <fa icon="exchange-alt" />
+                  </button>
+                </span>
+              </div>
             </div>
+          </div>
 
+          <div class="reserve-outfield">
             <!-- SUB Players -->
-            <div v-for="(player, i) in benchedPlayers" :key="i">
+            <div v-for="(player, i) in benchedPlayers" :key="i" class="player-details">
               <img
                 :src="
                   require('@/assets/img/jerseys/' + player.department + '.png')
                 "
                 alt=""
               />
-              <span class="player-details"
-                >{{ player.position }}{{ player.fname }}</span
-              >
-              <span v-if="selected[1] != 'goalkeeper' && selected[1]">
-                <button
-                  @click="changePlayer($event, player.id, player.position)"
-                >
-                  <fa icon="exchange-alt" />
-                </button>
-              </span>
+              <div class="details">
+                <span>{{ player.position }}</span>
+                <p>{{ player.fname }}</p>
+                <span v-if="selected[1] != 'goalkeeper' && selected[1]">
+                  <button
+                    @click="changePlayer($event, player.id, player.position)"
+                  >
+                    <fa icon="exchange-alt" />
+                  </button>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="sidebar"></div>
+      <div class="sidebar">
+        <h3>{{ myTeamName }}</h3>
+        <div class="quick-info">
+          <div>
+            <span>07:00</span>
+            <p>Deadline</p>
+          </div>
+          <div>
+            <p></p>
+            <span>GW {{ activeGameweek }}</span>
+          </div>
+        </div>
+        <div class="skewed">
+          <button @click="updateTeamApi">SAVE</button>
+        </div>
+      </div>
       <br />
-      <button @click="updateTeamApi">SAVE</button>
     </div>
   </div>
 </template>
@@ -316,6 +350,7 @@ export default {
 }
 
 @import "../assets/css/styles.css";
+@import "../assets/css/sidebar.css";
 
 #team_selection img {
   width: 15vw;
@@ -329,10 +364,28 @@ export default {
   grid-column-gap: 2rem;
 }
 
+.team {
+  display: grid;
+  grid-row-gap: 5rem;
+}
+
 .starting_team {
   display: grid;
   grid-template-rows: repeat(4, 150px);
-  /* justify-items: center; */
+  grid-gap: 1rem;
+  background-color: var(--secondary-color);
+  background-image: url("../assets/img/fields/Field4.0.png");
+  background-repeat: no-repeat;
+  animation: rise 1s forwards;
+}
+
+@keyframes rise {
+  0% {
+    background-position: 50% -50%;
+  }
+  100% {
+    background-position: 50%;
+  }
 }
 
 .starting_team > div,
@@ -343,26 +396,60 @@ export default {
 
 .active {
   background-color: tomato;
+  animation: pop 0.4s forwards;
   border-radius: 10%;
 }
 
+@keyframes pop {
+  0% {
+    margin: 0%;
+  }
+  100% {
+    margin: 20px 20px 0;
+  }
+}
 .starting_team div,
 .substitutes div {
   position: relative;
 }
 
 .player-details {
-  position: absolute;
-  bottom: -10px;
-  left: 37%;
+  position: relative;
+  text-align: center;
 }
 
-#info {
-  display: inline-flex;
-  font-size: 1.7rem;
-  font-weight: bold;
-  background-color: cadetblue;
-  margin: 0 6rem;
-  padding: 0.7rem;
+.details {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
+
+#team_selection .player-details img {
+  width: 200px;
+  cursor: pointer;
+}
+
+.details > span {
+  display: block;
+  background-color: var(--accent-color);
+  color: var(--secondary-color);
+}
+
+.details > p {
+  background-color: var(--secondary-color);
+  color: var(--accent-color);
+}
+
+.substitutes,
+.reserve-outfield {
+  display: flex;
+}
+
+.substitutes {
+  justify-content: space-around;
 }
 </style>

@@ -4,10 +4,7 @@
       <h1>DL Cup Fantasy</h1>
     </nav>
     <navigation :activePage="'Transfers'" />
-    <div id="info">
-      {{ myTeamName }}
-      |GW-> {{ activeGameweek }}
-    </div>
+    <div id="info"></div>
     <alert :msg="alertMsg" v-if="showMsg" />
     <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
@@ -19,11 +16,13 @@
             <div
               v-for="i in [0, 1]"
               :key="i"
+              class="player-details"
               :class="{ active: selected[0] == i && selected[1] == 'gk' }"
               @click="toggleActive($event, i, 'gk')"
             >
               <!-- Set selectedPlayerIndex when clicked -->
               <img
+                v-if="myTeam.goalkeeper[i]"
                 @click="getPlayers($event, i)"
                 class="i"
                 :src="
@@ -33,12 +32,14 @@
                 "
                 alt=""
               />
-              <span>GK</span>
+              <div class="details">
+                <span>GK</span>
               <!-- Check if any selected players in myTeam -->
+                <p v-if="myTeam.goalkeeper[i]">
               <!-- If so display name -->
-              <span v-if="myTeam.goalkeeper[i]">{{
-                myTeam.goalkeeper[i].fname
-              }}</span>
+                  {{ myTeam.goalkeeper[i].fname }}
+                </p>
+              </div>
             </div>
             <i></i>
           </div>
@@ -47,10 +48,12 @@
             <div
               v-for="i in [0, 1, 2]"
               :key="i"
+              class="player-details"
               :class="{ active: selected[0] == i && selected[1] == 'df' }"
               @click="toggleActive($event, i, 'df')"
             >
               <img
+                v-if="myTeam.defender[i]"
                 @click="getPlayers($event, i)"
                 class="i"
                 :src="
@@ -60,20 +63,26 @@
                 "
                 alt=""
               />
-              <span>DEF</span>
-              <span v-if="myTeam.defender[i]">{{
-                myTeam.defender[i].fname
-              }}</span>
+              <div class="details">
+                <span>DEF</span>
+              <!-- Check if any selected players in myTeam -->
+                <p v-if="myTeam.defender[i]">
+              <!-- If so display name -->
+                  {{ myTeam.defender[i].fname }}
+                </p>
+              </div>
             </div>
           </div>
           <div class="midfielder">
             <div
               v-for="i in [0, 1, 2]"
               :key="i"
+              class="player-details"
               :class="{ active: selected[0] == i && selected[1] == 'md' }"
               @click="toggleActive($event, i, 'md')"
             >
               <img
+                v-if="myTeam.midfielder[i]"
                 @click="getPlayers($event, i)"
                 class="i"
                 :src="
@@ -83,10 +92,14 @@
                 "
                 alt=""
               />
-              <span>MID</span>
-              <span v-if="myTeam.midfielder[i]">{{
-                myTeam.midfielder[i].fname
-              }}</span>
+              <div class="details">
+                <span>MID</span>
+              <!-- Check if any selected players in myTeam -->
+                <p v-if="myTeam.midfielder[i]">
+              <!-- If so display name -->
+                  {{ myTeam.midfielder[i].fname }}
+                </p>
+              </div>
             </div>
           </div>
           <div class="striker">
@@ -94,10 +107,12 @@
             <div
               v-for="i in [0, 1]"
               :key="i"
+              class="player-details"
               :class="{ active: selected[0] == i && selected[1] == 'st' }"
               @click="toggleActive($event, i, 'st')"
             >
               <img
+                v-if="myTeam.striker[i]"
                 @click="getPlayers($event, i)"
                 class="i"
                 :src="
@@ -107,38 +122,55 @@
                 "
                 alt=""
               />
-              <span>ST</span>
-              <span v-if="myTeam.striker[i]">{{
-                myTeam.striker[i].fname
-              }}</span>
+              <div class="details">
+                <span>ST</span>
+              <!-- Check if any selected players in myTeam -->
+                <p v-if="myTeam.striker[i]">
+              <!-- If so display name -->
+                  {{ myTeam.striker[i].fname }}
+                </p>
+              </div>
             </div>
             <i></i>
           </div>
         </div>
       </div>
-      <div id="transfer_sidebar">
-        <!-- Show if server status is false or down -->
-        <h2 v-if="!serverStatus">Server could not be reached.</h2>
-        <ul>
-          <li
-            v-for="(player, index) in playersApi"
-            :key="index"
-            :class="checkSelected(player) ? 'disabled' : ''"
-          >
-            <span>{{ player.fname }}</span>
-            <span>{{ player.lname }}</span>
-            <span>{{ player.position }}</span>
-            <button
-              @click="addPlayer($event, player)"
-              :disabled="checkSelected(player)"
+      <div class="sidebar">
+        <h3>{{ myTeamName }}</h3>
+        <div class="quick-info">
+          <div>
+            <span>{{ selected[1] == 'gk' ? "GK" : selected[1] == 'df' ? "DEF" :  selected[1] == 'md' ? "MID" : selected[1] == 'st' ? "ST" : "-"}}</span>
+            <p></p>
+          </div>
+          <div>
+            <p></p>
+            <span>GW {{ activeGameweek }}</span>
+          </div>
+        </div>
+        <div class="skewed">
+          <!-- Show if server status is false or down -->
+          <h2 v-if="!serverStatus">Server could not be reached.</h2>
+          <ul>
+            <li
+              v-for="(player, index) in playersApi"
+              :key="index"
+              :class="checkSelected(player) ? 'disabled' : ''"
             >
-              +
-            </button>
-          </li>
-        </ul>
+              <span>{{ player.fname }}</span>
+              <span>{{ player.lname }}</span>
+              <span>{{ player.position }}</span>
+              <button
+                @click="addPlayer($event, player)"
+                :disabled="checkSelected(player)"
+              >
+                +
+              </button>
+            </li>
+          </ul>
+          <br>
+          <button @click="updateTeamApi">SAVE</button>
+        </div>
       </div>
-      <br />
-      <button @click="updateTeamApi">SAVE</button>
     </div>
   </div>
 </template>
@@ -322,6 +354,7 @@ export default {
 }
 
 @import "../assets/css/styles.css";
+@import "../assets/css/sidebar.css";
 
 #team_selection img {
   width: 15vw;
@@ -336,18 +369,27 @@ export default {
 }
 
 #transfer_field {
-  background-color: black;
   display: grid;
-  color: white;
+  grid-template-rows: repeat(4, 150px);
+  grid-gap: 1rem;
+  background-color: var(--secondary-color);
+  background-image: url("../assets/img/fields/Field4.0.png");
+  background-repeat: no-repeat;
+  animation: rise 1s forwards;
+}
 
-  grid-template-rows: repeat(4, 1fr);
+@keyframes rise {
+  0% {
+    background-position: 50% -50%;
+  }
+  100% {
+    background-position: 50%;
+  }
 }
 
 #transfer_field > div {
   display: flex;
-
-  justify-content: space-around;
-  align-items: center;
+  justify-content: center;
 }
 
 #transfer_field > div > div > img {
@@ -364,14 +406,30 @@ export default {
   display: flex;
 }
 
+li{
+  list-style: none;
+}
+
 li.disabled {
-  background-color: #696969;
+  background-color: var(--secondary-color);
   color: black;
 }
 
 .active {
   background-color: tomato;
+  animation: pop 0.4s forwards;
+  border-radius: 10%;
 }
+
+@keyframes pop {
+  0% {
+    margin: 0%;
+  }
+  100% {
+    margin: 10px 10px 0;
+  }
+}
+
 #team_selection img {
   width: 15vw;
   cursor: pointer;
@@ -388,17 +446,33 @@ li.disabled {
 }
 
 .player-details {
-  position: absolute;
-  bottom: -10px;
-  left: 37%;
+  position: relative;
+  text-align: center;
 }
 
-#info {
-  display: inline-flex;
-  font-size: 1.7rem;
-  font-weight: bold;
-  background-color: cadetblue;
-  margin: 0 6rem;
-  padding: 0.7rem;
+.details {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
+
+#team_selection .player-details img {
+  width: 200px;
+  cursor: pointer;
+}
+
+.details > span {
+  display: block;
+  background-color: var(--accent-color);
+  color: var(--secondary-color);
+}
+
+.details > p {
+  background-color: var(--secondary-color);
+  color: var(--accent-color);
 }
 </style>
