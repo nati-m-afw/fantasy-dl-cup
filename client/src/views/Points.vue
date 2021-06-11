@@ -7,6 +7,7 @@
     <div id="info">
       {{ myTeamName }}
       |GW-> {{ activeGameweek }}
+      | Score-> {{ gameweekScore }}
     </div>
     <alert :msg="alertMsg" v-if="showMsg" />
     <!-- <pre>{{ $data }}</pre> -->
@@ -27,7 +28,7 @@
                 "
                 alt=""
               />
-              <span class="player-details">GK{{ player.fname }}</span>
+              <span class="player-details">GK{{ player.fname }} Score({{player.score}})</span>
             </div>
           </div>
           <!-- DEF -->
@@ -44,7 +45,7 @@
                 "
                 alt=""
               />
-              <span class="player-details">DEF{{ player.fname }}</span>
+              <span class="player-details">DEF{{ player.fname }} Score({{player.score}})</span>
             </div>
           </div>
           <!-- MID -->
@@ -61,7 +62,7 @@
                 "
                 alt=""
               />
-              <span class="player-details">MID{{ player.fname }}</span>
+              <span class="player-details">MID{{ player.fname }} Score({{player.score}})</span>
             </div>
           </div>
           <!-- ST -->
@@ -78,7 +79,7 @@
                 "
                 alt=""
               />
-              <span class="player-details">ST{{ player.fname }}</span>
+              <span class="player-details">ST{{ player.fname }} Score({{player.score}})</span>
             </div>
           </div>
         </div>
@@ -98,7 +99,7 @@
                 "
                 alt=""
               />
-              <span class="player-details">GK{{ player.fname }}</span>
+              <span class="player-details">GK{{ player.fname }} Score({{player.score}})</span>
             </div>
 
             <!-- SUB Players -->
@@ -110,7 +111,7 @@
                 alt=""
               />
               <span class="player-details"
-                >{{ player.position }}{{ player.fname }}</span
+                >{{ player.position }}{{ player.fname }} Score({{player.score}})</span
               >
             </div>
           </div>
@@ -152,6 +153,17 @@ export default {
         .concat(this.myTeam.midfielder.concat(this.myTeam.striker))
         .filter((player) => player.status == "bench");
     },
+
+    gameweekScore(){
+      let score = 0;
+      for (const position in this.myTeam) {
+        for (const player of this.myTeam[position]) {
+          score += player.score;
+        }
+      }
+
+      return score;
+    }
   },
 
   components: {
@@ -189,8 +201,25 @@ export default {
             this.myTeam[player.position].push(player);
           }
           // this.myTeam = res.data.team
+
+          // Get points
+          this.getPoints();
         })
         .catch((err) => console.error(err));
+    },
+
+    getPoints(){
+      for (const position in this.myTeam) {
+        for (const [index, player] of this.myTeam[position].entries()) {
+          axios.get(
+          "http://localhost:5000/score/" + player.id + "/" + this.activeGameweek
+          )
+          .then(res => {
+            player['score'] = res.data.score;
+            this.$set(this.myTeam[position], index, player);
+          })
+        }
+      }
     },
 
     // Logout

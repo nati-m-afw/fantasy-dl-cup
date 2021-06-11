@@ -6,13 +6,17 @@ from models.user_players import userPlayers
 from models.department import Dept
 from models.gameweek import Gameweek
 from models.matches import Match
+from models.score import Scores
 from flask_cors import cross_origin
 from main import db
-from flask_restx import Resource, Api
+from flask_restx import Resource , Api
 
 #Creating Blueprint for api
 api_app = Blueprint("api",__name__)
 api=Api(api_app)
+
+api = Api(api_app)
+
 
 # DEMO ARRAY OF PLAYERS LIST
 # PLAYERS = [
@@ -317,3 +321,9 @@ def get_table():
 
     print(table)
     return table
+@api.route("/score/<player_id>/<gameweek_id>")
+class Score(Resource):
+    def get(self,player_id,gameweek_id):
+        current_score = Scores.query.filter_by(players_id=player_id,gameweek_id=gameweek_id)
+        current_score =  list(map(lambda p: p.serialize(), current_score))
+        return current_score[0]
