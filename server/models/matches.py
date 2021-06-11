@@ -13,7 +13,9 @@ class Match(db.Model):
     event = db.relationship('Event', backref='match_event', lazy=True)
 
     
-    
+    def __repr__(self):
+        return f"Match('{self.team}', '{self.opponent}','{self.game_week}','{self.time}','{self.date}','{self.state}',,'{self.score}','{self.event}')"
+
     def __init__(self,team,opponent,game_week,time,date,state,score):
         
         self.team= team

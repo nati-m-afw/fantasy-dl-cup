@@ -94,24 +94,24 @@ def populate():
 
 
      # GW1
-    m1 =Match(team=1,opponent=2,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
-    m2 =Match(team=3,opponent=4,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
-    m3 =Match(team=5,opponent=6,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
+    m1 =Match(team=1,opponent=2,game_week=1,time="16:00",date="2021-03-03",state=1,score="2v1")
+    m2 =Match(team=3,opponent=4,game_week=1,time="16:00",date="2021-03-03",state=1,score="3v0")
+    m3 =Match(team=5,opponent=6,game_week=1,time="16:00",date="2021-03-03",state=1,score="4v1")
     
      # GW2
-    m4 =Match(team=6,opponent=1,game_week=2,time="16:00",date="2021-04-04",state=0,score="")
-    m5 =Match(team=2,opponent=3,game_week=2,time="16:00",date="2021-04-04",state=0,score="")
-    m6 =Match(team=5,opponent=4,game_week=2,time="16:00",date="2021-04-04",state=0,score="")
+    m4 =Match(team=6,opponent=1,game_week=2,time="16:00",date="2021-04-04",state=1,score="1v3")
+    m5 =Match(team=2,opponent=3,game_week=2,time="16:00",date="2021-04-04",state=1,score="1v1")
+    m6 =Match(team=5,opponent=4,game_week=2,time="16:00",date="2021-04-04",state=1,score="2v2")
     
      # GW3
-    m7 =Match(team=5,opponent=1,game_week=3,time="16:00",date="2021-08-04",state=0,score="")
-    m8 =Match(team=5,opponent=3,game_week=3,time="16:00",date="2021-08-04",state=0,score="")
-    m9 =Match(team=6,opponent=4,game_week=3,time="16:00",date="2021-08-04",state=0,score="")
+    m7 =Match(team=4,opponent=1,game_week=3,time="16:00",date="2021-08-04",state=1,score="0v3")
+    m8 =Match(team=5,opponent=3,game_week=3,time="16:00",date="2021-08-04",state=1,score="3v1")
+    m9 =Match(team=6,opponent=2,game_week=3,time="16:00",date="2021-08-04",state=1,score="2v2")
     
     # GW4
-    m10 =Match(team=1,opponent=4,game_week=4,time="16:00",date="2021-12-04",state=0,score="")
-    m11 =Match(team=5,opponent=2,game_week=4,time="16:00",date="2021-12-04",state=0,score="")
-    m12 =Match(team=6,opponent=3,game_week=4,time="16:00",date="2021-12-04",state=0,score="")
+    m10 =Match(team=2,opponent=4,game_week=4,time="16:00",date="2021-12-04",state=1,score="2v0")
+    m11 =Match(team=5,opponent=1,game_week=4,time="16:00",date="2021-12-04",state=1,score="1v1")
+    m12 =Match(team=6,opponent=3,game_week=4,time="16:00",date="2021-12-04",state=1,score="1v1")
 
 
     # Match Event stats

@@ -5,12 +5,14 @@ from models.users import Users
 from models.user_players import userPlayers
 from models.department import Dept
 from models.gameweek import Gameweek
+from models.matches import Match
 from flask_cors import cross_origin
 from main import db
+from flask_restx import Resource, Api
 
 #Creating Blueprint for api
 api_app = Blueprint("api",__name__)
-
+api=Api(api_app)
 
 # DEMO ARRAY OF PLAYERS LIST
 # PLAYERS = [
@@ -40,7 +42,7 @@ api_app = Blueprint("api",__name__)
 
 ###############################################################
 
-#Route to get players by position
+
 @api_app.route('/getplayers/<pos>')
 @cross_origin()
 def getPlayers(pos):
@@ -124,3 +126,194 @@ def addStatusToResponse(player, status, department):
     result.update( {'status': status } )
     result.update( {'department': department} )
     return result
+
+
+#mock data 
+# team1 = 1
+# score = 
+# mckdata[team1]['points'] =
+
+# #MOCK_DATA={
+# # "1" : {
+# #   "teamName":"IT",
+# #   "teamId":1,
+# #   "points": 15,
+# #   "last5": ["W","w","W","w","W"]
+# #   "played":,
+# #   "won":0,
+# #   "drawn":5,
+# #   "lost":0,
+# #   "GF":
+# # },
+# # "2": {
+# # }
+# # }
+
+#get table route
+@api_app.route('/gettable')
+def get_table():
+    response={'status':'success'}
+    table = {
+        # IT
+        "1":{
+            "teamName":"IT",
+            "teamId": 1,
+            "points": 0,
+            "last5": [],
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "GF":0,
+            "GA":0
+        },
+        "2": {
+            "teamName":"Mech",
+            "teamId": 2,
+            "points": 0,
+            "last5": [],
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "GF":0,
+            "GA":0
+        },
+        "3": {
+            "teamName":"Elec",
+            "teamId": 3,
+            "points": 0,
+            "last5": [],
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "GF":0,
+            "GA":0
+        },
+        "4":{
+            "teamName":"SE",
+            "teamId": 4,
+            "points": 0,
+            "last5": [],
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "GF":0,
+            "GA":0
+        },
+        "5":{
+            "teamName":"Chemical",
+            "teamId": 5,
+            "points": 0,
+            "last5": [],
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "GF":0,
+            "GA":0
+        },
+        "6":{
+            "teamName":"BioMed",
+            "teamId": 6,
+            "points": 0,
+            "last5": [],
+            "played": 0,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "GF":0,
+            "GA":0
+        },
+        
+    }
+    matches = Match.query.all()
+    for match in matches:
+        # check if match has been played
+        if(match.state == 1):
+            # table[str(match.team)] = match
+
+            # Check if team has won the match
+            if(match.score[0] > match.score[2]):
+                # Add win to home team
+                table[str(match.team)]['won'] += 1
+                # Add win point
+                table[str(match.team)]['points']+=3
+                # Add play count
+                table[str(match.team)]['played'] += 1
+                # Add to Last 5
+                
+                # Add GF to home team
+                table[str(match.team)]['GF'] += int(match.score[0])
+                # Add GA to home team
+                table[str(match.team)]['GA'] += int(match.score[2])
+                
+                
+                # Add loss to away team
+                table[str(match.opponent)]['lost'] += 1
+                # Add play count
+                table[str(match.opponent)]['played'] += 1
+                # Add GF to away team
+                table[str(match.opponent)]['GF'] += int(match.score[2])
+                # Add GA to away team
+                table[str(match.opponent)]['GA'] += int(match.score[0])
+
+            
+            # Check if team has lost the match
+            elif(match.score[0] < match.score[2]):
+                # Add loss to home team
+                table[str(match.team)]['lost'] += 1
+                # Add play count
+                table[str(match.team)]['played'] += 1
+                # Add GF to home team
+                table[str(match.team)]['GF'] += int(match.score[0])
+                # Add GA to home team
+                table[str(match.team)]['GA'] += int(match.score[2])
+
+                
+                
+                # Add win to away team
+                table[str(match.opponent)]['won'] += 1
+                # Add win point
+                table[str(match.opponent)]['points'] += 3
+                #Add play count
+                table[str(match.opponent)]['played'] += 1
+                 # Add GF to away team
+                table[str(match.opponent)]['GF'] += int(match.score[2])
+                # Add GA to away team
+                table[str(match.opponent)]['GA'] += int(match.score[0])
+
+
+            #Check if team has drawn the match
+            elif(match.score[0] == match.score[2]):
+                # Add draw to home team
+                table[str(match.team)]['drawn'] += 1
+                # Add play count
+                table[str(match.team)]['played'] += 1
+                #Add draw point
+                table[str(match.team)]['points'] +=1
+                # Add GF to home team
+                table[str(match.team)]['GF'] += int(match.score[0])
+                # Add GA to home team
+                table[str(match.team)]['GA'] += int(match.score[2])
+
+                
+                # Add draw to away team
+                table[str(match.opponent)]['drawn'] += 1
+                # Add play count
+                table[str(match.opponent)]['played'] += 1
+                # Add draw point
+                table[str(match.opponent)]['points'] +=1
+                # Add GF to away team
+                table[str(match.opponent)]['GF'] += int(match.score[2])
+                # Add GA to away team
+                table[str(match.opponent)]['GA'] += int(match.score[0])
+
+            
+            
+            
+
+    print(table)
+    return table
