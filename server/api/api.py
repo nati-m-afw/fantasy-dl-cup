@@ -5,11 +5,16 @@ from models.users import Users
 from models.user_players import userPlayers
 from models.department import Dept
 from models.gameweek import Gameweek
+from models.score import Scores
 from flask_cors import cross_origin
 from main import db
+from flask_restx import Resource , Api
 
 #Creating Blueprint for api
 api_app = Blueprint("api",__name__)
+
+
+api = Api(api_app)
 
 
 # DEMO ARRAY OF PLAYERS LIST
@@ -124,3 +129,11 @@ def addStatusToResponse(player, status, department):
     result.update( {'status': status } )
     result.update( {'department': department} )
     return result
+
+
+@api.route("/score/<player_id>/<gameweek_id>")
+class Score(Resource):
+    def get(self,player_id,gameweek_id):
+        current_score = Scores.query.filter_by(players_id=player_id,gameweek_id=gameweek_id)
+        current_score =  list(map(lambda p: p.serialize(), current_score))
+        return current_score[0]

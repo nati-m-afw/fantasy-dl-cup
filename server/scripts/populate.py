@@ -157,7 +157,7 @@ def populate():
     e23 = Event(players_id=23,match_id=3,gameweek_id=1,goals_scored=1,goals_conceded=3,assists_provided=1,minutes_played=90,yellow_cards=1,red_cards=0)
     e24 = Event(players_id=24,match_id=3,gameweek_id=1,goals_scored=1,goals_conceded=3,assists_provided=0,minutes_played=90,yellow_cards=0,red_cards=0)
 
-
+    
     db.session.add_all([
         # Add Departments
         dept1, dept2, dept3, dept4, dept5, dept6
