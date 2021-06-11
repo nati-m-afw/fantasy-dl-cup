@@ -140,7 +140,7 @@
         <h3>{{ myTeamName }}</h3>
         <div class="quick-info">
           <div>
-            <span>{{ gameweekScore }}</span>
+            <span>{{ gameweekScore || "-" }}</span>
             <p>points</p>
           </div>
           <div>
@@ -354,7 +354,7 @@ export default {
 
 .details {
   position: absolute;
-  bottom: -10px;
+  bottom: 10px;
   left: 0;
   right: 0;
   margin: 0 auto;

@@ -405,7 +405,7 @@ export default {
     margin: 0%;
   }
   100% {
-    margin: 20px 20px 0;
+    margin: 10px 10px 0;
   }
 }
 .starting_team div,
@@ -420,7 +420,7 @@ export default {
 
 .details {
   position: absolute;
-  bottom: -10px;
+  bottom: 10px;
   left: 0;
   right: 0;
   margin: 0 auto;
