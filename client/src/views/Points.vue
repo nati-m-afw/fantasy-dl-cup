@@ -6,8 +6,7 @@
     <navigation :activePage="'Points'" />
     <div id="info">
       {{ myTeamName }}
-      |GW-> {{ activeGameweek }}
-      | Score-> {{ gameweekScore }}
+      |GW-> {{ activeGameweek }} | Score-> {{ gameweekScore }}
     </div>
     <alert :msg="alertMsg" v-if="showMsg" />
     <!-- <pre>{{ $data }}</pre> -->
@@ -28,7 +27,9 @@
                 "
                 alt=""
               />
-              <span class="player-details">GK{{ player.fname }} Score({{player.score}})</span>
+              <span class="player-details"
+                >GK{{ player.fname }} Score({{ player.score }})</span
+              >
             </div>
           </div>
           <!-- DEF -->
@@ -45,7 +46,9 @@
                 "
                 alt=""
               />
-              <span class="player-details">DEF{{ player.fname }} Score({{player.score}})</span>
+              <span class="player-details"
+                >DEF{{ player.fname }} Score({{ player.score }})</span
+              >
             </div>
           </div>
           <!-- MID -->
@@ -62,7 +65,9 @@
                 "
                 alt=""
               />
-              <span class="player-details">MID{{ player.fname }} Score({{player.score}})</span>
+              <span class="player-details"
+                >MID{{ player.fname }} Score({{ player.score }})</span
+              >
             </div>
           </div>
           <!-- ST -->
@@ -79,7 +84,9 @@
                 "
                 alt=""
               />
-              <span class="player-details">ST{{ player.fname }} Score({{player.score}})</span>
+              <span class="player-details"
+                >ST{{ player.fname }} Score({{ player.score }})</span
+              >
             </div>
           </div>
         </div>
@@ -99,7 +106,9 @@
                 "
                 alt=""
               />
-              <span class="player-details">GK{{ player.fname }} Score({{player.score}})</span>
+              <span class="player-details"
+                >GK{{ player.fname }} Score({{ player.score }})</span
+              >
             </div>
 
             <!-- SUB Players -->
@@ -111,7 +120,9 @@
                 alt=""
               />
               <span class="player-details"
-                >{{ player.position }}{{ player.fname }} Score({{player.score}})</span
+                >{{ player.position }}{{ player.fname }} Score({{
+                  player.score
+                }})</span
               >
             </div>
           </div>
@@ -154,7 +165,7 @@ export default {
         .filter((player) => player.status == "bench");
     },
 
-    gameweekScore(){
+    gameweekScore() {
       let score = 0;
       for (const position in this.myTeam) {
         for (const player of this.myTeam[position]) {
@@ -163,7 +174,7 @@ export default {
       }
 
       return score;
-    }
+    },
   },
 
   components: {
@@ -173,12 +184,13 @@ export default {
 
   methods: {
     getActiveGameweek() {
-      axios.get("http://localhost:5000/getactivegw")
-        .then(res => {
+      axios
+        .get("http://localhost:5000/getactivegw")
+        .then((res) => {
           this.activeGameweek = res.data.activeGW;
           this.getTeam();
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
     },
 
     getTeam() {
@@ -189,14 +201,13 @@ export default {
           "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek
         )
         .then((res) => {
-          if(res.data.team == false && this.activeGameweek == 0){
-            this.alertMsg = 'Gameweek has not started!';
+          if (res.data.team == false && this.activeGameweek == 0) {
+            this.alertMsg = "Gameweek has not started!";
+            this.showMsg = true;
+          } else if (res.data.team == false) {
+            this.alertMsg = "No team for current GW in DB";
             this.showMsg = true;
           }
-          else if(res.data.team == false){
-            this.alertMsg = 'No team for current GW in DB';
-            this.showMsg = true;
-          };
           for (const player of res.data.team) {
             this.myTeam[player.position].push(player);
           }
@@ -208,22 +219,26 @@ export default {
         .catch((err) => console.error(err));
     },
 
-    getPoints(){
+    getPoints() {
       for (const position in this.myTeam) {
         for (const [index, player] of this.myTeam[position].entries()) {
-          axios.get(
-          "http://localhost:5000/score/" + player.id + "/" + this.activeGameweek
-          )
-          .then(res => {
-            player['score'] = res.data.score;
-            this.$set(this.myTeam[position], index, player);
-          })
+          axios
+            .get(
+              "http://localhost:5000/score/" +
+                player.id +
+                "/" +
+                this.activeGameweek
+            )
+            .then((res) => {
+              player["score"] = res.data.score;
+              this.$set(this.myTeam[position], index, player);
+            });
         }
       }
     },
 
     // Logout
-    logout(){
+    logout() {
       localStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");

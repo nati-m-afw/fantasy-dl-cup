@@ -137,7 +137,7 @@
           </li>
         </ul>
       </div>
-      <br>
+      <br />
       <button @click="updateTeamApi">SAVE</button>
     </div>
   </div>
@@ -242,7 +242,8 @@ export default {
 
     // Add selected player to myTeam based on position
     addPlayer(e, player) {
-      player['status'] = this.myTeam[player.position][this.selectedPlayerIndex].status;
+      player["status"] =
+        this.myTeam[player.position][this.selectedPlayerIndex].status;
       this.$set(this.myTeam[player.position], this.selectedPlayerIndex, player);
     },
 
@@ -264,7 +265,7 @@ export default {
     // Update team API
     updateTeamApi() {
       this.$store.commit("updateMyTeam", this.myTeam);
-    
+
       const payload = {
         userId: this.$store.state.userId,
         team: [],
@@ -277,9 +278,9 @@ export default {
       for (const position in this.$store.state.myTeam) {
         // payload.team[position] = [];
         for (const player of this.$store.state.myTeam[position]) {
-          payload.team.push({ 
-            'playerId': player.id,
-            'status': player.status,
+          payload.team.push({
+            playerId: player.id,
+            status: player.status,
           });
         }
       }
@@ -301,7 +302,7 @@ export default {
     },
 
     // Logout
-    logout(){
+    logout() {
       localStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");

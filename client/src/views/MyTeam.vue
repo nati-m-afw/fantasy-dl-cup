@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <nav>
-        <h1>DL Cup Fantasy</h1>
+      <h1>DL Cup Fantasy</h1>
     </nav>
     <navigation :activePage="'MyTeam'" />
     <div id="info">
@@ -25,7 +25,12 @@
               }"
               @click="toggleActive($event, i, 'goalkeeper', player.id)"
             >
-              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <img
+                :src="
+                  require('@/assets/img/jerseys/' + player.department + '.png')
+                "
+                alt=""
+              />
               <span class="player-details">GK{{ player.fname }}</span>
             </div>
           </div>
@@ -39,7 +44,12 @@
               :class="{ active: selected[0] == i && selected[1] == 'defender' }"
               @click="toggleActive($event, i, 'defender', player.id)"
             >
-              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <img
+                :src="
+                  require('@/assets/img/jerseys/' + player.department + '.png')
+                "
+                alt=""
+              />
               <span class="player-details">DEF{{ player.fname }}</span>
             </div>
           </div>
@@ -55,7 +65,12 @@
               }"
               @click="toggleActive($event, i, 'midfielder', player.id)"
             >
-              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <img
+                :src="
+                  require('@/assets/img/jerseys/' + player.department + '.png')
+                "
+                alt=""
+              />
               <span class="player-details">MID{{ player.fname }}</span>
             </div>
           </div>
@@ -69,7 +84,12 @@
               :class="{ active: selected[0] == i && selected[1] == 'striker' }"
               @click="toggleActive($event, i, 'striker', player.id)"
             >
-              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <img
+                :src="
+                  require('@/assets/img/jerseys/' + player.department + '.png')
+                "
+                alt=""
+              />
               <span class="player-details">ST{{ player.fname }}</span>
             </div>
           </div>
@@ -84,7 +104,12 @@
               )"
               :key="i"
             >
-              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
+              <img
+                :src="
+                  require('@/assets/img/jerseys/' + player.department + '.png')
+                "
+                alt=""
+              />
               <span class="player-details">GK{{ player.fname }}</span>
               <span v-if="selected[1] == 'goalkeeper'">
                 <button
@@ -97,8 +122,15 @@
 
             <!-- SUB Players -->
             <div v-for="(player, i) in benchedPlayers" :key="i">
-              <img :src="require('@/assets/img/jerseys/' + player.department + '.png')" alt="">
-              <span class="player-details">{{ player.position }}{{ player.fname }}</span>
+              <img
+                :src="
+                  require('@/assets/img/jerseys/' + player.department + '.png')
+                "
+                alt=""
+              />
+              <span class="player-details"
+                >{{ player.position }}{{ player.fname }}</span
+              >
               <span v-if="selected[1] != 'goalkeeper' && selected[1]">
                 <button
                   @click="changePlayer($event, player.id, player.position)"
@@ -111,7 +143,7 @@
         </div>
       </div>
       <div class="sidebar"></div>
-      <br>
+      <br />
       <button @click="updateTeamApi">SAVE</button>
     </div>
   </div>
@@ -132,9 +164,9 @@ export default {
         striker: [],
       },
 
-      myTeamName: '',
+      myTeamName: "",
 
-      activeGameweek: '',
+      activeGameweek: "",
       // Player being replaced in myTeam.<position>
       selectedPlayerIndex: null,
 
@@ -162,13 +194,14 @@ export default {
 
   methods: {
     getActiveGameweek() {
-      axios.get("http://localhost:5000/getactivegw")
-        .then(res => {
+      axios
+        .get("http://localhost:5000/getactivegw")
+        .then((res) => {
           // Team Selection for the coming Gameweek
           this.activeGameweek = res.data.activeGW + 1;
           this.getTeam();
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
     },
 
     // Get user Team API
@@ -176,12 +209,12 @@ export default {
       let userId = this.$store.state.userId;
 
       axios
-        .get("http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek)
+        .get(
+          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek
+        )
         .then((res) => {
-          
           // Check if user has picked team
-          if (res.data.team.length == 0)
-            this.$router.push("/pickteam")
+          if (res.data.team.length == 0) this.$router.push("/pickteam");
           for (const player of res.data.team) {
             this.myTeam[player.position].push(player);
           }
@@ -195,7 +228,12 @@ export default {
       // Check if selected(sub out) player is striker
       // Check if selected(sub out) player is the last striker
       // Show error if selected(sub out) player is not a striker
-      if (this.selected[1] == 'striker' && this.myTeam.striker.filter( player => player.status == 'active' ).length == 1 && playerPos != 'striker'){
+      if (
+        this.selected[1] == "striker" &&
+        this.myTeam.striker.filter((player) => player.status == "active")
+          .length == 1 &&
+        playerPos != "striker"
+      ) {
         this.msg = "Minimum of one striker required!";
         this.showMsg = true;
         return;
@@ -221,7 +259,7 @@ export default {
     // Update team API
     updateTeamApi() {
       this.$store.commit("updateMyTeam", this.myTeam);
-    
+
       const payload = {
         userId: this.$store.state.userId,
         team: [],
@@ -234,9 +272,9 @@ export default {
       for (const position in this.$store.state.myTeam) {
         // payload.team[position] = [];
         for (const player of this.$store.state.myTeam[position]) {
-          payload.team.push({ 
-            'playerId': player.id,
-            'status': player.status,
+          payload.team.push({
+            playerId: player.id,
+            status: player.status,
           });
         }
       }
@@ -258,7 +296,7 @@ export default {
     },
 
     // Logout
-    logout(){
+    logout() {
       localStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");
@@ -275,31 +313,32 @@ export default {
 <style scoped>
 * {
   box-sizing: border-box;
-} 
+}
 
 @import "../assets/css/styles.css";
 
 #team_selection img {
-    width: 15vw;
-    cursor: pointer;
+  width: 15vw;
+  cursor: pointer;
 }
 
 #team_selection {
-    padding: 2% 7%;
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    grid-column-gap: 2rem;
+  padding: 2% 7%;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-column-gap: 2rem;
 }
 
-.starting_team{
-    display: grid;
-    grid-template-rows: repeat(4, 150px);
-    /* justify-items: center; */
+.starting_team {
+  display: grid;
+  grid-template-rows: repeat(4, 150px);
+  /* justify-items: center; */
 }
 
-.starting_team > div, .substitutes > div {
-    display: flex;
-    justify-content: center;
+.starting_team > div,
+.substitutes > div {
+  display: flex;
+  justify-content: center;
 }
 
 .active {
@@ -307,17 +346,18 @@ export default {
   border-radius: 10%;
 }
 
-.starting_team div, .substitutes div {
-  position: relative; 
+.starting_team div,
+.substitutes div {
+  position: relative;
 }
 
 .player-details {
-    position: absolute;
-    bottom: -10px;
-    left: 37%;
+  position: absolute;
+  bottom: -10px;
+  left: 37%;
 }
 
-#info{
+#info {
   display: inline-flex;
   font-size: 1.7rem;
   font-weight: bold;
@@ -325,5 +365,4 @@ export default {
   margin: 0 6rem;
   padding: 0.7rem;
 }
-
 </style>

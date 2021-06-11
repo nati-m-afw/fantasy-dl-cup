@@ -368,10 +368,10 @@ export default {
         .post(`${path}/getUserID/${this.firebase_id}`)
         .then(async (response) => {
           this.user_id = await response.data.id;
-          this.team_name = await response.data.team_name
+          this.team_name = await response.data.team_name;
 
           // Check if valid user_id returned
-          if (this.user_id){
+          if (this.user_id) {
             // Update store state
             this.$store.commit("setCurrentUserID", this.user_id);
             this.$store.commit("setMyTeamName", this.team_name);

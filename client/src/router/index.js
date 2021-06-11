@@ -18,20 +18,16 @@ import AdminMain from "../views/AdminMain.vue";
 // If authenticated continue / Else goto login
 const ifAuthenticated = (to, from, next) => {
   // next()
-  if (store.getters.isAuthenticated)
-    next()
-  else
-    next("/")
+  if (store.getters.isAuthenticated) next();
+  else next("/");
 };
 
 // If not authenticated continue / Else goto myteam
 // For Login % Register route
 const ifNotAuthenticated = (to, from, next) => {
   // next()
-  if (!store.getters.isAuthenticated)
-    next()
-  else
-    next("/myteam")
+  if (!store.getters.isAuthenticated) next();
+  else next("/myteam");
 };
 
 const routes = [

@@ -22,7 +22,12 @@
               icon="user"
               size="7x"
             /> -->
-            <img @click="getPlayers($event, i)" class="i" :src="require('@/assets/img/jerseys/placeholdershirt.png')" alt="">
+            <img
+              @click="getPlayers($event, i)"
+              class="i"
+              :src="require('@/assets/img/jerseys/placeholdershirt.png')"
+              alt=""
+            />
             <span>GK</span>
             <!-- Check if any selected players in myTeam -->
             <!-- If so display name -->
@@ -46,7 +51,12 @@
               icon="user"
               size="7x"
             /> -->
-            <img @click="getPlayers($event, i)" class="i" :src="require('@/assets/img/jerseys/placeholdershirt.png')" alt="">
+            <img
+              @click="getPlayers($event, i)"
+              class="i"
+              :src="require('@/assets/img/jerseys/placeholdershirt.png')"
+              alt=""
+            />
             <span>DEF</span>
             <span v-if="myTeam.defender[i]">{{
               myTeam.defender[i].fname
@@ -66,7 +76,12 @@
               icon="user"
               size="7x"
             /> -->
-            <img @click="getPlayers($event, i)" class="i" :src="require('@/assets/img/jerseys/placeholdershirt.png')" alt="">
+            <img
+              @click="getPlayers($event, i)"
+              class="i"
+              :src="require('@/assets/img/jerseys/placeholdershirt.png')"
+              alt=""
+            />
             <span>MID</span>
             <span v-if="myTeam.midfielder[i]">{{
               myTeam.midfielder[i].fname
@@ -87,7 +102,12 @@
               icon="user"
               size="7x"
             /> -->
-            <img @click="getPlayers($event, i)" class="i" :src="require('@/assets/img/jerseys/placeholdershirt.png')" alt="">
+            <img
+              @click="getPlayers($event, i)"
+              class="i"
+              :src="require('@/assets/img/jerseys/placeholdershirt.png')"
+              alt=""
+            />
             <span>ST</span>
             <span v-if="myTeam.striker[i]">{{ myTeam.striker[i].fname }}</span>
           </div>
@@ -117,7 +137,7 @@
       </div>
       <div>
         <!-- <router-link to="Registration" @click.native="submit"> -->
-          <button @click="submit">Save</button>
+        <button @click="submit">Save</button>
         <!-- </router-link> -->
       </div>
     </div>
@@ -138,7 +158,7 @@ export default {
         striker: [null, null],
       },
 
-      myTeamName: '',
+      myTeamName: "",
 
       // Players from api based on position
       playersApi: [],
@@ -151,7 +171,6 @@ export default {
 
       // Active player order number and playing position
       selected: [],
-
     };
   },
 
@@ -198,12 +217,12 @@ export default {
       // Check for if team is complete
       let teamCompleted = true;
       for (const position in this.myTeam) {
-        for(const player of this.myTeam[position]){
+        for (const player of this.myTeam[position]) {
           teamCompleted = !player ? false : true;
         }
       }
-      
-      if(teamCompleted){
+
+      if (teamCompleted) {
         this.$store.commit("updateMyTeam", this.myTeam);
         this.$router.push("/registration");
         return;
@@ -283,8 +302,7 @@ li.disabled {
   background-color: tomato;
 }
 #team_selection img {
-    width: 15vw;
-    cursor: pointer;
+  width: 15vw;
+  cursor: pointer;
 }
-
 </style>
