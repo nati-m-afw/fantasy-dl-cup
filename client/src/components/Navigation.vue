@@ -20,7 +20,9 @@
     <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
       >Fixtures</router-link
     >
-    <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
+    <router-link
+      to="/statistics"
+      :class="activePage == 'myTeam' ? 'active' : ''"
       >Stats</router-link
     >
     <div class="dropdown">

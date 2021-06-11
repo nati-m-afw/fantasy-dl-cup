@@ -1,10 +1,11 @@
 # Importing
 from flask import Blueprint, request,json
-from flask_restful import Resource, Api
+from flask_restx import Resource , Api
 from models.matches import Match
 from models.players import Players
 from models.event import Event
 from models.department import Dept
+from models.statistics import StatInfo
 from flask_cors import cross_origin
 from main import db
 
@@ -161,3 +162,31 @@ admin.add_resource(AddNewPlayer,"/player/new")
 admin.add_resource(RemovePlayer,"/player/delete/<id>")
     
     
+    
+@admin.route("/statistics/<player_id>")
+class Statistics(Resource):
+    def patch(self,player_id):
+        response_data = request.get_json()
+        # print(response_data['goals_conceded'])
+        current_player = StatInfo.query.filter_by(players_id=player_id).first()
+        # Update Goals value
+        current_player.goals_scored = current_player.goals_scored + int( response_data['goals_scored'])
+        # Update Clean Sheets value
+        if response_data['goals_conceded'] == 0:
+            current_player.clean_sheets =  current_player.clean_sheets + 1
+            
+        # Update Assists Value 
+        current_player.assists_provided = current_player.assists_provided + int(response_data['assists_provided'])
+        
+        # Update Yellow Card Value
+        if response_data['yellow_cards'] == 1:
+            current_player.yellow_cards = current_player.yellow_cards + 1
+        
+        # Update Red Cards Value 
+        if response_data['red_cards'] == 1:
+            current_player.red_cards = current_player.red_cards + 1
+            
+        db.session.add(current_player)
+        db.session.commit()
+        
+        return {"message":"Update Successful"} , 204
