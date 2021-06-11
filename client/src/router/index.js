@@ -6,6 +6,7 @@ import Registration from "../views/Registration.vue";
 import MyTeam from "../views/MyTeam.vue";
 import Points from "../views/Points.vue";
 import Transfers from "../views/Transfers.vue";
+import Stats from "../views/Stats.vue";
 
 // Imports for Auth
 import Login from "../views/Login.vue";
@@ -65,6 +66,13 @@ const routes = [
     name: "Transfers",
     component: Transfers,
     meta: { title: "Trading Block" },
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: "/statistics",
+    name: "Statistics",
+    component: Stats,
+    meta: { title: "DL Stats" },
     beforeEnter: ifAuthenticated,
   },
 

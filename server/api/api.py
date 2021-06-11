@@ -7,42 +7,15 @@ from models.department import Dept
 from models.gameweek import Gameweek
 from models.matches import Match
 from models.score import Scores
+from models.statistics import StatInfo
+
 from flask_cors import cross_origin
 from main import db
 from flask_restx import Resource , Api
 
 #Creating Blueprint for api
 api_app = Blueprint("api",__name__)
-api=Api(api_app)
-
-# api = Api(api_app)
-
-
-# DEMO ARRAY OF PLAYERS LIST
-# PLAYERS = [
-#     {
-#      "dept_id": 1, 
-#      "fname": "Manu", 
-#      "id": 1, 
-#      "lname": "GK", 
-#      "position": "goalkeeper"
-#    }, 
-#    {
-#      "dept_id": 2, 
-#      "fname": "Fanny", 
-#      "id": 2, 
-#      "lname": "Gk", 
-#      "position": "goalkeeper"
-#    }, 
-#    {
-#      "dept_id": 4, 
-#      "fname": "Ranjit", 
-#      "id": 12, 
-#      "lname": "GK", 
-#      "position": "goalkeeper"
-#    }
-# ]
-
+api = Api(api_app)
 
 ###############################################################
 
@@ -361,3 +334,62 @@ class Score(Resource):
         current_score = Scores.query.filter_by(players_id=player_id,gameweek_id=gameweek_id)
         current_score =  list(map(lambda p: p.serialize(), current_score))
         return current_score[0]
+
+
+@api.route("/statistics")
+class Stat(Resource):
+    def get(self):
+        most_goals = StatInfo.query.filter_by().order_by(StatInfo.goals_scored.desc()).limit(5)
+        most_assists = StatInfo.query.filter_by().order_by(StatInfo.assists_provided.desc()).limit(5)
+        most_red_cards = StatInfo.query.filter_by().order_by(StatInfo.red_cards.desc()).limit(5)
+        most_yellow_cards = StatInfo.query.filter_by().order_by(StatInfo.yellow_cards.desc()).limit(5)
+        most_clean_sheets = StatInfo.query.filter_by().order_by(StatInfo.clean_sheets.desc()).limit(5)
+        most_goals =  list(map(lambda p: p.serialize(), most_goals))
+        most_assists =  list(map(lambda p: p.serialize(), most_assists))
+        most_red_cards =  list(map(lambda p: p.serialize(), most_red_cards))
+        most_yellow_cards =  list(map(lambda p: p.serialize(), most_yellow_cards))
+        most_clean_sheets =  list(map(lambda p: p.serialize(), most_clean_sheets))
+        
+        def get_player_info(player_id):
+            current_player_info = Players.query.filter_by(id=player_id).first()
+            current_team_id = current_player_info.dept_id
+            current_player_name = current_player_info.fname + " " + current_player_info.lname
+            current_team_name = Dept.query.filter_by(id=current_team_id).first().dName
+            return {"team_id":current_team_id,"player_name":current_player_name,"team_name":current_team_name}
+            
+        all_data = {
+            "goals_scored":[],
+            "assists_provided":[],
+            "yellow_cards":[],
+            "red_cards":[],
+            "clean_sheets":[],
+        }
+        def get_stat_data(type,data):
+            all_goals_info = []
+            for i in range(len(data)):
+                extra_info = get_player_info(data[i]['id'])
+                current_goal_info = {
+                "player_id":data[i]['id'],
+                "player_name":extra_info['player_name'],
+                type:data[i][type],
+                "team_name":extra_info['team_name']
+                }
+                
+                all_goals_info.append(current_goal_info)
+            all_data[type] = all_goals_info
+            
+            
+                
+        
+                
+                
+                
+        get_stat_data("goals_scored",most_goals)
+        get_stat_data("assists_provided",most_goals)
+        get_stat_data("yellow_cards",most_yellow_cards)
+        get_stat_data("red_cards",most_red_cards)
+        get_stat_data("clean_sheets",most_clean_sheets)
+        
+        
+        return all_data , 200
+        

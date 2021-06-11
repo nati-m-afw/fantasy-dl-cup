@@ -301,6 +301,12 @@ export default {
         })
         .then(() => {
           this.get_player_event();
+
+          // Send Update to Stats Table for Player by ID
+          axios.patch(
+            `${path}/statistics/${updated_stats.player_id}`,
+            updated_stats
+          );
           this.flashMessage.success({
             message: "Information Updated Successfully",
           });

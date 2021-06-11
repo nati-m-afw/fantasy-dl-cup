@@ -41,6 +41,7 @@ from models.users import Users
 from models.matches import Match
 from models.gameweek import Gameweek
 from models.event import Event
+from models.statistics import StatInfo
 # Create Tables 
 db.create_all()
 
