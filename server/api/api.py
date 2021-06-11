@@ -247,12 +247,16 @@ def get_table():
                 table[str(match.team)]['points']+=3
                 # Add play count
                 table[str(match.team)]['played'] += 1
-                # Add to Last 5
-                
                 # Add GF to home team
                 table[str(match.team)]['GF'] += int(match.score[0])
                 # Add GA to home team
                 table[str(match.team)]['GA'] += int(match.score[2])
+                # Add to Last 5
+                if len(table[str(match.team)]['last5']) < 5:
+                    table[str(match.team)]['last5'].append("W")
+                else:
+                    table[str(match.team)]['last5'].pop(0)
+                    table[str(match.team)]['last5'].append("W")
                 
                 
                 # Add loss to away team
@@ -263,6 +267,12 @@ def get_table():
                 table[str(match.opponent)]['GF'] += int(match.score[2])
                 # Add GA to away team
                 table[str(match.opponent)]['GA'] += int(match.score[0])
+                # Add to Last 5
+                if len(table[str(match.opponent)]['last5']) < 5:
+                    table[str(match.opponent)]['last5'].append("L")
+                else:
+                    table[str(match.opponent)]['last5'].pop(0)
+                    table[str(match.opponent)]['last5'].append("L")
 
             
             # Check if team has lost the match
@@ -275,6 +285,12 @@ def get_table():
                 table[str(match.team)]['GF'] += int(match.score[0])
                 # Add GA to home team
                 table[str(match.team)]['GA'] += int(match.score[2])
+                # Add to Last 5
+                if len(table[str(match.team)]['last5']) < 5:
+                    table[str(match.team)]['last5'].append("L")
+                else:
+                    table[str(match.team)]['last5'].pop(0)
+                    table[str(match.team)]['last5'].append("L")
 
                 
                 
@@ -288,6 +304,12 @@ def get_table():
                 table[str(match.opponent)]['GF'] += int(match.score[2])
                 # Add GA to away team
                 table[str(match.opponent)]['GA'] += int(match.score[0])
+                # Add to Last 5
+                if len(table[str(match.opponent)]['last5']) < 5:
+                    table[str(match.opponent)]['last5'].append("W")
+                else:
+                    table[str(match.opponent)]['last5'].pop(0)
+                    table[str(match.opponent)]['last5'].append("W")
 
 
             #Check if team has drawn the match
@@ -302,6 +324,12 @@ def get_table():
                 table[str(match.team)]['GF'] += int(match.score[0])
                 # Add GA to home team
                 table[str(match.team)]['GA'] += int(match.score[2])
+                # Add to Last 5
+                if len(table[str(match.team)]['last5']) < 5:
+                    table[str(match.team)]['last5'].append("D")
+                else:
+                    table[str(match.team)]['last5'].pop(0)
+                    table[str(match.team)]['last5'].append("D")
 
                 
                 # Add draw to away team
@@ -314,6 +342,12 @@ def get_table():
                 table[str(match.opponent)]['GF'] += int(match.score[2])
                 # Add GA to away team
                 table[str(match.opponent)]['GA'] += int(match.score[0])
+                # Add to Last 5
+                if len(table[str(match.opponent)]['last5']) < 5:
+                    table[str(match.opponent)]['last5'].append("D")
+                else:
+                    table[str(match.opponent)]['last5'].pop(0)
+                    table[str(match.opponent)]['last5'].append("D")
 
             
             
