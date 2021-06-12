@@ -133,8 +133,8 @@ def get_table():
     table = {
         # IT
         "1":{
-            "teamName":"IT",
-            "teamId": 1,
+            "teamName": "BioMed",
+            "teamId": 6,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -144,9 +144,9 @@ def get_table():
             "GF":0,
             "GA":0
         },
-        "2": {
-            "teamName":"Mech",
-            "teamId": 2,
+        "2":{
+            "teamName": "Chemical",
+            "teamId": 5,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -157,7 +157,7 @@ def get_table():
             "GA":0
         },
         "3": {
-            "teamName":"Elec",
+            "teamName": "Elec",
             "teamId": 3,
             "points": 0,
             "last5": [],
@@ -169,8 +169,8 @@ def get_table():
             "GA":0
         },
         "4":{
-            "teamName":"SE",
-            "teamId": 4,
+            "teamName": "IT",
+            "teamId": 1,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -180,9 +180,9 @@ def get_table():
             "GF":0,
             "GA":0
         },
-        "5":{
-            "teamName":"Chemical",
-            "teamId": 5,
+        "5": {
+            "teamName": "Mech",
+            "teamId": 2,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -193,8 +193,8 @@ def get_table():
             "GA":0
         },
         "6":{
-            "teamName":"BioMed",
-            "teamId": 6,
+            "teamName": "SE",
+            "teamId": 4,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -204,7 +204,6 @@ def get_table():
             "GF":0,
             "GA":0
         },
-        
     }
     matches = Match.query.all()
     for match in matches:
