@@ -321,13 +321,10 @@ def get_table():
                 else:
                     table[str(match.opponent)]['last5'].pop(0)
                     table[str(match.opponent)]['last5'].append("D")
-
-            
-            
-            
-
-    print(table)
+   
+    ## print(table)
     return table
+    
 @api.route("/score/<player_id>/<gameweek_id>")
 class Score(Resource):
     def get(self,player_id,gameweek_id):

@@ -140,7 +140,11 @@
 
           <div class="reserve-outfield">
             <!-- SUB Players -->
-            <div v-for="(player, i) in benchedPlayers" :key="i" class="player-details">
+            <div
+              v-for="(player, i) in benchedPlayers"
+              :key="i"
+              class="player-details"
+            >
               <img
                 :src="
                   require('@/assets/img/jerseys/' + player.department + '.png')

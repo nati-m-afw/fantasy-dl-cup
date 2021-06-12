@@ -6,6 +6,7 @@ import Registration from "../views/Registration.vue";
 import MyTeam from "../views/MyTeam.vue";
 import Points from "../views/Points.vue";
 import Transfers from "../views/Transfers.vue";
+import Table from "../views/Table.vue";
 import Stats from "../views/Stats.vue";
 
 // Imports for Auth
@@ -66,6 +67,13 @@ const routes = [
     name: "Transfers",
     component: Transfers,
     meta: { title: "Trading Block" },
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: "/table",
+    name: "Table",
+    component: Table,
+    meta: { title: "DL Cup Official League Table" },
     beforeEnter: ifAuthenticated,
   },
   {

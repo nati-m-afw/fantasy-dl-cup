@@ -14,15 +14,13 @@
     <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
       >League</router-link
     >
-    <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
+    <router-link to="/table" :class="activePage == 'Table' ? 'active' : ''"
       >Table</router-link
     >
     <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
       >Fixtures</router-link
     >
-    <router-link
-      to="/statistics"
-      :class="activePage == 'Stats' ? 'active' : ''"
+    <router-link to="/statistics" :class="activePage == 'Stats' ? 'active' : ''"
       >Stats</router-link
     >
     <div class="dropdown">
