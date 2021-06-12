@@ -20,6 +20,9 @@ import {
   faPlus,
   faTrashAlt,
   faSave,
+  faCheckCircle,
+  faTimesCircle,
+  faMinusCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -69,6 +72,9 @@ library.add(faArrowCircleLeft);
 library.add(faPlus);
 library.add(faTrashAlt);
 library.add(faSave);
+library.add(faCheckCircle);
+library.add(faTimesCircle);
+library.add(faMinusCircle);
 
 Vue.component("fa", FontAwesomeIcon);
 

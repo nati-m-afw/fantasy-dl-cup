@@ -20,8 +20,10 @@ def populate():
     dept4 = Dept(id=4,dName='SE')
     dept5 = Dept(id=5,dName='Chemical')
     dept6 = Dept(id=6,dName='BioMed')
-
-
+    # dept7 = Dept(id=7,dName='')
+    # dept8 = Dept(id=8,dName='')
+    # dept9 = Dept(id=9,dName='')
+    # dept10 = Dept(id=10,dName='')
     
     # Dep't 1
     

@@ -24,13 +24,17 @@
           <tr v-for="team in table" :key="team">
             <td>{{ team.teamName }}<i class="fas fa-minus"></i></td>
             <td>
-              <i class="fas fa-check-circle"></i
-              ><i class="fas fa-check-circle"></i
-              ><i class="fas fa-check-circle"></i
-              ><i class="fas fa-check-circle"></i
-              ><i class="fas fa-check-circle"></i>
+              <span v-for="result in team.last5" :key="result">
+                <fa v-if="result == 'W'" class="i fas" icon="check-circle" />
+                <fa
+                  v-else-if="result == 'L'"
+                  class="i fas"
+                  icon="times-circle"
+                />
+                <fa v-else class="i fas" icon="minus-circle" />
+              </span>
             </td>
-            <td>{{ team.points }}</td>
+            <td>{{ team.won * 3 + team.drawn }}</td>
             <td>{{ team.played }}</td>
             <td>{{ team.won }}</td>
             <td>{{ team.drawn }}</td>

@@ -131,10 +131,9 @@ def addStatusToResponse(player, status, department):
 def get_table():
     response={'status':'success'}
     table = {
-        # IT
         "1":{
             "teamName": "BioMed",
-            "teamId": 6,
+            "teamId": 1,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -146,7 +145,7 @@ def get_table():
         },
         "2":{
             "teamName": "Chemical",
-            "teamId": 5,
+            "teamId": 2,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -170,7 +169,7 @@ def get_table():
         },
         "4":{
             "teamName": "IT",
-            "teamId": 1,
+            "teamId": 4,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -182,7 +181,7 @@ def get_table():
         },
         "5": {
             "teamName": "Mech",
-            "teamId": 2,
+            "teamId": 5,
             "points": 0,
             "last5": [],
             "played": 0,
@@ -194,7 +193,7 @@ def get_table():
         },
         "6":{
             "teamName": "SE",
-            "teamId": 4,
+            "teamId": 6,
             "points": 0,
             "last5": [],
             "played": 0,
