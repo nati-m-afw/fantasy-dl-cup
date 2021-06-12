@@ -77,7 +77,17 @@ export default {
       .get("http://localhost:5000/getactivegw")
       .then((res) => {
         // Add team on upcoming GW
-        this.sendTeamToAPI(res.data.activeGW + 1);
+        let data = res.data;
+        axios
+        .get(
+          "http://localhost:5000/getteam/" + this.$store.state.userId + "/5"
+        )
+        .then((res) => {
+          // Check if user has picked team
+          if (res.data.team.length != 0) this.$router.push("/myteam")
+          else this.sendTeamToAPI(data.activeGW + 1);
+        })
+        .catch((err) => console.error(err));
       })
       .catch((err) => console.error(err));
   },

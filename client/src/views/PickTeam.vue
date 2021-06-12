@@ -234,6 +234,15 @@ export default {
 
   created() {
     this.myTeamName = this.$store.state.myTeamName;
+    axios
+        .get(
+          "http://localhost:5000/getteam/" + this.$store.state.userId + "/5"
+        )
+        .then((res) => {
+          // Check if user has picked team
+          if (res.data.team.length != 0) this.$router.push("/myteam");
+        })
+        .catch((err) => console.error(err));
   },
 };
 </script>
