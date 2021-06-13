@@ -1,7 +1,11 @@
 # Importing Libs
 from flask import Flask, Blueprint,json 
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+jwt = JWTManager(app)
 # Library for importing environment variables
 from dotenv import load_dotenv
 
@@ -41,7 +45,6 @@ from models.users import Users
 from models.matches import Match
 from models.gameweek import Gameweek
 from models.event import Event
-from models.statistics import StatInfo
 # Create Tables 
 db.create_all()
 
