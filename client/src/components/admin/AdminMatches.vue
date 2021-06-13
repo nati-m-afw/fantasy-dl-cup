@@ -132,7 +132,7 @@ export default {
           this.game_week_date = this.match_schedules[0].date;
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
     get_teams: function () {
@@ -185,10 +185,25 @@ export default {
           this.showOption = false;
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
-
+      handle_error: function (err) {
+      // 401 UnAuthorized
+      if (err.response.status == 401) {
+        console.log("401 Error Handling");
+      }
+      // Tampered with JWT
+      else if (err.response.status == 422) {
+        console.log("422 Error Handling");
+      }
+      // Non Admin Access
+      else if (err.response.status == 403) {
+        console.log("403 Error Handling");
+      } else {
+        console.log(err);
+      }
+    },
     show: function (e) {
       console.log(e.target);
     },

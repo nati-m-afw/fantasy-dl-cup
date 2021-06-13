@@ -454,6 +454,22 @@ export default {
         }
       }
     },
+    handle_error: function (err) {
+      // 401 UnAuthorized
+      if (err.response.status == 401) {
+        console.log("401 Error Handling");
+      }
+      // Tampered with JWT
+      else if (err.response.status == 422) {
+        console.log("422 Error Handling");
+      }
+      // Non Admin Access
+      else if (err.response.status == 403) {
+        console.log("403 Error Handling");
+      } else {
+        console.log(err);
+      }
+    },
     // Get all teams for drop down
     get_all_teams: function () {
       axios
@@ -462,7 +478,7 @@ export default {
           this.all_teams = response.data;
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
     // Get Players By department
@@ -474,7 +490,7 @@ export default {
           this.loader = 0;
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
 
@@ -505,7 +521,7 @@ export default {
           this.get_players();
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
     // Edit Player Info
@@ -536,7 +552,7 @@ export default {
           this.get_players();
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
     edit_player: function () {
@@ -568,7 +584,7 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
     cancel_new_player: function () {
