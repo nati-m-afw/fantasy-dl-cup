@@ -1,23 +1,26 @@
-# Importing
+# Importing Essentials
 from flask import Blueprint, request,json,jsonify
-from flask.globals import session
+
+#  Importing Restx
 from flask_restx import Resource, Api
-# from flask_restplus import Resource, Api
+
+# Importing Models
+from models.department import Dept
+from models.event import Event
 from models.matches import Match
 from models.players import Players
-from models.event import Event
-from models.department import Dept
 from models.score import Scores
-from flask_cors import cross_origin
+
+
+# Importing DB and JWT Instance from main
 from main import db,jwt
-
-
 
 
 #Creating Blueprint for Admin
 admin_app = Blueprint("admin",__name__)
 admin = Api(admin_app)
 
+# JWT Config
 jwt._set_error_handler_callbacks(admin)
 
 # Importing JWT Helpers
@@ -35,6 +38,7 @@ def check_admin():
     else:
         "Non-Admin"
        
+# Route to Handle Teams
 @admin.route("/teams")
 class Team(Resource):
     # Get All teams
@@ -47,6 +51,7 @@ class Team(Resource):
         else:
             return {"message":"Forbidden Access"}, 403
 
+# Route to Handle Schedule
 @admin.route("/schedule/<id>")
 class Schedule(Resource):
     # Get Schedule by GAMEWEEK ID
@@ -74,7 +79,8 @@ class Schedule(Resource):
              return {"message":"Forbidden Access"}, 403
 
     #  Generate Match Schedule
-      
+ 
+# Route to Handle Players   
 @admin.route("/players/<id>")      
 class Player(Resource):
     # Get Players by Department ID
@@ -136,7 +142,8 @@ class Player(Resource):
             return {"message":"Player Successfully Deleted"} , 204
         else:
             return {"message":"Forbidden Access"}, 403
-               
+     
+# Route to Handle Events   
 @admin.route("/events/<id>")       
 class Events(Resource):
     # Get Player Info From Event Table
@@ -169,101 +176,102 @@ class Events(Resource):
             return {"message":"Forbidden Access"}, 403
         
          
-@admin.route("/score")
-class Score(Resource):
-    def get(self):
-        scores= []
-        all_player_events = []
-        all_players = db.session.query(Players.id).all()
-        for player in all_players:
-            current_event = Event.query.filter_by(players_id=player[0]).all()
-            current_event =  list(map(lambda p: p.serialize(), current_event))
-            if len(current_event) == 0:
-                continue
-            all_player_events.append(current_event)
+# @admin.route("/score")
+# class Score(Resource):
+#     def get(self):
+#         scores= []
+#         all_player_events = []
+#         all_players = db.session.query(Players.id).all()
+#         for player in all_players:
+#             current_event = Event.query.filter_by(players_id=player[0]).all()
+#             current_event =  list(map(lambda p: p.serialize(), current_event))
+#             if len(current_event) == 0:
+#                 continue
+#             all_player_events.append(current_event)
         
         
-        for event in all_player_events:
-            # Event Info
-            player_id = event[0]['player_id']
-            match_id = event[0]['match_id']
-            gameweek_id = event[0]['gameweek_id']
-            score = 0
-            # Get Player Position
-            curr_player = Players.query.filter_by(id=event[0]['id']).first()
-            position = curr_player.position
-            # Get Events
-            goal_scored = event[0]['goals_scored']
-            goals_assisted = event[0]['assists_provided']
-            goals_conceded = event[0]['goals_conceded']
-            yellow_cards = event[0]['yellow_cards']
-            red_cards = event[0]['red_cards']
-            minutes_played = event[0]['minutes_played']
+#         for event in all_player_events:
+#             # Event Info
+#             player_id = event[0]['player_id']
+#             match_id = event[0]['match_id']
+#             gameweek_id = event[0]['gameweek_id']
+#             score = 0
+#             # Get Player Position
+#             curr_player = Players.query.filter_by(id=event[0]['id']).first()
+#             position = curr_player.position
+#             # Get Events
+#             goal_scored = event[0]['goals_scored']
+#             goals_assisted = event[0]['assists_provided']
+#             goals_conceded = event[0]['goals_conceded']
+#             yellow_cards = event[0]['yellow_cards']
+#             red_cards = event[0]['red_cards']
+#             minutes_played = event[0]['minutes_played']
             
             
 
-            # Handle Minutes Played
-            if(minutes_played >= 45):
-                # print("Here")
-                score = score + 2
-            elif(minutes_played <45):
-                score = score + 1
+#             # Handle Minutes Played
+#             if(minutes_played >= 45):
+#                 # print("Here")
+#                 score = score + 2
+#             elif(minutes_played <45):
+#                 score = score + 1
             
-            # Handle Yellow Cards
-            if(yellow_cards == 1):
-                score = score - 1
+#             # Handle Yellow Cards
+#             if(yellow_cards == 1):
+#                 score = score - 1
                 
-            # Red card
-            if(red_cards == 1):
-                score = score - 3
+#             # Red card
+#             if(red_cards == 1):
+#                 score = score - 3
                 
-            # Handle Goals
-            if(position == "goalkeeper"):
-                score = score + (goal_scored * 6)
-            elif(position == "defender"):
-                score = score + (goal_scored * 5)
-            elif (position == " midfielder"):
-                score = score + (goal_scored * 4)
-            elif (position == "striker"):
-                score = score + (goal_scored * 3)
+#             # Handle Goals
+#             if(position == "goalkeeper"):
+#                 score = score + (goal_scored * 6)
+#             elif(position == "defender"):
+#                 score = score + (goal_scored * 5)
+#             elif (position == " midfielder"):
+#                 score = score + (goal_scored * 4)
+#             elif (position == "striker"):
+#                 score = score + (goal_scored * 3)
                 
-            # Handle Assists
-            if (position == "goalkeeper"):
-                score = score + (goals_assisted * 5)
-            elif (position == "defender"):
-                score = score + (goals_assisted * 4)
-            elif (position == "midfielder" or position=='striker'):
-                score = score + (goals_assisted * 3)
+#             # Handle Assists
+#             if (position == "goalkeeper"):
+#                 score = score + (goals_assisted * 5)
+#             elif (position == "defender"):
+#                 score = score + (goals_assisted * 4)
+#             elif (position == "midfielder" or position=='striker'):
+#                 score = score + (goals_assisted * 3)
                 
-            # Handle Goals Conceded
-            if(position == "goalkeeper"):
-                if goals_conceded == 0:
-                    score = score + 3
-                else:
-                    score = score - goals_conceded
+#             # Handle Goals Conceded
+#             if(position == "goalkeeper"):
+#                 if goals_conceded == 0:
+#                     score = score + 3
+#                 else:
+#                     score = score - goals_conceded
         
-            elif(position == "defender"):
-                if goals_conceded == 0:
-                    score = score + 3
-                else:
-                    score = score - goals_conceded
+#             elif(position == "defender"):
+#                 if goals_conceded == 0:
+#                     score = score + 3
+#                 else:
+#                     score = score - goals_conceded
         
-            elif(position == "midfielder"):
-                if goals_conceded == 0:
-                    score = score + 3
-                else:
-                    score = score - goals_conceded
+#             elif(position == "midfielder"):
+#                 if goals_conceded == 0:
+#                     score = score + 3
+#                 else:
+#                     score = score - goals_conceded
         
-            print("Insertion")            
-            curr_score = Scores(players_id=player_id,gameweek_id=gameweek_id,match_id=match_id,score=score)
-            db.session.add(curr_score)
-            db.session.commit()
-            scores.append(curr_score)
+#             print("Insertion")            
+#             curr_score = Scores(players_id=player_id,gameweek_id=gameweek_id,match_id=match_id,score=score)
+#             db.session.add(curr_score)
+#             db.session.commit()
+#             scores.append(curr_score)
            
             
-        return all_players , 200
+#         return all_players , 200
     
-    
+
+# Route to Handle Scores 
 @admin.route("/score/<player_id>")
 class Score(Resource):
     def post(self,player_id):
