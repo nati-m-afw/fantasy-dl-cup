@@ -282,6 +282,22 @@ export default {
       this.team_id = main_info.getAttribute("team_id");
       this.opponent_id = main_info.getAttribute("opponent_id");
     },
+    handle_error: function (err) {
+      // 401 UnAuthorized
+      if (err.response.status == 401) {
+        console.log("401 Error Handling");
+      }
+      // Tampered with JWT
+      else if (err.response.status == 422) {
+        console.log("422 Error Handling");
+      }
+      // Non Admin Access
+      else if (err.response.status == 403) {
+        console.log("403 Error Handling");
+      } else {
+        console.log(err);
+      }
+    },
     // Function to save data after edit
     save_data: function () {
       let updated_stats = {
@@ -301,19 +317,14 @@ export default {
         })
         .then(() => {
           this.get_player_event();
-
-          // Send Update to Stats Table for Player by ID
-          axios.patch(
-            `${path}/statistics/${updated_stats.player_id}`,
-            updated_stats
-          );
           this.flashMessage.success({
             message: "Information Updated Successfully",
           });
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
+         
     },
     // Method for setting up score form for clicks
     get_scoring_system: function (e) {
@@ -355,7 +366,7 @@ export default {
           this.get_players(this.opponent_id, "");
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
     // Method to get team names
@@ -382,7 +393,7 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
     // Method to get player event info
@@ -400,7 +411,7 @@ export default {
           this.red_cards = data.red_cards;
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
 
@@ -437,6 +448,7 @@ export default {
         this.get_player_event();
       }
     },
+   
   },
 };
 </script>
