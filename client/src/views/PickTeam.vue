@@ -114,7 +114,7 @@
           <i></i>
         </div>
       </div>
-      <div id="transfer_sidebar">
+      <div id="transfer_sidebar" class="sidebar">
         <!-- Show if server status is false or down -->
         <h2 v-if="!serverStatus">Server could not be reached.</h2>
         <ul>
@@ -248,6 +248,8 @@ export default {
 </script>
 
 <style scoped>
+@import "../assets/css/sidebar.css";
+
 * {
   box-sizing: border-box;
 }

@@ -132,7 +132,7 @@ def get_table():
     response={'status':'success'}
     table = {
         "1":{
-            "teamName": "BioMed",
+            "teamName": "IT",
             "teamId": 1,
             "points": 0,
             "last5": [],
@@ -144,7 +144,7 @@ def get_table():
             "GA":0
         },
         "2":{
-            "teamName": "Chemical",
+            "teamName": "Mech",
             "teamId": 2,
             "points": 0,
             "last5": [],
@@ -168,7 +168,7 @@ def get_table():
             "GA":0
         },
         "4":{
-            "teamName": "IT",
+            "teamName": "SE",
             "teamId": 4,
             "points": 0,
             "last5": [],
@@ -180,7 +180,7 @@ def get_table():
             "GA":0
         },
         "5": {
-            "teamName": "Mech",
+            "teamName": "Chemical",
             "teamId": 5,
             "points": 0,
             "last5": [],
@@ -192,7 +192,7 @@ def get_table():
             "GA":0
         },
         "6":{
-            "teamName": "SE",
+            "teamName": "BioMed",
             "teamId": 6,
             "points": 0,
             "last5": [],
