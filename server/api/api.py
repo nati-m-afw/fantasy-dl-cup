@@ -395,7 +395,7 @@ class Stat(Resource):
 class GlobalLeague(Resource):
     def get(self):
         response = { 'status': 'success' }
-        # teams = []
+        teams = {}
 
         activeGW = 0
 
@@ -410,5 +410,24 @@ class GlobalLeague(Resource):
 
 
         # Get all user_players
-        up =  db.session.query(userPlayers).filter(userPlayers.gameweek_id < activeGW + 1).all()
-        print(up)
+        users = db.session.query(Users).all()
+        user_players =  db.session.query(userPlayers).filter(userPlayers.gameweek_id < activeGW + 1).all()
+        
+        for user in users:
+            teams[user.id] = {
+                'id': user.id,
+                'teamName': user.teamname,
+                'score': [0,0,0,0,0]
+            }
+            # team.push(userScore)
+
+        for gameweek in range(1, activeGW + 1):
+            for player in user_players:
+                playerScore = Scores.query.filter_by(players_id=player.players_id,gameweek_id=gameweek).first()
+                try:
+                    teams[player.user_id]['score'][gameweek - 1] += playerScore.score
+                except:
+                    teams[player.user_id]['score'][gameweek - 1] += 0
+
+        response['teams'] = teams
+        return response
