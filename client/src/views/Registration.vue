@@ -79,15 +79,15 @@ export default {
         // Add team on upcoming GW
         let data = res.data;
         axios
-        .get(
-          "http://localhost:5000/getteam/" + this.$store.state.userId + "/5"
-        )
-        .then((res) => {
-          // Check if user has picked team
-          if (res.data.team.length != 0) this.$router.push("/myteam")
-          else this.sendTeamToAPI(data.activeGW + 1);
-        })
-        .catch((err) => console.error(err));
+          .get(
+            "http://localhost:5000/getteam/" + this.$store.state.userId + "/5"
+          )
+          .then((res) => {
+            // Check if user has picked team
+            if (res.data.team.length != 0) this.$router.push("/myteam");
+            else this.sendTeamToAPI(data.activeGW + 1);
+          })
+          .catch((err) => console.error(err));
       })
       .catch((err) => console.error(err));
   },

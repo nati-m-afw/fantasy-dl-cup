@@ -60,6 +60,266 @@
   </div>
 </template>
 
+<script>
+import firebase from "firebase";
+import "firebase/auth";
+
+// Random Word Generator
+import randomWords from "random-words";
+import axios from "axios";
+let path = "http://localhost:5000/auth";
+
+export default {
+  name: "Login",
+
+  data() {
+    return {
+      email: "",
+      password: "",
+      providerName: "",
+    };
+  },
+  methods: {
+    // For Email Live
+    validate_email_live: function (e) {
+      if (
+        /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/.test(this.email)
+      ) {
+        e.target.classList.remove("error");
+        e.target.classList.add("success");
+        this.$refs.username_icon.style.color = "green";
+      } else {
+        e.target.classList.remove("success");
+        e.target.classList.remove("error");
+        e.target.classList.add("error");
+
+        this.$refs.username_icon.style.color = "red";
+      }
+    },
+
+    // For Email Final
+    validate_email: function () {
+      if (
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+          this.email
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    // Live Validation For Password Live
+    validate_password_live: function (e) {
+      if (
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
+          this.password
+        )
+      ) {
+        e.target.classList.remove("error");
+        e.target.classList.add("success");
+        this.$refs.password_icon.style.color = "green";
+      } else {
+        e.target.classList.remove("success");
+        e.target.classList.remove("error");
+        e.target.classList.add("error");
+
+        this.$refs.password_icon.style.color = "red";
+      }
+    },
+
+    // Final Check For Password Final
+    validate_password: function () {
+      if (
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
+          this.password
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    // Function to update db with firebase id
+    update_api: function (user_info) {
+      axios
+        .post(`${path}/signuser`, { user_info })
+        .then(() => {})
+        .catch((err) => {
+          this.flashMessage.error({
+            message: err.message,
+          });
+        });
+    },
+
+    // Function to get id from firebase_id
+    get_user_id: function () {
+      axios
+        .post(`${path}/getUserID/${this.firebase_id}`)
+        .then(async (response) => {
+          this.user_id = await response.data.id;
+          this.team_name = await response.data.team_name;
+
+          // Check if valid user_id returned
+          if (this.user_id) {
+            // Update store state
+            this.$store.commit("setCurrentUserID", this.user_id);
+            this.$store.commit("setMyTeamName", this.team_name);
+            localStorage.setItem("token", response.data.token);
+            // this.$store.dispatch("getActiveGameweek");
+          }
+
+          // If Admin Redirect to admin
+          if (this.user_id == 1) {
+            this.$router.push("/admin");
+          } else {
+            // Redirect to myTeam
+            this.$router.push("/myteam");
+          }
+        })
+        .catch((err) => {
+          this.flashMessage.error({
+            message: err.message,
+          });
+        });
+    },
+
+    // Function for firebase Login with email and password
+    email_login: function () {
+      // If Data is valid
+      if (
+        this.validate_email()
+        // && this.validate_password()
+      ) {
+        // Call Firebase API
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(this.email, this.password)
+          .then(
+            async () => {
+              // Get Current User
+              let user = firebase.auth().currentUser;
+              this.firebase_id = user.uid;
+              // Function to call api route for adding to db (Incase the call during registration was inturrepted)
+              this.update_api({
+                firebase_id: this.firebase_id,
+                fname: "Full",
+                lname: "Name",
+                team_name: randomWords(),
+              });
+
+              // GET USER ID
+              // Redirect to MyTeam Component in get_user_id
+              this.get_user_id(this.firebase_id);
+
+              // Flash Success Message at Login
+            },
+            // If User email is already in use in firebase
+            (err) => {
+              this.flashMessage.error({
+                message: `${err.message}`,
+              });
+            }
+          );
+      } else {
+        this.flashMessage.error({
+          message: "Please check your input.",
+        });
+      }
+    },
+
+    // Function to handle SSO for all methods
+    handle_sso: function () {
+      // Find out the selected provider
+      let provider;
+      if (this.providerName == "Google") {
+        provider = new firebase.auth.GoogleAuthProvider();
+      } else if (this.providerName == "Github") {
+        provider = new firebase.auth.GithubAuthProvider();
+      } else if (this.providerName == "Facebook") {
+        provider = new firebase.auth.FacebookAuthProvider();
+      }
+
+      // Call to firebase api
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(
+          async () => {
+            // Get Current User
+            let user = firebase.auth().currentUser;
+
+            // Get Firebase_id
+            this.firebase_id = user.uid;
+
+            // If API displays Full Name
+            if (user.displayName) {
+              this.full_name = user.displayName;
+            }
+
+            // Request for id with firebase_id
+            axios
+              .get(`${path}/getuser/${user.uid}`)
+              .then((response) => {
+                // If firebase_id in database
+                if (response.data.code == "Error") {
+                  // Redirect to Pick Team Component
+                  this.$router.push({ name: "PickTeam" });
+
+                  // Call Function to HANDLE ID SHARING
+                  this.get_user_id(this.firebase_id);
+                }
+                // If new firebase_id
+                else if (response.data.code == "Success") {
+                  // Add firebase_id to DB
+                  this.update_api({
+                    firebase_id: this.firebase_id,
+                    fname: this.full_name.split(" ")[0],
+                    lname: this.full_name.split(" ")[1],
+                    team_name: randomWords(),
+                  });
+
+                  // Redirect to Pick Team Component
+                  this.$router.push({ name: "PickTeam" });
+                  // GET ID of user
+                  this.get_user_id(this.firebase_id);
+                }
+              })
+              .catch((err) => {
+                this.flashMessage.error({
+                  message: err.message,
+                });
+              });
+          },
+          () => {
+            // Call Error Handler Function
+            this.flashMessage.error({
+              message: `Email ${this.email} with a different Provider`,
+            });
+          }
+        );
+    },
+
+    google_login: function () {
+      this.providerName = "Google";
+      this.handle_sso();
+    },
+
+    github_login: function () {
+      this.providerName = "Github";
+
+      this.handle_sso();
+    },
+
+    facebook_login: function () {
+      this.providerName = "Facebook";
+
+      this.handle_sso();
+    },
+  },
+};
+</script>
+
 <style scoped>
 /* Defining Fonts */
 @font-face {
@@ -97,7 +357,6 @@ input:focus {
 .body {
   width: 100%;
   padding-botton: 5%;
-
   /* background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
     url("../../public/img/5273776.jpg"); */
   background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
@@ -269,257 +528,3 @@ input:focus {
 .redirect-link {
 }
 </style>
-
-<script>
-import firebase from "firebase";
-import "firebase/auth";
-
-// Random Word Generator
-import randomWords from "random-words";
-import axios from "axios";
-let path = "http://localhost:5000/auth";
-
-export default {
-  name: "Login",
-
-  data() {
-    return {
-      email: "",
-      password: "",
-      providerName: "",
-    };
-  },
-  methods: {
-    // For Email Live
-    validate_email_live: function (e) {
-      if (
-        /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/.test(this.email)
-      ) {
-        e.target.classList.remove("error");
-        e.target.classList.add("success");
-        this.$refs.username_icon.style.color = "green";
-      } else {
-        e.target.classList.remove("success");
-        e.target.classList.remove("error");
-        e.target.classList.add("error");
-
-        this.$refs.username_icon.style.color = "red";
-      }
-    },
-
-    // For Email Final
-    validate_email: function () {
-      if (
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-          this.email
-        )
-      ) {
-        return true;
-      }
-      return false;
-    },
-
-    // Live Validation For Password Live
-    validate_password_live: function (e) {
-      if (
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
-          this.password
-        )
-      ) {
-        e.target.classList.remove("error");
-        e.target.classList.add("success");
-        this.$refs.password_icon.style.color = "green";
-      } else {
-        e.target.classList.remove("success");
-        e.target.classList.remove("error");
-        e.target.classList.add("error");
-
-        this.$refs.password_icon.style.color = "red";
-      }
-    },
-
-    // Final Check For Password Final
-    validate_password: function () {
-      if (
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
-          this.password
-        )
-      ) {
-        return true;
-      }
-      return false;
-    },
-
-    // Function to update db with firebase id
-    update_api: function (user_info) {
-      axios
-        .post(`${path}/signuser`, { user_info })
-        .then(() => {})
-        .catch((err) => {
-          this.flashMessage.error({
-            message: err.message,
-          });
-        });
-    },
-
-    // Function to get id from firebase_id
-    get_user_id: function () {
-      axios
-        .post(`${path}/getUserID/${this.firebase_id}`)
-        .then(async (response) => {
-          this.user_id = await response.data.id;
-          this.team_name = await response.data.team_name;
-
-          // Check if valid user_id returned
-          if (this.user_id) {
-            // Update store state
-            this.$store.commit("setCurrentUserID", this.user_id);
-            this.$store.commit("setMyTeamName", this.team_name);
-            // this.$store.dispatch("getActiveGameweek");
-          }
-
-          // Redirect to myTeam
-          this.$router.push("/myteam");
-        })
-        .catch((err) => {
-          this.flashMessage.error({
-            message: err.message,
-          });
-        });
-    },
-
-    // Function for firebase Login with email and password
-    email_login: function () {
-      // If Data is valid
-      if (
-        this.validate_email()
-        // && this.validate_password()
-      ) {
-        // Call Firebase API
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(this.email, this.password)
-          .then(
-            async () => {
-              // Get Current User
-              let user = firebase.auth().currentUser;
-              this.firebase_id = user.uid;
-              // Function to call api route for adding to db (Incase the call during registration was inturrepted)
-              this.update_api({
-                firebase_id: this.firebase_id,
-                fname: "Full",
-                lname: "Name",
-                team_name: randomWords(),
-              });
-
-              // GET USER ID
-              // Redirect to MyTeam Component in get_user_id
-              this.get_user_id(this.firebase_id);
-
-              // Flash Success Message at Login
-            },
-            // If User email is already in use in firebase
-            (err) => {
-              this.flashMessage.error({
-                message: `${err.message}`,
-              });
-            }
-          );
-      } else {
-        this.flashMessage.error({
-          message: "Please check your input.",
-        });
-      }
-    },
-
-    // Function to handle SSO for all methods
-    handle_sso: function () {
-      // Find out the selected provider
-      let provider;
-      if (this.providerName == "Google") {
-        provider = new firebase.auth.GoogleAuthProvider();
-      } else if (this.providerName == "Github") {
-        provider = new firebase.auth.GithubAuthProvider();
-      } else if (this.providerName == "Facebook") {
-        provider = new firebase.auth.FacebookAuthProvider();
-      }
-
-      // Call to firebase api
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(
-          async () => {
-            // Get Current User
-            let user = firebase.auth().currentUser;
-
-            // Get Firebase_id
-            this.firebase_id = user.uid;
-
-            // If API displays Full Name
-            if (user.displayName) {
-              this.full_name = user.displayName;
-            }
-
-            // Request for id with firebase_id
-            axios
-              .get(`${path}/getuser/${user.uid}`)
-              .then((response) => {
-                // If firebase_id in database
-                if (response.data.code == "Error") {
-                  // Redirect to Pick Team Component
-                  this.$router.push({ name: "PickTeam" });
-
-                  // Call Function to HANDLE ID SHARING
-                  this.get_user_id(this.firebase_id);
-                }
-                // If new firebase_id
-                else if (response.data.code == "Success") {
-                  // Add firebase_id to DB
-                  this.update_api({
-                    firebase_id: this.firebase_id,
-                    fname: this.full_name.split(" ")[0],
-                    lname: this.full_name.split(" ")[1],
-                    team_name: randomWords(),
-                  });
-
-                  // Redirect to Pick Team Component
-                  this.$router.push({ name: "PickTeam" });
-                  // GET ID of user
-                  this.get_user_id(this.firebase_id);
-                }
-              })
-              .catch((err) => {
-                this.flashMessage.error({
-                  message: err.message,
-                });
-              });
-          },
-          () => {
-            // Call Error Handler Function
-            this.flashMessage.error({
-              message: `Email ${this.email} with a different Provider`,
-            });
-          }
-        );
-    },
-
-    google_login: function () {
-      this.providerName = "Google";
-      this.handle_sso();
-    },
-
-    github_login: function () {
-      this.providerName = "Github";
-
-      this.handle_sso();
-    },
-
-    facebook_login: function () {
-      this.providerName = "Facebook";
-
-      this.handle_sso();
-    },
-  },
-};
-</script>

@@ -121,7 +121,11 @@
 
           <div class="reserve-outfield">
             <!-- SUB Players -->
-            <div v-for="(player, i) in benchedPlayers" :key="i" class="player-details">
+            <div
+              v-for="(player, i) in benchedPlayers"
+              :key="i"
+              class="player-details"
+            >
               <img
                 :src="
                   require('@/assets/img/jerseys/' + player.department + '.png')
@@ -145,13 +149,28 @@
           </div>
           <div>
             <p>Active GW</p>
-            <select name="gameweek" id="gameweek" v-model="activeGameweek" @change="getTeam">
+            <select
+              name="gameweek"
+              id="gameweek"
+              v-model="activeGameweek"
+              @change="getTeam"
+            >
               <!-- <option v-for="i in availabeGameweeks" :key="i" value="i">GW {{ i }}</option> -->
-              <option value="1" v-if="this.activeGameweek >= 1">Gameweek 1</option>
-              <option value="2" v-if="this.activeGameweek >= 2">Gameweek 2</option>
-              <option value="3" v-if="this.activeGameweek >= 3">Gameweek 3</option>
-              <option value="4" v-if="this.activeGameweek >= 4">Gameweek 4</option>
-              <option value="5" v-if="this.activeGameweek >= 5">Gameweek 5</option>
+              <option value="1" v-if="this.activeGameweek >= 1">
+                Gameweek 1
+              </option>
+              <option value="2" v-if="this.activeGameweek >= 2">
+                Gameweek 2
+              </option>
+              <option value="3" v-if="this.activeGameweek >= 3">
+                Gameweek 3
+              </option>
+              <option value="4" v-if="this.activeGameweek >= 4">
+                Gameweek 4
+              </option>
+              <option value="5" v-if="this.activeGameweek >= 5">
+                Gameweek 5
+              </option>
             </select>
           </div>
         </div>

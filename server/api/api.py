@@ -67,33 +67,75 @@ def update_team():
 ### Add GAMEWEEK parameter
 @api_app.route('/getteam/<userId>/<gameweekId>')
 def get_team(userId, gameweekId):
-    response = { 'status': 'success' }
+    # response = { 'status': 'success' }
 
-    team = (db.session.query(userPlayers, Players, Users, Dept, Gameweek).with_entities(Players, userPlayers.status, Dept.dName)
-    .join(Users)
-    # .join(userPlayers)
-    .join(Players)
-    .join(Dept)
-    .join(Gameweek)
-    .filter(Users.id==userId, Gameweek.id==gameweekId)).all()
+    # team = (db.session.query(userPlayers, Players, Users, Dept, Gameweek).with_entities(Players, userPlayers.status, Dept.dName)
+    # .join(Users)
+    # # .join(userPlayers)
+    # .join(Players)
+    # .join(Dept)
+    # .join(Gameweek)
+    # .filter(Users.id==userId, Gameweek.id==gameweekId)).all()
     
-    response['team'] = list(map(lambda p: addStatusToResponse(p[0].serialize(), p[1], p[2]), team))
-    response['gameweekId'] = gameweekId
-    return response
+    # response['team'] = list(map(lambda p: addStatusToResponse(p[0].serialize(), p[1], p[2]), team))
+    # response['gameweekId'] = gameweekId
+     # Get Active gameweek
+        active_gameweek_id = 0
+        active_gameweek = Gameweek.query.filter_by(status='ACTIVE').first()
+        if(active_gameweek):
+            active_gameweek_id = active_gameweek.id
+       
+        team = []
+        response = { 'status': 'success',"gameweekId":active_gameweek_id}
+        selected_players = userPlayers.query.filter_by(user_id=userId,gameweek_id=gameweekId)
+        selected_players =  list(map(lambda p: p.serialize(), selected_players))
+       
+        for player in selected_players:
+            # Get Players Info
+            current_player = Players.query.filter_by(id=player['players_id']).first()
+            # current_player =  list(map(lambda p: p.serialize(), current_player))
+            current_dept = Dept.query.filter_by(id=current_player.dept_id).first()
+            # current_dept =  list(map(lambda p: p.serialize(), current_dept))
+            
+            current_info = {
+                "department":current_dept.dName,
+                "dept_id":current_dept.id,
+                "fname":current_player.fname,
+                "lname":current_player.lname,
+                "position":current_player.position,
+                "id":current_player.id,
+                "status":player['status']          
+            }
+            team.append(current_info)
+            
+          
+            # print(player)
+        response['team'] = team
+        
+        
+        return response , 200
 
 
-# Get Acitve Gameweek
+# Get Active Gameweek
 @api_app.route('/getactivegw')
 def get_active_gameweek():
     response = { 'status': 'success' }
 
     gw = Gameweek.query.filter_by(status='ACTIVE').first()
 
-    if gw is None:
-        response['activeGW'] = 0
-    else:
+    #  If gameweek active exists
+    if gw is not None:
         response['activeGW'] = gw.id
-
+        
+    # If GW active does not exists
+    else:
+        gw = Gameweek.query.filter_by(status='PAST').first()
+        # If Past GW Exists
+        if gw is not None:
+            response['activeGW'] = gw.id
+        # If Past GW does not Exist
+        else:
+            response['activeGW'] = 0
     return response
 
 # Helper Function

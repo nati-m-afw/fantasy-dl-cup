@@ -2,6 +2,8 @@
 from flask import Flask, Blueprint,json 
 from flask_sqlalchemy import SQLAlchemy
 
+from datetime import timedelta
+
 # Library for importing environment variables
 from dotenv import load_dotenv
 
@@ -24,13 +26,13 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 
 # Creating DB Instance
 db = SQLAlchemy(app)
 
 # Creating JWT Instance
 jwt = JWTManager(app)
-
 
 # Import - to avoid circular Import
 from api.api import api_app

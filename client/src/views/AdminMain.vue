@@ -14,15 +14,12 @@
         <fa class="i" icon="users" size="1x" />
         <span class="side-nav-component-text">Players</span>
       </div>
-      <div class="side-nav-component" @click="component = 'admin-departments'">
-        <fa class="i" icon="building" size="1x" />
-        <span class="side-nav-component-text">Departments</span>
-      </div>
+
       <div class="side-nav-component" @click="component = 'admin-season'">
         <fa class="i" icon="play-circle" size="1x" />
         <span class="side-nav-component-text">Season</span>
       </div>
-      <div class="side-nav-component">
+      <div class="side-nav-component" @click="logout">
         <fa class="i" icon="sign-out-alt" size="1x" />
         <span class="side-nav-component-text">Logout</span>
       </div>
@@ -37,23 +34,28 @@
 </template>
 
 <script>
-import AdminMatches from "../components/admin/AdminMatches";
+import AdminSchedule from "../components/admin/AdminSchedule.vue";
 import AdminLive from "../components/admin/AdminLive";
 import AdminPlayers from "../components/admin/AdminPlayers";
-import AdminDepartments from "../components/admin/AdminDepartments";
 import AdminSeason from "../components/admin/AdminSeason";
 export default {
   components: {
-    "admin-matches": AdminMatches,
+    "admin-matches": AdminSchedule,
     "admin-live": AdminLive,
     "admin-players": AdminPlayers,
-    "admin-departments": AdminDepartments,
     "admin-season": AdminSeason,
   },
   data() {
     return {
       component: "admin-matches",
     };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("user-id");
+      this.$store.commit("setCurrentUserID");
+      this.$router.push("/");
+    },
   },
 };
 </script>

@@ -114,6 +114,7 @@ const routes = [
     name: "Admin Dash",
     component: AdminMain,
     meta: { title: "Admin Dashboard" },
+    beforeEnter: ifAuthenticated,
   },
 ];
 
