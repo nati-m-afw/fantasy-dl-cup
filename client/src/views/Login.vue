@@ -325,12 +325,13 @@ export default {
 @font-face {
   font-family: "Poppins";
   src: local("Poppins"),
-    url("../../public/fonts/Poppins-Regular.ttf") format("truetype");
+    url("../assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
 }
 @font-face {
   font-family: "SourceSans";
   src: local("SourceSans"),
-    url("../../public/fonts/SourceSansPro-Regular.ttf") format("truetype");
+    url("../assets/fonts/SourceSans/SourceSansPro-Regular.ttf")
+      format("truetype");
 }
 /* Styling for dynamic stuff */
 .flash-message {
@@ -356,12 +357,9 @@ input:focus {
 }
 .body {
   width: 100%;
-  padding-botton: 5%;
-  /* background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
-    url("../../public/img/5273776.jpg"); */
+  min-height: 100vh;
   background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
-    url("../../public/img/4799045.jpg");
-  /* background-image: url("../../public/img/5295526.jpg"); */
+    url("../assets/img/Forms_Background.jpg");
   color: black;
   background-repeat: no-repeat;
   background-position: center;
@@ -371,15 +369,12 @@ input:focus {
 }
 .form-container {
   width: 500px;
-  min-height: 640px;
-  /* background-color: rgba(255, 255, 255, 0.7);
-   */
+  height: fit-content;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-
   margin-left: auto;
   margin-right: auto;
-  margin-top: 3%;
+  margin-top: 7%;
   padding: 5%;
   margin-bottom: 3%;
 }
@@ -419,10 +414,8 @@ input:focus {
 .email-input,
 .password-input {
   background-color: rgba(255, 255, 255, 0);
-
   outline: none;
   border-inline-color: none;
-
   border: none;
   border-bottom: 1px solid black;
   width: 100%;
@@ -444,7 +437,6 @@ input:focus {
 .forgot-password {
   width: 94%;
   text-align: right;
-
   margin-left: 6%;
   font-family: "Poppins";
   font-size: 14px;
@@ -507,13 +499,13 @@ input:focus {
   transform: scale(1.2);
 }
 .google-login {
-  background-image: url("../../public/icons/icons8-google.svg");
+  background-image: url("../assets/icons/Google_Icon.svg");
 }
 .github-login {
-  background-image: url("../../public/icons/icons8-github.svg");
+  background-image: url("../assets/icons/Github_Icon.svg");
 }
 .facebook-login {
-  background-image: url("../../public/icons/icons8-facebook (1).svg");
+  background-image: url("../assets/icons/Facebook_Icon.svg");
 }
 .redirect-info,
 .redirect-link {
@@ -524,7 +516,5 @@ input:focus {
   text-decoration: none;
   color: black;
   margin-right: 1%;
-}
-.redirect-link {
 }
 </style>

@@ -66,12 +66,13 @@ export default {
 @font-face {
   font-family: "Poppins";
   src: local("Poppins"),
-    url("../../public/fonts/Poppins-Regular.ttf") format("truetype");
+    url("../assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
 }
 @font-face {
   font-family: "SourceSans";
   src: local("SourceSans"),
-    url("../../public/fonts/SourceSansPro-Regular.ttf") format("truetype");
+    url("../assets/fonts/SourceSans/SourceSansPro-Regular.ttf")
+      format("truetype");
 }
 /* Styling for dynamic stuff */
 .body {
@@ -83,7 +84,7 @@ export default {
       rgba(0, 0, 0, 0.5),
       rgba(0, 0, 0, 0.55)
     ),
-    url("../../public/img/jj-ying-7JX0-bfiuxQ-unsplash.jpg");
+    url("../assets/img/Admin_Backround.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -129,7 +130,6 @@ export default {
   padding: 5% 3% 5% 10%;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.25);
   transition: all 0.75s ease 0s;
 }

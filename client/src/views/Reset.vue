@@ -36,17 +36,109 @@
   </div>
 </template>
 
+<script>
+import firebase from "firebase";
+import "firebase/auth";
+export default {
+  name: "Reset",
+  data() {
+    return {
+      email: "",
+    };
+  },
+  methods: {
+    //   Function for live validation
+
+    // For Email
+    validate_email_live: function (e) {
+      if (
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+          this.email
+        )
+      ) {
+        e.target.classList.remove("error");
+        e.target.classList.add("success");
+        this.$refs.username_icon.style.color = "green";
+      } else {
+        e.target.classList.remove("success");
+        e.target.classList.remove("error");
+        e.target.classList.add("error");
+
+        this.$refs.username_icon.style.color = "red";
+      }
+    },
+
+    // For Password
+    validate_password_live: function (e) {
+      if (
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
+          this.password
+        )
+      ) {
+        e.target.classList.remove("error");
+        e.target.classList.add("success");
+        this.$refs.password_icon.style.color = "green";
+      } else {
+        if (!e.target.classList.contains("error"))
+          e.target.classList.toggle("error");
+        this.$refs.password_icon.style.color = "red";
+      }
+    },
+
+    // Final Validation For Email
+    validate_email: function () {
+      if (
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+          this.email
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    // Function to send reset verification
+    reset_password: function () {
+      if (this.validate_email() && this.email != "") {
+        firebase
+          .auth()
+          .sendPasswordResetEmail(this.email)
+          .then(() => {
+            // Show Success Message
+            this.flashMessage.success({
+              message: `Reset link has been sent to ${this.email}`,
+            });
+
+            // Redirect to Login Page
+            this.$router.push({ name: "Login" });
+          })
+          .catch((err) => {
+            this.flashMessage.error({
+              message: err.message,
+            });
+          });
+      } else {
+        this.flashMessage.error({
+          message: "Invalid credentials",
+        });
+      }
+    },
+  },
+};
+</script>
+
 <style scoped>
 /* Defining Fonts */
 @font-face {
   font-family: "Poppins";
   src: local("Poppins"),
-    url("../../public/fonts/Poppins-Regular.ttf") format("truetype");
+    url("../assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
 }
 @font-face {
   font-family: "SourceSans";
   src: local("SourceSans"),
-    url("../../public/fonts/SourceSansPro-Regular.ttf") format("truetype");
+    url("../assets/fonts/SourceSans/SourceSansPro-Regular.ttf")
+      format("truetype");
 }
 /* Styling for dynamic stuff */
 .flash-message {
@@ -73,11 +165,8 @@ input:focus {
 .body {
   width: 100%;
   height: 100vh;
-  /* background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
-    url("../../public/img/5273776.jpg"); */
   background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
-    url("../../public/img/4799045.jpg");
-  /* background-image: url("../../public/img/5295526.jpg"); */
+    url("../assets/img/Forms_Background.jpg");
   color: black;
   background-repeat: no-repeat;
   background-position: center;
@@ -192,94 +281,3 @@ input:focus {
   font-size: 18px;
 }
 </style>
-
-<script>
-import firebase from "firebase";
-import "firebase/auth";
-export default {
-  name: "Reset",
-  data() {
-    return {
-      email: "",
-    };
-  },
-  methods: {
-    //   Function for live validation
-
-    // For Email
-    validate_email_live: function (e) {
-      if (
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-          this.email
-        )
-      ) {
-        e.target.classList.remove("error");
-        e.target.classList.add("success");
-        this.$refs.username_icon.style.color = "green";
-      } else {
-        e.target.classList.remove("success");
-        e.target.classList.remove("error");
-        e.target.classList.add("error");
-
-        this.$refs.username_icon.style.color = "red";
-      }
-    },
-
-    // For Password
-    validate_password_live: function (e) {
-      if (
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
-          this.password
-        )
-      ) {
-        e.target.classList.remove("error");
-        e.target.classList.add("success");
-        this.$refs.password_icon.style.color = "green";
-      } else {
-        if (!e.target.classList.contains("error"))
-          e.target.classList.toggle("error");
-        this.$refs.password_icon.style.color = "red";
-      }
-    },
-
-    // Final Validation For Email
-    validate_email: function () {
-      if (
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-          this.email
-        )
-      ) {
-        return true;
-      }
-      return false;
-    },
-
-    // Function to send reset verification
-    reset_password: function () {
-      if (this.validate_email() && this.email != "") {
-        firebase
-          .auth()
-          .sendPasswordResetEmail(this.email)
-          .then(() => {
-            // Show Success Message
-            this.flashMessage.success({
-              message: `Reset link has been sent to ${this.email}`,
-            });
-
-            // Redirect to Login Page
-            this.$router.push({ name: "Login" });
-          })
-          .catch((err) => {
-            this.flashMessage.error({
-              message: err.message,
-            });
-          });
-      } else {
-        this.flashMessage.error({
-          message: "Invalid credentials",
-        });
-      }
-    },
-  },
-};
-</script>
