@@ -271,7 +271,7 @@ export default {
                 this.activeGameweek
             )
             .then((res) => {
-              player["score"] = res.data.score;
+              player["score"] = res.data.score || 0;
               this.$set(this.myTeam[position], index, player);
             });
         }

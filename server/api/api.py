@@ -52,9 +52,9 @@ def update_team():
         requestBody = request.get_json()
         
         # Delete old team
-        db.session.query(userPlayers).filter(userPlayers.user_id == requestBody['userId'], userPlayers.gameweek_id == requestBody['gameweekId']).delete()
         # print(a)
         for gameweek in range(requestBody['gameweekId'], 6):
+            db.session.query(userPlayers).filter(userPlayers.user_id == requestBody['userId'], userPlayers.gameweek_id == gameweek).delete()
             for player in requestBody['team']:
                 ### Add GAMEWEEK column
                 up = userPlayers(user_id=requestBody['userId'], players_id=player['playerId'], gameweek_id=gameweek, status=player['status'])
@@ -328,8 +328,10 @@ class Score(Resource):
     def get(self,player_id,gameweek_id):
         current_score = Scores.query.filter_by(players_id=player_id,gameweek_id=gameweek_id)
         current_score =  list(map(lambda p: p.serialize(), current_score))
-        return current_score[0]
-
+        try:
+            return current_score[0]
+        except:
+            return 0
 
 @api.route("/statistics")
 class Stat(Resource):
@@ -388,3 +390,25 @@ class Stat(Resource):
         
         return all_data , 200
         
+
+@api.route("/globalleague")
+class GlobalLeague(Resource):
+    def get(self):
+        response = { 'status': 'success' }
+        # teams = []
+
+        activeGW = 0
+
+        gw = Gameweek.query.filter_by(status='ACTIVE').first()
+
+        if gw is not None :
+            activeGW = gw.id
+        else:
+            gw = Gameweek.query.filter_by(status='PAST').first()
+            if gw is not None:
+                activeGW = gw.id
+
+
+        # Get all user_players
+        up =  db.session.query(userPlayers).filter(userPlayers.gameweek_id < activeGW + 1).all()
+        print(up)
