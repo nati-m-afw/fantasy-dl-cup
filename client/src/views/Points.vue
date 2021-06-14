@@ -235,9 +235,23 @@ export default {
   },
 
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     getActiveGameweek() {
+      let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getactivegw")
+        .get("http://localhost:5000/getactivegw", config)
         .then((res) => {
           this.activeGameweek = res.data.activeGW;
           this.getTeam();
@@ -255,10 +269,11 @@ export default {
         midfielder: [],
         striker: [],
       };
-
+      let config = this.get_access_token();
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek
+          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek,
+          config
         )
         .then((res) => {
           if (res.data.team == false && this.activeGameweek == 0) {
@@ -280,6 +295,7 @@ export default {
     },
 
     getPoints() {
+      let config = this.get_access_token();
       for (const position in this.myTeam) {
         for (const [index, player] of this.myTeam[position].entries()) {
           axios
@@ -287,7 +303,8 @@ export default {
               "http://localhost:5000/score/" +
                 player.id +
                 "/" +
-                this.activeGameweek
+                this.activeGameweek,
+              config
             )
             .then((res) => {
               player["score"] = res.data.score;

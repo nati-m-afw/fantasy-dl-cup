@@ -70,8 +70,23 @@ export default {
     navigation: Navigation,
   },
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
+
     getTableData() {
-      axios.get("http://127.0.0.1:5000/gettable").then((res) => {
+      let config = this.get_access_token();
+      axios.get("http://127.0.0.1:5000/gettable", config).then((res) => {
         let i = 1;
         for (let team in this.table) {
           this.table[team] = res.data[i++];

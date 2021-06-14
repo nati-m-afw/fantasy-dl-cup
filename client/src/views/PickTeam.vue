@@ -175,13 +175,26 @@ export default {
   },
 
   methods: {
+    // Get Access Token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     // Get players from API
     getPlayers(e, selectedPlayerIndex) {
       const position = e.path[2].className;
       // console.log(e.path);
-
+      let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getplayers/" + position)
+        .get("http://localhost:5000/getplayers/" + position, config)
         .then((res) => {
           this.playersApi = res.data.players;
           this.serverStatus = true;
@@ -234,6 +247,7 @@ export default {
 
   created() {
     this.myTeamName = this.$store.state.myTeamName;
+
     axios
       .get("http://localhost:5000/getteam/" + this.$store.state.userId + "/5")
       .then((res) => {
