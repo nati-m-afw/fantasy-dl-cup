@@ -5,7 +5,6 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
-jwt = JWTManager(app)
 # Library for importing environment variables
 from dotenv import load_dotenv
 
@@ -15,6 +14,7 @@ import os
 
 # Create App Instance
 app = Flask(__name__)
+jwt = JWTManager(app)
 
 #App configs
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
