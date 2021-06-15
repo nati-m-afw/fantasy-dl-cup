@@ -322,9 +322,8 @@ export default {
           });
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
-         
     },
     // Method for setting up score form for clicks
     get_scoring_system: function (e) {
@@ -366,7 +365,7 @@ export default {
           this.get_players(this.opponent_id, "");
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     // Method to get team names
@@ -393,7 +392,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     // Method to get player event info
@@ -411,7 +410,7 @@ export default {
           this.red_cards = data.red_cards;
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
 
@@ -448,7 +447,6 @@ export default {
         this.get_player_event();
       }
     },
-   
   },
 };
 </script>

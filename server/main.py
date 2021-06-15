@@ -1,12 +1,18 @@
-# Importing Libs
+# Importing Flask , Blueprint and SQL Alchemy
 from flask import Flask, Blueprint,json 
 from flask_sqlalchemy import SQLAlchemy
+
+from datetime import timedelta
+
+# Library for importing environment variables
+from dotenv import load_dotenv
+
+
+# Importing JWT
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
-# Library for importing environment variables
-from dotenv import load_dotenv
 
 #Library to enable cors
 from flask_cors import CORS,cross_origin
@@ -19,9 +25,14 @@ jwt = JWTManager(app)
 #App configs
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 
 # Creating DB Instance
 db = SQLAlchemy(app)
+
+# Creating JWT Instance
+jwt = JWTManager(app)
 
 # Import - to avoid circular Import
 from api.api import api_app
@@ -39,12 +50,16 @@ load_dotenv()
 
 #Import Database Models
 from models.department import Dept
+from models.event import Event
+from models.gameweek import Gameweek
+from models.matches import Match
 from models.players import Players
+from models.score import Scores
+from models.statistics import StatInfo
 from models.user_players import userPlayers
 from models.users import Users
-from models.matches import Match
-from models.gameweek import Gameweek
-from models.event import Event
+
+
 # Create Tables 
 db.create_all()
 
@@ -53,9 +68,12 @@ from scripts.populate import populate
 # populate()
 
 
+# Test Route
 @app.route("/")
 def test():
     return "AAA"
+
+
 #Registering Blueprints
 app.register_blueprint(api_app,url_prefix="")
 app.register_blueprint(auth_app,url_prefix="/auth")

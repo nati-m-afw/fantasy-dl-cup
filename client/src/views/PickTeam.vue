@@ -114,7 +114,7 @@
           <i></i>
         </div>
       </div>
-      <div id="transfer_sidebar">
+      <div id="transfer_sidebar" class="sidebar">
         <!-- Show if server status is false or down -->
         <h2 v-if="!serverStatus">Server could not be reached.</h2>
         <ul>
@@ -175,13 +175,26 @@ export default {
   },
 
   methods: {
+    // Get Access Token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     // Get players from API
     getPlayers(e, selectedPlayerIndex) {
       const position = e.path[2].className;
       // console.log(e.path);
-
+      let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getplayers/" + position)
+        .get("http://localhost:5000/getplayers/" + position, config)
         .then((res) => {
           this.playersApi = res.data.players;
           this.serverStatus = true;
@@ -234,20 +247,21 @@ export default {
 
   created() {
     this.myTeamName = this.$store.state.myTeamName;
+
     axios
-        .get(
-          "http://localhost:5000/getteam/" + this.$store.state.userId + "/5"
-        )
-        .then((res) => {
-          // Check if user has picked team
-          if (res.data.team.length != 0) this.$router.push("/myteam");
-        })
-        .catch((err) => console.error(err));
+      .get("http://localhost:5000/getteam/" + this.$store.state.userId + "/5")
+      .then((res) => {
+        // Check if user has picked team
+        if (res.data.team.length != 0) this.$router.push("/myteam");
+      })
+      .catch((err) => console.error(err));
   },
 };
 </script>
 
 <style scoped>
+@import "../assets/css/sidebar.css";
+
 * {
   box-sizing: border-box;
 }

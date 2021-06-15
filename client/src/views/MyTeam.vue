@@ -231,9 +231,23 @@ export default {
   },
 
   methods: {
+    // Get Access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     getActiveGameweek() {
+      let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getactivegw")
+        .get("http://localhost:5000/getactivegw", config)
         .then((res) => {
           // Team Selection for the coming Gameweek
           this.activeGameweek = res.data.activeGW + 1;
@@ -245,10 +259,11 @@ export default {
     // Get user Team API
     getTeam() {
       let userId = this.$store.state.userId;
-
+      let config = this.get_access_token();
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek
+          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek,
+          config
         )
         .then((res) => {
           // Check if user has picked team
@@ -316,10 +331,10 @@ export default {
           });
         }
       }
-
+      let config = this.get_access_token();
       // Send myTeam to api
       axios
-        .post("http://localhost:5000/updateuserplayers", payload)
+        .post("http://localhost:5000/updateuserplayers", payload, config)
         .then(() => {
           this.isRegistered = true;
           this.msg = "Team Updated!";

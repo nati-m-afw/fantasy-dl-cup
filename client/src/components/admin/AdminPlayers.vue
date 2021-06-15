@@ -478,7 +478,7 @@ export default {
           this.all_teams = response.data;
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     // Get Players By department
@@ -490,7 +490,7 @@ export default {
           this.loader = 0;
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
 
@@ -521,7 +521,7 @@ export default {
           this.get_players();
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     // Edit Player Info
@@ -552,7 +552,7 @@ export default {
           this.get_players();
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     edit_player: function () {
@@ -584,7 +584,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     cancel_new_player: function () {

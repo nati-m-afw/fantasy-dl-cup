@@ -23,6 +23,19 @@ export default {
   },
 
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     sendTeamToAPI(gameweek) {
       // prepare payload
       const payload = {
@@ -53,10 +66,10 @@ export default {
           };
         }
       }
-
+      let config = this.get_access_token();
       // Send myTeam to API
       axios
-        .post("http://localhost:5000/updateuserplayers", payload)
+        .post("http://localhost:5000/updateuserplayers", payload, config)
         .then(() => {
           this.isRegistered = true;
           this.msg = "Successfully registered!";
@@ -73,21 +86,23 @@ export default {
 
   created() {
     // ge active gameweek
+    let config = this.get_access_token();
     axios
-      .get("http://localhost:5000/getactivegw")
+      .get("http://localhost:5000/getactivegw", config)
       .then((res) => {
         // Add team on upcoming GW
         let data = res.data;
         axios
-        .get(
-          "http://localhost:5000/getteam/" + this.$store.state.userId + "/5"
-        )
-        .then((res) => {
-          // Check if user has picked team
-          if (res.data.team.length != 0) this.$router.push("/myteam")
-          else this.sendTeamToAPI(data.activeGW + 1);
-        })
-        .catch((err) => console.error(err));
+          .get(
+            "http://localhost:5000/getteam/" + this.$store.state.userId + "/5",
+            config
+          )
+          .then((res) => {
+            // Check if user has picked team
+            if (res.data.team.length != 0) this.$router.push("/myteam");
+            else this.sendTeamToAPI(data.activeGW + 1);
+          })
+          .catch((err) => console.error(err));
       })
       .catch((err) => console.error(err));
   },

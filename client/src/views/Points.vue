@@ -121,7 +121,11 @@
 
           <div class="reserve-outfield">
             <!-- SUB Players -->
-            <div v-for="(player, i) in benchedPlayers" :key="i" class="player-details">
+            <div
+              v-for="(player, i) in benchedPlayers"
+              :key="i"
+              class="player-details"
+            >
               <img
                 :src="
                   require('@/assets/img/jerseys/' + player.department + '.png')
@@ -145,13 +149,28 @@
           </div>
           <div>
             <p>Active GW</p>
-            <select name="gameweek" id="gameweek" v-model="activeGameweek" @change="getTeam">
+            <select
+              name="gameweek"
+              id="gameweek"
+              v-model="activeGameweek"
+              @change="getTeam"
+            >
               <!-- <option v-for="i in availabeGameweeks" :key="i" value="i">GW {{ i }}</option> -->
-              <option value="1" v-if="this.activeGameweek >= 1">Gameweek 1</option>
-              <option value="2" v-if="this.activeGameweek >= 2">Gameweek 2</option>
-              <option value="3" v-if="this.activeGameweek >= 3">Gameweek 3</option>
-              <option value="4" v-if="this.activeGameweek >= 4">Gameweek 4</option>
-              <option value="5" v-if="this.activeGameweek >= 5">Gameweek 5</option>
+              <option value="1" v-if="this.activeGameweek >= 1">
+                Gameweek 1
+              </option>
+              <option value="2" v-if="this.activeGameweek >= 2">
+                Gameweek 2
+              </option>
+              <option value="3" v-if="this.activeGameweek >= 3">
+                Gameweek 3
+              </option>
+              <option value="4" v-if="this.activeGameweek >= 4">
+                Gameweek 4
+              </option>
+              <option value="5" v-if="this.activeGameweek >= 5">
+                Gameweek 5
+              </option>
             </select>
           </div>
         </div>
@@ -216,9 +235,23 @@ export default {
   },
 
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     getActiveGameweek() {
+      let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getactivegw")
+        .get("http://localhost:5000/getactivegw", config)
         .then((res) => {
           this.activeGameweek = res.data.activeGW;
           this.getTeam();
@@ -236,10 +269,11 @@ export default {
         midfielder: [],
         striker: [],
       };
-
+      let config = this.get_access_token();
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek
+          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek,
+          config
         )
         .then((res) => {
           if (res.data.team == false && this.activeGameweek == 0) {
@@ -261,6 +295,7 @@ export default {
     },
 
     getPoints() {
+      let config = this.get_access_token();
       for (const position in this.myTeam) {
         for (const [index, player] of this.myTeam[position].entries()) {
           axios
@@ -268,7 +303,8 @@ export default {
               "http://localhost:5000/score/" +
                 player.id +
                 "/" +
-                this.activeGameweek
+                this.activeGameweek,
+              config
             )
             .then((res) => {
               player["score"] = res.data.score || 0;

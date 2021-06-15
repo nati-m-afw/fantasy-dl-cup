@@ -34,9 +34,9 @@
               />
               <div class="details">
                 <span>GK</span>
-              <!-- Check if any selected players in myTeam -->
+                <!-- Check if any selected players in myTeam -->
                 <p v-if="myTeam.goalkeeper[i]">
-              <!-- If so display name -->
+                  <!-- If so display name -->
                   {{ myTeam.goalkeeper[i].fname }}
                 </p>
               </div>
@@ -65,9 +65,9 @@
               />
               <div class="details">
                 <span>DEF</span>
-              <!-- Check if any selected players in myTeam -->
+                <!-- Check if any selected players in myTeam -->
                 <p v-if="myTeam.defender[i]">
-              <!-- If so display name -->
+                  <!-- If so display name -->
                   {{ myTeam.defender[i].fname }}
                 </p>
               </div>
@@ -94,9 +94,9 @@
               />
               <div class="details">
                 <span>MID</span>
-              <!-- Check if any selected players in myTeam -->
+                <!-- Check if any selected players in myTeam -->
                 <p v-if="myTeam.midfielder[i]">
-              <!-- If so display name -->
+                  <!-- If so display name -->
                   {{ myTeam.midfielder[i].fname }}
                 </p>
               </div>
@@ -124,9 +124,9 @@
               />
               <div class="details">
                 <span>ST</span>
-              <!-- Check if any selected players in myTeam -->
+                <!-- Check if any selected players in myTeam -->
                 <p v-if="myTeam.striker[i]">
-              <!-- If so display name -->
+                  <!-- If so display name -->
                   {{ myTeam.striker[i].fname }}
                 </p>
               </div>
@@ -139,7 +139,17 @@
         <h3>{{ myTeamName }}</h3>
         <div class="quick-info">
           <div>
-            <span>{{ selected[1] == 'gk' ? "GK" : selected[1] == 'df' ? "DEF" :  selected[1] == 'md' ? "MID" : selected[1] == 'st' ? "ST" : "-"}}</span>
+            <span>{{
+              selected[1] == "gk"
+                ? "GK"
+                : selected[1] == "df"
+                ? "DEF"
+                : selected[1] == "md"
+                ? "MID"
+                : selected[1] == "st"
+                ? "ST"
+                : "-"
+            }}</span>
             <p></p>
           </div>
           <div>
@@ -167,7 +177,7 @@
               </button>
             </li>
           </ul>
-          <br>
+          <br />
           <button @click="updateTeamApi">SAVE</button>
         </div>
       </div>
@@ -406,7 +416,7 @@ export default {
   display: flex;
 }
 
-li{
+li {
   list-style: none;
 }
 

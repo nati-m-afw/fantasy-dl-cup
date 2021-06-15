@@ -26,7 +26,7 @@
     <div class="dropdown">
       <div class="dropdiv"></div>
       <div class="dropdown-content">
-        <a href="#">Profile</a>
+        <router-link to="/profile">Profile</router-link>
         <a href="#" @click.prevent="logout">Log Out</a>
       </div>
     </div>
