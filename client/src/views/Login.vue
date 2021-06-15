@@ -170,7 +170,7 @@ export default {
           }
 
           // If Admin Redirect to admin
-          if (this.user_id == 1) {
+          if (this.user_id == 2) {
             this.$router.push("/admin");
           } else {
             // Redirect to myTeam

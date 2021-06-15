@@ -413,6 +413,7 @@ class Stat(Resource):
 
 @api.route("/globalleague")
 class GlobalLeague(Resource):
+
     def get(self):
         response = { 'status': 'success' }
         teams = {}
@@ -433,6 +434,7 @@ class GlobalLeague(Resource):
         users = db.session.query(Users).all()
         user_players =  db.session.query(userPlayers).filter(userPlayers.gameweek_id < activeGW + 1).all()
         
+        # Create data structure containing all users
         for user in users:
             teams[user.id] = {
                 'id': user.id,
@@ -441,13 +443,27 @@ class GlobalLeague(Resource):
             }
             # team.push(userScore)
 
-        for gameweek in range(1, activeGW + 1):
-            for player in user_players:
-                playerScore = Scores.query.filter_by(players_id=player.players_id,gameweek_id=gameweek).first()
-                try:
-                    teams[player.user_id]['score'][gameweek - 1] += playerScore.score
-                except:
-                    teams[player.user_id]['score'][gameweek - 1] += 0
+        # Iterate over every row in user_players
+        # Store score in data structure if player status is active
+        for player in user_players:
+            playerScore = Scores.query.filter_by(players_id=player.players_id,gameweek_id=player.gameweek_id).first()
+            # print(playerScore)
+            # print("UID", player.user_id, "GW", player.gameweek_id, "STATUS", player.status)
+             
+            try:
+                if player.status == 'active':
+                    teams[player.user_id]['score'][player.gameweek_id - 1] += playerScore.score
+            except:
+                teams[player.user_id]['score'][player.gameweek_id - 1] += 0
 
         response['teams'] = teams
         return response
+
+
+@api.route("/schedule/<id>")
+class Schedule(Resource):
+    # Get Schedule by GAMEWEEK ID
+    def get(self,id):
+        schedule = Match.query.filter_by(game_week=id).order_by(Match.state.asc(),Match.time.asc())
+        schedule =list(map(lambda p: p.serialize(), schedule))
+        return {"response_data":schedule} , 200

@@ -8,6 +8,7 @@ import Points from "../views/Points.vue";
 import Transfers from "../views/Transfers.vue";
 import Table from "../views/Table.vue";
 import Stats from "../views/Stats.vue";
+import League from "../views/League.vue";
 
 // Imports for Auth
 import Login from "../views/Login.vue";
@@ -19,9 +20,11 @@ import Profile from "../views/Profile.vue";
 import AdminMain from "../views/AdminMain.vue";
 
 // If authenticated continue / Else goto login
+// if admin goto admin
 const ifAuthenticated = (to, from, next) => {
   // next()
-  if (store.getters.isAuthenticated) next();
+  if(store.getters.isAuthenticated && store.getters.userId == 1) next("/admin");
+  else if (store.getters.isAuthenticated) next();
   else next("/");
 };
 
@@ -33,6 +36,11 @@ const ifNotAuthenticated = (to, from, next) => {
   else next("/myteam");
 };
 
+// If authenticated and admin continue / Else go to login
+const ifAdmin = (to, from, next) => {
+  if (store.getters.isAuthenticated && store.getters.userId == 1) next();
+  else next("/");
+}
 const routes = [
   {
     path: "/pickteam",
@@ -84,6 +92,13 @@ const routes = [
     meta: { title: "DL Stats" },
     beforeEnter: ifAuthenticated,
   },
+  {
+    path: "/league",
+    name: "Global League",
+    component: League,
+    meta: { title: "DL Global League" },
+    beforeEnter: ifAuthenticated,
+  },
 
   // Routes For Auth
   {
@@ -122,7 +137,7 @@ const routes = [
     name: "Admin Dash",
     component: AdminMain,
     meta: { title: "Admin Dashboard" },
-    beforeEnter: ifAuthenticated,
+    beforeEnter: ifAdmin,
   },
 ];
 

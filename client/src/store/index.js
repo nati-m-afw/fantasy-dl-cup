@@ -22,6 +22,10 @@ export default new Vuex.Store({
       return state.userId && state.userId != "undefined" ? true : false;
     },
 
+    userId(state) {
+      return state.userId || false;
+    },
+    
     myTeamName(state) {
       return state.myTeamName;
     },

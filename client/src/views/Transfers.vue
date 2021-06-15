@@ -228,11 +228,27 @@ export default {
   },
 
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
+
     // gets active gameweek
     // calls getTeam
     getActiveGameweek() {
+      let config = this.get_access_token();
+
       axios
-        .get("http://localhost:5000/getactivegw")
+        .get("http://localhost:5000/getactivegw", config)
         .then((res) => {
           this.activeGameweek = res.data.activeGW + 1;
           this.getTeam();
@@ -243,10 +259,12 @@ export default {
     // Fetches user's team for the current gameweek from API
     getTeam() {
       let userId = this.$store.state.userId;
+      let config = this.get_access_token();
 
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek
+          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek,
+          config
         )
         .then((res) => {
           if (res.data.team == false && this.activeGameweek == 0) {
@@ -268,9 +286,11 @@ export default {
     getPlayers(e, selectedPlayerIndex) {
       const position = e.path[2].className;
       // console.log(e.path);
+      let config = this.get_access_token();
+
 
       axios
-        .get("http://localhost:5000/getplayers/" + position)
+        .get("http://localhost:5000/getplayers/" + position, config)
         .then((res) => {
           this.playersApi = res.data.players;
           this.serverStatus = true;
@@ -327,9 +347,11 @@ export default {
         }
       }
 
+      let config = this.get_access_token();
+
       // Send myTeam to api
       axios
-        .post("http://localhost:5000/updateuserplayers", payload)
+        .post("http://localhost:5000/updateuserplayers", payload, config)
         .then(() => {
           this.isRegistered = true;
           this.msg = "Team Updated!";

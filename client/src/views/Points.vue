@@ -152,10 +152,11 @@
             <select
               name="gameweek"
               id="gameweek"
-              v-model="activeGameweek"
+              v-model="selectedGameweek"
               @change="getTeam"
             >
               <!-- <option v-for="i in availabeGameweeks" :key="i" value="i">GW {{ i }}</option> -->
+              <!-- Show options if earlier or on the active gameweek -->
               <option value="1" v-if="this.activeGameweek >= 1">
                 Gameweek 1
               </option>
@@ -199,6 +200,8 @@ export default {
 
       activeGameweek: "",
 
+      selectedGameweek: "",
+
       alertMsg: "",
 
       showMsg: false,
@@ -216,7 +219,7 @@ export default {
       let score = 0;
       for (const position in this.myTeam) {
         for (const player of this.myTeam[position]) {
-          score += player.score;
+          if (player.status == "active") score += player.score;
         }
       }
 
@@ -253,7 +256,10 @@ export default {
       axios
         .get("http://localhost:5000/getactivegw", config)
         .then((res) => {
+          // Set active gameweek
           this.activeGameweek = res.data.activeGW;
+          // Set selected gameweek to current (activeGameweek)
+          this.selectedGameweek = this.activeGameweek;
           this.getTeam();
         })
         .catch((err) => console.error(err));
@@ -269,10 +275,12 @@ export default {
         midfielder: [],
         striker: [],
       };
+      
       let config = this.get_access_token();
+      
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek,
+          "http://localhost:5000/getteam/" + userId + "/" + this.selectedGameweek,
           config
         )
         .then((res) => {
@@ -303,8 +311,8 @@ export default {
               "http://localhost:5000/score/" +
                 player.id +
                 "/" +
-                this.activeGameweek,
-              config
+                this.selectedGameweek,
+                config
             )
             .then((res) => {
               player["score"] = res.data.score || 0;

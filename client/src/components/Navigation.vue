@@ -11,7 +11,7 @@
       :class="activePage == 'Transfers' ? 'active' : ''"
       >Transfers</router-link
     >
-    <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
+    <router-link to="/league" :class="activePage == 'League' ? 'active' : ''"
       >League</router-link
     >
     <router-link to="/table" :class="activePage == 'Table' ? 'active' : ''"

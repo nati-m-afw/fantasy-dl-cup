@@ -19,7 +19,7 @@ class Scores(db.Model):
     
     
     def __repr__(self):
-        return f"Gameweek('{self.players_id}', '{self.match_id}', '{self.gameweek_id}', '{self.score}'"
+        return f"Score('{self.players_id}', '{self.gameweek_id}', '{self.match_id}', '{self.score}')"
 
 
     def serialize(self):

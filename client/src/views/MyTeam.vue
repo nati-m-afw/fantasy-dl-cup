@@ -339,7 +339,7 @@ export default {
           this.isRegistered = true;
           this.msg = "Team Updated!";
           this.showMsg = true;
-          this.$router.push("/myteam");
+          // this.$router.push("/myteam");
         })
         .catch((err) => {
           console.error(err);
