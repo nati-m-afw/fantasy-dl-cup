@@ -13,6 +13,7 @@ import Stats from "../views/Stats.vue";
 import Login from "../views/Login.vue";
 import RegisterUser from "../views/RegisterUser.vue";
 import Reset from "../views/Reset.vue";
+import Profile from "../views/Profile.vue";
 
 // Imports for Admin
 import AdminMain from "../views/AdminMain.vue";
@@ -105,6 +106,13 @@ const routes = [
     name: "Reset Password",
     component: Reset,
     meta: { title: "Reset" },
+    // add nav guard
+  },
+  {
+    path: "/profile",
+    name: "Customize Profile",
+    component: Profile,
+    meta: { title: "Profile" },
     // add nav guard
   },
 

@@ -9,7 +9,11 @@
     <!-- Title Header -->
 
     <!-- Button To Generate Matches -->
-    <button class="schedule-button" @click="schedule_match">
+    <button
+      class="schedule-button"
+      @click="schedule_match"
+      v-show="match_schedules.length < 1"
+    >
       Schedule Matches
     </button>
     <!-- Button To Generate Matches -->
@@ -130,7 +134,6 @@ export default {
     return {
       dataLoaded: false,
       allPlayed: true,
-
       showOption: "",
       match_schedules: "",
       class_name: "match-0",

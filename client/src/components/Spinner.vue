@@ -1,90 +1,59 @@
 <template>
-  <div class="spinner">
-    <div class="ball ball-1"></div>
-    <div class="ball ball-2"></div>
-    <div class="ball ball-3"></div>
-    <div class="ball ball-4"></div>
+  <div class="spinner-container">
+    <div class="d1"></div>
+    <div class="d2"></div>
+    <div class="d3"></div>
+    <div class="d4"></div>
+    <div class="d5"></div>
   </div>
 </template>
-<style scoped>
-.spinner {
-  width: 150px;
-  height: 30px;
-  margin: 100px auto;
-}
-.ball {
-  height: 30px;
-  width: 30px;
-  float: left;
 
-  border-radius: 50%;
-  margin-right: 10px;
+<style>
+.spinner-container {
+  height: fit-content;
+  width: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
-.ball-1 {
-  animation: jump3 1.8s infinite ease-out;
-  background: rgba(0, 255, 0, 0.5);
+
+.spinner-container div {
+  background-color: greenyellow;
+  border-radius: 30px;
+  animation: wave 600ms forwards;
+  animation-iteration-count: infinite;
 }
-.ball-2 {
-  animation: jump2 1.8s infinite ease-out;
-  background: rgba(255, 94, 0, 0.5);
+
+:root {
+  --animation-delay: 200ms;
 }
-.ball-3 {
-  animation: jump1 1.8s infinite ease-out;
-  background: rgba(0, 225, 255, 0.5);
+
+div.d2,
+div.d4 {
+  animation-delay: calc(var(--animation-delay) * 2);
 }
-.ball-4 {
-  margin-right: 0;
-  animation: wipe 1.8s infinite cubic-bezier(0.5, 0, 0.5, 1);
-  background: rgba(255, 0, 0, 0.5);
+
+div.d3 {
+  animation-delay: var(--animation-delay);
 }
-@keyframes jump1 {
-  12% {
-    transform: translate(20px, -40px);
-    animation-timing-function: ease-in;
+
+@keyframes wave {
+  0% {
+    height: 100px;
+    width: 10px;
   }
-  24% {
-    transform: translate(40px, 0);
+
+  50% {
+    height: 50px;
   }
+
   100% {
-    transform: translate(40px, 0);
-  }
-}
-@keyframes jump2 {
-  12% {
-    transform: translate(0, 0);
-  }
-  24% {
-    transform: translate(20px, -40px);
-    animation-timing-function: ease-in;
-  }
-  36% {
-    transform: translate(40px, 0);
-  }
-  100% {
-    transform: translate(40px, 0);
-  }
-}
-@keyframes jump3 {
-  24% {
-    transform: translate(0, 0);
-  }
-  36% {
-    transform: translate(20px, -40px);
-    animation-timing-function: ease-in;
-  }
-  48% {
-    transform: translate(40px, 0);
-  }
-  100% {
-    transform: translate(40px, 0);
-  }
-}
-@keyframes wipe {
-  48% {
-    transform: translateX(-120px);
-  }
-  100% {
-    transform: translateX(-120px);
+    height: 100px;
+    width: 10px;
   }
 }
 </style>
