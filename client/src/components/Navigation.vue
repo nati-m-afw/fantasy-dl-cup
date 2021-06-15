@@ -17,7 +17,7 @@
     <router-link to="/table" :class="activePage == 'Table' ? 'active' : ''"
       >Table</router-link
     >
-    <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
+    <router-link to="/fixtures" :class="activePage == 'Fixtures' ? 'active' : ''"
       >Fixtures</router-link
     >
     <router-link to="/statistics" :class="activePage == 'Stats' ? 'active' : ''"

@@ -460,10 +460,25 @@ class GlobalLeague(Resource):
         return response
 
 
+
+# Route to get match schedule of a gameweek
 @api.route("/schedule/<id>")
 class Schedule(Resource):
     # Get Schedule by GAMEWEEK ID
+    @jwt_required()
     def get(self,id):
         schedule = Match.query.filter_by(game_week=id).order_by(Match.state.asc(),Match.time.asc())
         schedule =list(map(lambda p: p.serialize(), schedule))
         return {"response_data":schedule} , 200
+
+
+
+# Route to get teams info
+@api.route("/teams")
+class Team(Resource):
+    # Get All teams
+    @jwt_required()
+    def get(self):
+        all_teams = Dept.query.all()
+        all_teams =  list(map(lambda p: p.serialize(), all_teams))
+        return all_teams , 200

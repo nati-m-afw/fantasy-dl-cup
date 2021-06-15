@@ -9,6 +9,7 @@ import Transfers from "../views/Transfers.vue";
 import Table from "../views/Table.vue";
 import Stats from "../views/Stats.vue";
 import League from "../views/League.vue";
+import Fixtures from "../views/Fixtures.vue";
 
 // Imports for Auth
 import Login from "../views/Login.vue";
@@ -97,6 +98,13 @@ const routes = [
     name: "Global League",
     component: League,
     meta: { title: "DL Global League" },
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: "/fixtures",
+    name: "Fixtures",
+    component: Fixtures,
+    meta: { title: "Fixtures" },
     beforeEnter: ifAuthenticated,
   },
 
