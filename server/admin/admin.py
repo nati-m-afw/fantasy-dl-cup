@@ -89,36 +89,37 @@ class GenerateMatch(Resource):
     @jwt_required()
     def get(self):
         if(check_admin()=="Admin"):
-           #GW1
-            m1 =Match(team=4,opponent=5,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
-            m2 =Match(team=6,opponent=2,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
-            m3 =Match(team=1,opponent=3,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
+            if(not Match.query.first()):
+            #GW1
+                m1 =Match(team=4,opponent=5,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
+                m2 =Match(team=6,opponent=2,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
+                m3 =Match(team=1,opponent=3,game_week=1,time="16:00",date="2021-03-03",state=0,score="")
 
-            #GW2
-            m4 =Match(team=2,opponent=4,game_week=2,time="16:00",date="2021-10-03",state=0,score="")
-            m5 =Match(team=1,opponent=5,game_week=2,time="16:00",date="2021-10-03",state=0,score="")
-            m6 =Match(team=6,opponent=3,game_week=2,time="16:00",date="2021-10-03",state=0,score="")
+                #GW2
+                m4 =Match(team=2,opponent=4,game_week=2,time="16:00",date="2021-10-03",state=0,score="")
+                m5 =Match(team=1,opponent=5,game_week=2,time="16:00",date="2021-10-03",state=0,score="")
+                m6 =Match(team=6,opponent=3,game_week=2,time="16:00",date="2021-10-03",state=0,score="")
 
-            #GW3
-            m7 =Match(team=4,opponent=1,game_week=3,time="16:00",date="2021-17-03",state=0,score="")
-            m8 =Match(team=2,opponent=3,game_week=3,time="16:00",date="2021-17-03",state=0,score="")
-            m9 =Match(team=5,opponent=6,game_week=3,time="16:00",date="2021-17-03",state=0,score="")
+                #GW3
+                m7 =Match(team=4,opponent=1,game_week=3,time="16:00",date="2021-17-03",state=0,score="")
+                m8 =Match(team=2,opponent=3,game_week=3,time="16:00",date="2021-17-03",state=0,score="")
+                m9 =Match(team=5,opponent=6,game_week=3,time="16:00",date="2021-17-03",state=0,score="")
 
-            #GW4
-            m10=Match(team=3,opponent=4,game_week=4,time="16:00",date="2021-24-03",state=0,score="")
-            m11=Match(team=6,opponent=1,game_week=4,time="16:00",date="2021-24-03",state=0,score="")
-            m12=Match(team=5,opponent=2,game_week=4,time="16:00",date="2021-24-03",state=0,score="")
+                #GW4
+                m10=Match(team=3,opponent=4,game_week=4,time="16:00",date="2021-24-03",state=0,score="")
+                m11=Match(team=6,opponent=1,game_week=4,time="16:00",date="2021-24-03",state=0,score="")
+                m12=Match(team=5,opponent=2,game_week=4,time="16:00",date="2021-24-03",state=0,score="")
 
-            #GW5
-            m13 =Match(team=4,opponent=6,game_week=5,time="16:00",date="2021-31-03",state=0,score="")
-            m14 =Match(team=3,opponent=5,game_week=5,time="16:00",date="2021-31-03",state=0,score="")
-            m15 =Match(team=1,opponent=2,game_week=5,time="16:00",date="2021-31-03",state=0,score="")
-                        
-            db.session.add_all([m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13,m14,m15])
-            db.session.commit()
-            return {"message":"Match Generated Successfully"}, 200
-        else:
-            return {"message":"Forbidden Access"}, 403
+                #GW5
+                m13 =Match(team=4,opponent=6,game_week=5,time="16:00",date="2021-31-03",state=0,score="")
+                m14 =Match(team=3,opponent=5,game_week=5,time="16:00",date="2021-31-03",state=0,score="")
+                m15 =Match(team=1,opponent=2,game_week=5,time="16:00",date="2021-31-03",state=0,score="")
+                            
+                db.session.add_all([m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13,m14,m15])
+                db.session.commit()
+                return {"message":"Match Generated Successfully"}, 200
+            else:
+                return {"message":"Forbidden Access"}, 403
 # Route to Handle Players   
 @admin.route("/players/<id>")      
 class Player(Resource):
