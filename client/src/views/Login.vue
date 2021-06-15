@@ -169,13 +169,8 @@ export default {
             // this.$store.dispatch("getActiveGameweek");
           }
 
-          // If Admin Redirect to admin
-          if (this.user_id == 2) {
-            this.$router.push("/admin");
-          } else {
-            // Redirect to myTeam
-            this.$router.push("/myteam");
-          }
+          this.$router.push("/myteam");
+          
         })
         .catch((err) => {
           this.flashMessage.error({
