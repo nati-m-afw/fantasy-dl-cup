@@ -12,8 +12,8 @@ export default new Vuex.Store({
       midfielder: [null, null, null],
       striker: [null, null],
     },
-    myTeamName: localStorage.getItem("team-name") || "",
-    userId: localStorage.getItem("user-id") || null,
+    myTeamName: sessionStorage.getItem("team-name") || "",
+    userId: sessionStorage.getItem("user-id") || null,
     // activeGameweek: 0,
   },
 
@@ -22,6 +22,10 @@ export default new Vuex.Store({
       return state.userId && state.userId != "undefined" ? true : false;
     },
 
+    userId(state) {
+      return state.userId || false;
+    },
+    
     myTeamName(state) {
       return state.myTeamName;
     },
@@ -34,16 +38,16 @@ export default new Vuex.Store({
     },
 
     setMyTeamName(state, newTeamName) {
-      localStorage.setItem("team-name", newTeamName);
-      state.myTeamName = localStorage.getItem("team-name") || "";
+      sessionStorage.setItem("team-name", newTeamName);
+      state.myTeamName = sessionStorage.getItem("team-name") || "";
       console.log("Store--> Team Name Updated Successfully!");
     },
 
     // Updater for User ID (AUTH)
     setCurrentUserID(state, userId) {
       // update state
-      localStorage.setItem("user-id", userId);
-      (state.userId = localStorage.getItem("user-id") || null),
+      sessionStorage.setItem("user-id", userId);
+      (state.userId = sessionStorage.getItem("user-id") || null),
         console.log("Store--> User ID Updated Successfully!");
     },
 

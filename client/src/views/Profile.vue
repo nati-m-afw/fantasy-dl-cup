@@ -220,10 +220,10 @@ export default {
   },
   mounted() {
     // Get User General Information
-    let user_id = localStorage.getItem("user-id");
+    let user_id = sessionStorage.getItem("user-id");
     this.user_id = user_id;
 
-    let access_token = localStorage.getItem("token");
+    let access_token = sessionStorage.getItem("token");
 
     // Prepare a header config
     let config = {
@@ -346,7 +346,7 @@ export default {
     // Get Access Token
     get_access_token: function () {
       // Get Token from Local Storage
-      let access_token = localStorage.getItem("token");
+      let access_token = sessionStorage.getItem("token");
 
       // Prepare a header config
       let config = {
@@ -427,7 +427,7 @@ export default {
     },
     send_reset_email: function () {
       this.sendingInfo = true;
-      let user_id = localStorage.getItem("user-id");
+      let user_id = sessionStorage.getItem("user-id");
       let config = this.get_access_token();
       axios
         .get(`${path}/auth/profile/firebaseID/${user_id}`, config)

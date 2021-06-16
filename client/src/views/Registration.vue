@@ -26,7 +26,7 @@ export default {
     // Function to get access token
     get_access_token: function () {
       // Get Token from Local Storage
-      let access_token = localStorage.getItem("token");
+      let access_token = sessionStorage.getItem("token");
 
       // Prepare a header config
       let config = {
@@ -43,10 +43,11 @@ export default {
         team: [],
         gameweekId: gameweek,
       };
-
+      
       // push player id into payload
       for (const position in this.$store.state.myTeam) {
         // payload.team[position] = [];
+          console.log(this.$store.state.myTeam[position]);
         for (const player of this.$store.state.myTeam[position]) {
           payload.team.push(player.id);
         }
@@ -85,6 +86,8 @@ export default {
   },
 
   created() {
+    if(!this.$store.state.myTeam['goalkeeper'][0]) this.$router.push("/myteam");
+
     // ge active gameweek
     let config = this.get_access_token();
     axios

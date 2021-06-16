@@ -1,15 +1,19 @@
 <template>
   <div class="body">
     <!-- Allows for Message Flashing -->
-    <FlashMessage :position="'top'"></FlashMessage>
     <div class="form-container">
-      <h1 class="header">Login</h1>
+      <FlashMessage></FlashMessage>
+
+      <h1 class="header">
+        Welcome <br />
+        Back
+      </h1>
 
       <!-- Email Input -->
       <div class="email-area">
         <label for="email" class="label">Email</label>
         <div class="email-input-container">
-          <fa class="i" icon="user" size="1x" ref="username_icon" />
+          <!-- <fa class="i" icon="user" size="1x" ref="username_icon" /> -->
           <input
             class="email-input"
             type="text"
@@ -24,7 +28,7 @@
       <div class="password-area">
         <label for="password" class="label">Password</label>
         <div class="password-input-container">
-          <fa class="i" icon="unlock" size="1x" ref="password_icon" />
+          <!-- <fa class="i" icon="unlock" size="1x" ref="password_icon" /> -->
           <input
             class="password-input"
             type="password"
@@ -49,7 +53,7 @@
         <button @click="facebook_login" class="facebook-login"></button>
       </div>
       <!-- <fa icon="facebook" class="i" size="7x" /> -->
-      <div>
+      <div class="form-footer">
         <span class="redirect-info">Don't have an account yet?</span>
 
         <router-link to="/register">
@@ -59,6 +63,241 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Defining Fonts */
+@font-face {
+  font-family: "Poppins";
+  src: local("Poppins"),
+    url("../assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "SourceSans";
+  src: local("SourceSans"),
+    url("../assets/fonts/SourceSans/SourceSansPro-Regular.ttf")
+      format("truetype");
+}
+/* Styling for dynamic stuff */
+.flash-message {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #37fd12 !important;
+}
+.error {
+  border-bottom: #ff0800 2px solid !important;
+}
+.success {
+  border-bottom: #37fd12 2px solid !important;
+}
+input:focus {
+  outline: none;
+}
+
+/* Main Styles */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.body {
+  min-height: 100vh;
+
+  background: url("../assets/img/spring_paint.jpg");
+
+  background-repeat: no-repeat;
+  background-position: -50px -60px;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.form-container {
+  width: 500px;
+  min-height: 640px;
+  /* background: linear-gradient(45deg, #411f73, purple); */
+  backdrop-filter: blur(5px);
+  /* background: var(--primary-color); */
+  color: var(--secondary-color);
+  padding: 5%;
+  border-radius: 50px 50px 0 0;
+}
+
+.header {
+  font-family: Poppins;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.email-area,
+.password-area {
+  margin-bottom: 5%;
+  margin-top: 5%;
+  padding: 1%;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-family: "Poppins";
+  font-size: 16px;
+  margin-bottom: 2%;
+}
+
+.email-input-container,
+.password-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.i {
+  margin-top: 2%;
+  color: gray;
+  opacity: 60%;
+  width: 18px !important;
+  height: auto;
+}
+
+.email-input,
+.password-input {
+  /* background-color: rgba(255, 255, 255, 0); */
+
+  outline: none;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 100%;
+  font-size: 18px;
+  font-family: "SourceSans";
+}
+
+.submit-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.forgot-password {
+  text-align: right;
+
+  font-family: "Poppins";
+  font-size: 14px;
+
+  margin-bottom: 30px;
+}
+
+.login-button {
+  font-family: "Poppins";
+  font-size: 20px;
+  letter-spacing: 0.8px;
+  width: 100%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  margin-bottom: 10%;
+  position: relative;
+  border: 1px solid black;
+  border-radius: 0 0 5px 5px;
+}
+
+.login-button:after {
+  content: "";
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(
+    40deg,
+    #dc143c,
+    #e22f72,
+    #c071c7,
+    #8d9fed,
+    #78b0f6,
+    #5ffbf1
+  );
+  background-size: 400%;
+  position: absolute;
+  z-index: -1;
+  top: 99%;
+  left: 0;
+  border-radius: inherit;
+  animation: glimmer 20s infinite alternate;
+}
+
+.login-button:active {
+  transform: translateY(5px);
+}
+
+.login-button:active:after {
+  width: 0;
+}
+
+@keyframes glimmer {
+  0% {
+    background-position: 0;
+  }
+  100% {
+    background-position: 100%;
+  }
+}
+
+.sso-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-bottom: 10%;
+}
+
+.google-login,
+.github-login,
+.facebook-login {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: none;
+  padding: 0px !important;
+  margin: 0px;
+  transition: 1s all;
+}
+
+.google-login,
+.github-login,
+.facebook-login {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.google-login:hover,
+.github-login:hover,
+.facebook-login:hover {
+  transform: scale(1.2);
+}
+.google-login {
+  background-image: url("../assets/icons/Google_Icon.svg");
+}
+.github-login {
+  background-image: url("../assets/icons/Github_Icon.svg");
+}
+.facebook-login {
+  background-image: url("../assets/icons/Facebook_Icon.svg");
+}
+
+.form-footer {
+  text-align: center;
+}
+
+.redirect-info,
+.redirect-link {
+  font-family: "Poppins";
+  font-size: 14px;
+}
+.redirect-info {
+  text-decoration: none;
+  margin-right: 1%;
+}
+.redirect-link {
+}
+</style>
 
 <script>
 import firebase from "firebase";
@@ -87,13 +326,13 @@ export default {
       ) {
         e.target.classList.remove("error");
         e.target.classList.add("success");
-        this.$refs.username_icon.style.color = "green";
+        this.$refs.username_icon.style.color = "#37FD12";
       } else {
         e.target.classList.remove("success");
         e.target.classList.remove("error");
         e.target.classList.add("error");
 
-        this.$refs.username_icon.style.color = "red";
+        this.$refs.username_icon.style.color = "#FF0800";
       }
     },
 
@@ -118,13 +357,13 @@ export default {
       ) {
         e.target.classList.remove("error");
         e.target.classList.add("success");
-        this.$refs.password_icon.style.color = "green";
+        this.$refs.password_icon.style.color = "#37FD12";
       } else {
         e.target.classList.remove("success");
         e.target.classList.remove("error");
         e.target.classList.add("error");
 
-        this.$refs.password_icon.style.color = "red";
+        this.$refs.password_icon.style.color = "#FF0800";
       }
     },
 
@@ -165,17 +404,11 @@ export default {
             // Update store state
             this.$store.commit("setCurrentUserID", this.user_id);
             this.$store.commit("setMyTeamName", this.team_name);
-            localStorage.setItem("token", response.data.token);
+            sessionStorage.setItem("token", response.data.token);
             // this.$store.dispatch("getActiveGameweek");
           }
 
-          // If Admin Redirect to admin
-          if (this.user_id == 1) {
-            this.$router.push("/admin");
-          } else {
-            // Redirect to myTeam
-            this.$router.push("/myteam");
-          }
+          this.$router.push("/myteam");
         })
         .catch((err) => {
           this.flashMessage.error({
@@ -319,202 +552,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Defining Fonts */
-@font-face {
-  font-family: "Poppins";
-  src: local("Poppins"),
-    url("../assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
-}
-@font-face {
-  font-family: "SourceSans";
-  src: local("SourceSans"),
-    url("../assets/fonts/SourceSans/SourceSansPro-Regular.ttf")
-      format("truetype");
-}
-/* Styling for dynamic stuff */
-.flash-message {
-  margin-left: auto;
-  margin-right: auto;
-  background-color: green !important;
-}
-.error {
-  border-bottom: red 2px solid !important;
-}
-.success {
-  border-bottom: green 2px solid !important;
-}
-input:focus {
-  outline: none;
-}
-
-/* Main Styles */
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-.body {
-  width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
-    url("../assets/img/Forms_Background.jpg");
-  color: black;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  display: flex;
-  z-index: -1;
-}
-.form-container {
-  width: 500px;
-  height: fit-content;
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 7%;
-  padding: 5%;
-  margin-bottom: 3%;
-}
-.header {
-  font-family: "Poppins";
-  letter-spacing: 2px;
-  font-weight: 400;
-  margin-bottom: 10%;
-}
-
-.email-area,
-.password-area {
-  margin-bottom: 5%;
-  margin-top: 5%;
-  padding: 1%;
-  display: flex;
-  flex-direction: column;
-}
-
-.label {
-  font-family: "Poppins";
-  font-size: 16px;
-  margin-bottom: 2%;
-}
-.email-input-container,
-.password-input-container {
-  display: flex;
-  align-items: center;
-}
-.i {
-  margin-top: 2%;
-  color: gray;
-  opacity: 60%;
-  width: 18px !important;
-  height: auto;
-}
-.email-input,
-.password-input {
-  background-color: rgba(255, 255, 255, 0);
-  outline: none;
-  border-inline-color: none;
-  border: none;
-  border-bottom: 1px solid black;
-  width: 100%;
-  height: 32px;
-  font-size: 18px;
-  font-family: "SourceSans";
-  font-weight: 100;
-  padding-left: 0%;
-  padding-right: 2%;
-  margin-left: 2.5%;
-}
-.email-input {
-  font-style: italic;
-}
-.submit-container {
-  display: flex;
-  flex-direction: column;
-}
-.forgot-password {
-  width: 94%;
-  text-align: right;
-  margin-left: 6%;
-  font-family: "Poppins";
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  opacity: 0.9;
-  margin-bottom: 10%;
-}
-.login-button {
-  background-color: rgba(255, 255, 255, 0);
-  backdrop-filter: blur(5px);
-  font-family: "Poppins";
-  font-size: 20px;
-  letter-spacing: 0.8px;
-  width: 80%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-top: 2%;
-  padding-bottom: 2%;
-  border-radius: 15px;
-  border: 1px solid black;
-  margin-bottom: 10%;
-  transition: 0.85s all;
-}
-.login-button:hover {
-  transform: scale(1.1);
-  background-color: teal;
-}
-
-.sso-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  margin-bottom: 10%;
-}
-
-.google-login,
-.github-login,
-.facebook-login {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  border: none;
-  padding: 0px !important;
-  margin: 0px;
-  transition: 1s all;
-  background-color: rgba(255, 255, 255, 0);
-}
-
-.google-login,
-.github-login,
-.facebook-login {
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-}
-
-.google-login:hover,
-.github-login:hover,
-.facebook-login:hover {
-  transform: scale(1.2);
-}
-.google-login {
-  background-image: url("../assets/icons/Google_Icon.svg");
-}
-.github-login {
-  background-image: url("../assets/icons/Github_Icon.svg");
-}
-.facebook-login {
-  background-image: url("../assets/icons/Facebook_Icon.svg");
-}
-.redirect-info,
-.redirect-link {
-  font-family: "Poppins";
-  font-size: 14px;
-}
-.redirect-info {
-  text-decoration: none;
-  color: black;
-  margin-right: 1%;
-}
-</style>

@@ -26,7 +26,11 @@ jwt = JWTManager(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+<<<<<<< HEAD
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=10000)
+=======
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=20000)
+>>>>>>> 8e7213b293e0e38b3200387c3bf161315741bc3e
 
 # Creating DB Instance
 db = SQLAlchemy(app)

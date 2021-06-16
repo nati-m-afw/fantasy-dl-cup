@@ -347,8 +347,10 @@ class Score(Resource):
     def get(self,player_id,gameweek_id):
         current_score = Scores.query.filter_by(players_id=player_id,gameweek_id=gameweek_id)
         current_score =  list(map(lambda p: p.serialize(), current_score))
-        return current_score[0]
-
+        try:
+            return current_score[0]
+        except:
+            return 0
 
 @api.route("/statistics")
 class Stat(Resource):
@@ -408,3 +410,75 @@ class Stat(Resource):
         
         return all_data , 200
         
+
+@api.route("/globalleague")
+class GlobalLeague(Resource):
+
+    def get(self):
+        response = { 'status': 'success' }
+        teams = {}
+
+        activeGW = 0
+
+        gw = Gameweek.query.filter_by(status='ACTIVE').first()
+
+        if gw is not None :
+            activeGW = gw.id
+        else:
+            gw = Gameweek.query.filter_by(status='PAST').first()
+            if gw is not None:
+                activeGW = gw.id
+
+
+        # Get all user_players
+        users = db.session.query(Users).all()
+        user_players =  db.session.query(userPlayers).filter(userPlayers.gameweek_id < activeGW + 1).all()
+        
+        # Create data structure containing all users
+        for user in users:
+            teams[user.id] = {
+                'id': user.id,
+                'teamName': user.teamname,
+                'score': [0,0,0,0,0]
+            }
+            # team.push(userScore)
+
+        # Iterate over every row in user_players
+        # Store score in data structure if player status is active
+        for player in user_players:
+            playerScore = Scores.query.filter_by(players_id=player.players_id,gameweek_id=player.gameweek_id).first()
+            # print(playerScore)
+            # print("UID", player.user_id, "GW", player.gameweek_id, "STATUS", player.status)
+             
+            try:
+                if player.status == 'active':
+                    teams[player.user_id]['score'][player.gameweek_id - 1] += playerScore.score
+            except:
+                teams[player.user_id]['score'][player.gameweek_id - 1] += 0
+
+        response['teams'] = teams
+        return response
+
+
+
+# Route to get match schedule of a gameweek
+@api.route("/schedule/<id>")
+class Schedule(Resource):
+    # Get Schedule by GAMEWEEK ID
+    @jwt_required()
+    def get(self,id):
+        schedule = Match.query.filter_by(game_week=id).order_by(Match.state.asc(),Match.time.asc())
+        schedule =list(map(lambda p: p.serialize(), schedule))
+        return {"response_data":schedule} , 200
+
+
+
+# Route to get teams info
+@api.route("/teams")
+class Team(Resource):
+    # Get All teams
+    @jwt_required()
+    def get(self):
+        all_teams = Dept.query.all()
+        all_teams =  list(map(lambda p: p.serialize(), all_teams))
+        return all_teams , 200

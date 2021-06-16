@@ -18,6 +18,10 @@ class Scores(db.Model):
     
     
     
+    def __repr__(self):
+        return f"Score('{self.players_id}', '{self.gameweek_id}', '{self.match_id}', '{self.score}')"
+
+
     def serialize(self):
         return {
            
