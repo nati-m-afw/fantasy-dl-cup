@@ -7,6 +7,7 @@
       <h1 class="header">
         Welcome <br />
         Back
+        <img class="cool-text" src="../assets/img/cool-text.png" alt="">
       </h1>
 
       <!-- Email Input -->
@@ -103,11 +104,11 @@ input:focus {
 .body {
   min-height: 100vh;
 
-  background: url("../assets/img/spring_paint.jpg");
+  background: url("../assets/img/epic_waves.jpg");
 
   background-repeat: no-repeat;
-  background-position: -50px -60px;
-  background-size: cover;
+  background-size: 150%;
+  background-position: 10% 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -117,12 +118,11 @@ input:focus {
 .form-container {
   width: 500px;
   min-height: 640px;
-  /* background: linear-gradient(45deg, #411f73, purple); */
-  backdrop-filter: blur(5px);
-  /* background: var(--primary-color); */
+  background: radial-gradient(circle, #009bde1c, #926fd66c, #003087ac 115%);
+  backdrop-filter: blur(8px);
+  /* background: var(--secondary-color); */
   color: var(--secondary-color);
-  padding: 5%;
-  border-radius: 50px 50px 0 0;
+  padding: 5% 3%;
 }
 
 .header {
@@ -131,6 +131,27 @@ input:focus {
   letter-spacing: 2px;
   font-weight: bold;
   line-height: 1.2;
+  position: relative;
+}
+
+.header > img {
+  position: absolute;
+  right: 0;
+  bottom: -25%;
+  width: 10vmax;
+  animation: rotate 4s infinite ease-in-out;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .email-area,
@@ -164,14 +185,14 @@ input:focus {
 
 .email-input,
 .password-input {
-  /* background-color: rgba(255, 255, 255, 0); */
-
   outline: none;
   border: none;
   border-bottom: 1px solid black;
   width: 100%;
   font-size: 18px;
   font-family: "SourceSans";
+  padding: 2%;
+  border-radius: 0 0 10px 10px;
 }
 
 .submit-container {
@@ -180,11 +201,10 @@ input:focus {
 }
 
 .forgot-password {
-  text-align: right;
+  align-self: flex-end;
 
   font-family: "Poppins";
-  font-size: 14px;
-
+  width: fit-content;
   margin-bottom: 30px;
 }
 
@@ -193,12 +213,13 @@ input:focus {
   font-size: 20px;
   letter-spacing: 0.8px;
   width: 100%;
-  padding-top: 2%;
-  padding-bottom: 2%;
+  padding: 2% 0;
   margin-bottom: 10%;
   position: relative;
   border: 1px solid black;
   border-radius: 0 0 5px 5px;
+  background: var(--primary-color);
+  color: var(--secondary-color);
 }
 
 .login-button:after {
@@ -240,6 +261,12 @@ input:focus {
   }
 }
 
+.form-container a {
+  color: hsl(348, 100%, 60%);
+  text-decoration: none;
+  font-weight: bold;
+}
+
 .sso-container {
   display: flex;
   align-items: center;
@@ -257,6 +284,7 @@ input:focus {
   padding: 0px !important;
   margin: 0px;
   transition: 1s all;
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .google-login,
@@ -289,13 +317,10 @@ input:focus {
 .redirect-info,
 .redirect-link {
   font-family: "Poppins";
-  font-size: 14px;
+  font-size: 1rem;
 }
 .redirect-info {
-  text-decoration: none;
   margin-right: 1%;
-}
-.redirect-link {
 }
 </style>
 
