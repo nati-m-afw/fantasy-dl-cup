@@ -404,7 +404,7 @@ export default {
             // Update store state
             this.$store.commit("setCurrentUserID", this.user_id);
             this.$store.commit("setMyTeamName", this.team_name);
-            localStorage.setItem("token", response.data.token);
+            sessionStorage.setItem("token", response.data.token);
             // this.$store.dispatch("getActiveGameweek");
           }
 

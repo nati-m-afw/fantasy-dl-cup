@@ -69,7 +69,7 @@ export default {
   },
   async mounted() {
     // Get Token from Local Storage
-    let access_token = localStorage.getItem("token");
+    let access_token = sessionStorage.getItem("token");
 
     // Prepare a header config
     let config = {
