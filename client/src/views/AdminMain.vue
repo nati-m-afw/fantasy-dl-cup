@@ -15,7 +15,7 @@
         <span class="side-nav-component-text">Players</span>
       </div>
 
-      <div class="side-nav-component" @click="component = 'admin-season'">
+      <div class="side-nav-component" @click="reset_season">
         <fa class="i" icon="play-circle" size="1x" />
         <span class="side-nav-component-text">Season</span>
       </div>
@@ -34,10 +34,12 @@
 </template>
 
 <script>
+import axios from "axios";
 import AdminSchedule from "../components/admin/AdminSchedule.vue";
 import AdminLive from "../components/admin/AdminLive";
 import AdminPlayers from "../components/admin/AdminPlayers";
 import AdminSeason from "../components/admin/AdminSeason";
+let path = "http://localhost:5000";
 export default {
   components: {
     "admin-matches": AdminSchedule,
@@ -55,6 +57,26 @@ export default {
       localStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");
+    },
+    // Methods to reset Season
+    reset_season: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      axios
+        .delete(`${path}/admin/reset`, config)
+        .then(() => {
+          console.log("Reset Done");
+          location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

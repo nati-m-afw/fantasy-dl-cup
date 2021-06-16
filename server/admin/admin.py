@@ -5,30 +5,28 @@ from flask import Blueprint, request,json,jsonify
 #  Importing Restx
 from flask_restx import Resource, Api
 
-# Importing Models
-from models.department import Dept
-from models.event import Event
-from models.matches import Match
-from models.players import Players
-from models.score import Scores
-from models.gameweek import Gameweek
-
-
 # Importing DB and JWT Instance from main
 from main import db
-
 
 #Creating Blueprint for Admin
 admin_app = Blueprint("admin",__name__)
 admin = Api(admin_app)
-
-
 
 # Importing JWT Helpers
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+
+# Importing Models
+from models.department import Dept
+from models.event import Event
+from models.gameweek import Gameweek
+from models.matches import Match
+from models.players import Players
+from models.score import Scores
+from models.statistics import StatInfo
+from models.user_players import userPlayers
 
 # ####################
 # Endpoints for admin
@@ -363,3 +361,38 @@ class gameweek(Resource):
         db.session.commit()
         
         
+        
+@admin.route("/reset")
+class Reset(Resource):
+    @jwt_required()
+    def delete(self):
+        if(check_admin()=="Admin"):
+            print("Invoked")
+            # Delete Stats
+            db.session.query(StatInfo).delete()
+            db.session.commit()
+            
+            # Delete Scores  
+            db.session.query(Scores).delete()
+            db.session.commit()    
+            
+            # Delete User Players   
+            db.session.query(userPlayers).delete()
+            db.session.commit()
+            
+            # Delete Events
+            db.session.query(Event).delete()
+            db.session.commit()
+            
+            # Delete Matches
+            db.session.query(Match).delete()
+            db.session.commit()
+            
+            # Delete Gameweek
+            db.session.query(Gameweek).delete()
+            db.session.commit()
+            
+            
+            return {"message":"Reset Successfully"} , 204
+        else:
+            return {"message":"Unauthorized Access"} , 403
