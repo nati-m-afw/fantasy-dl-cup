@@ -9,8 +9,8 @@ class Players(db.Model):
     position = db.Column(db.String(20), nullable=False)
     # price = db.Column(db.Decimal(5,5), nullable=False)
     dept_id = db.Column(db.Integer, db.ForeignKey('dept.id'), nullable=False)
-    userPlayers = db.relationship('userPlayers', backref = 'user_player', lazy=True)
-    event = db.relationship('Event', backref='player_event', lazy=True)
+    userPlayers = db.relationship('userPlayers', backref = 'user_player', lazy=True ,cascade='all, delete-orphan', passive_deletes = True)
+    event = db.relationship('Event', backref='player_event', lazy=True,cascade='all, delete-orphan', passive_deletes = True)
     
     def __init__(self, fname, lname, position, dept_id):
         

@@ -198,6 +198,7 @@ class Events(Resource):
     def patch(self,id):
         if(check_admin() == "Admin"):
             response_data = request.get_json()['updated_stats']
+            
             curr_match = Event.query.filter_by(gameweek_id=id,players_id=response_data['player_id']).first()
             curr_match.goals_scored = response_data['goals_scored'],
             curr_match.goals_conceded=response_data['goals_conceded'],
@@ -212,7 +213,7 @@ class Events(Resource):
         else:
             return {"message":"Forbidden Access"}, 403
      
-# Route to Handle Active Gameweek
+# Route Get Active
 @admin.route("/activegameweek")
 class ActiveGameweek(Resource):
     @jwt_required()
@@ -225,102 +226,6 @@ class ActiveGameweek(Resource):
             response['activeGW'] = gw.id
 
         return response
-        
-         
-# @admin.route("/score")
-# class Score(Resource):
-#     def get(self):
-#         scores= []
-#         all_player_events = []
-#         all_players = db.session.query(Players.id).all()
-#         for player in all_players:
-#             current_event = Event.query.filter_by(players_id=player[0]).all()
-#             current_event =  list(map(lambda p: p.serialize(), current_event))
-#             if len(current_event) == 0:
-#                 continue
-#             all_player_events.append(current_event)
-        
-        
-#         for event in all_player_events:
-#             # Event Info
-#             player_id = event[0]['player_id']
-#             match_id = event[0]['match_id']
-#             gameweek_id = event[0]['gameweek_id']
-#             score = 0
-#             # Get Player Position
-#             curr_player = Players.query.filter_by(id=event[0]['id']).first()
-#             position = curr_player.position
-#             # Get Events
-#             goal_scored = event[0]['goals_scored']
-#             goals_assisted = event[0]['assists_provided']
-#             goals_conceded = event[0]['goals_conceded']
-#             yellow_cards = event[0]['yellow_cards']
-#             red_cards = event[0]['red_cards']
-#             minutes_played = event[0]['minutes_played']
-            
-            
-
-#             # Handle Minutes Played
-#             if(minutes_played >= 45):
-#                 # print("Here")
-#                 score = score + 2
-#             elif(minutes_played <45):
-#                 score = score + 1
-            
-#             # Handle Yellow Cards
-#             if(yellow_cards == 1):
-#                 score = score - 1
-                
-#             # Red card
-#             if(red_cards == 1):
-#                 score = score - 3
-                
-#             # Handle Goals
-#             if(position == "goalkeeper"):
-#                 score = score + (goal_scored * 6)
-#             elif(position == "defender"):
-#                 score = score + (goal_scored * 5)
-#             elif (position == " midfielder"):
-#                 score = score + (goal_scored * 4)
-#             elif (position == "striker"):
-#                 score = score + (goal_scored * 3)
-                
-#             # Handle Assists
-#             if (position == "goalkeeper"):
-#                 score = score + (goals_assisted * 5)
-#             elif (position == "defender"):
-#                 score = score + (goals_assisted * 4)
-#             elif (position == "midfielder" or position=='striker'):
-#                 score = score + (goals_assisted * 3)
-                
-#             # Handle Goals Conceded
-#             if(position == "goalkeeper"):
-#                 if goals_conceded == 0:
-#                     score = score + 3
-#                 else:
-#                     score = score - goals_conceded
-        
-#             elif(position == "defender"):
-#                 if goals_conceded == 0:
-#                     score = score + 3
-#                 else:
-#                     score = score - goals_conceded
-        
-#             elif(position == "midfielder"):
-#                 if goals_conceded == 0:
-#                     score = score + 3
-#                 else:
-#                     score = score - goals_conceded
-        
-#             print("Insertion")            
-#             curr_score = Scores(players_id=player_id,gameweek_id=gameweek_id,match_id=match_id,score=score)
-#             db.session.add(curr_score)
-#             db.session.commit()
-#             scores.append(curr_score)
-           
-            
-#         return all_players , 200
-    
 
 # Route to Handle Scores 
 @admin.route("/score/<gameweek_id>")
@@ -360,7 +265,6 @@ def calculate_score(player_position,goals_scored,goals_conceded,assists_provided
     score = int(score)
     # Yellow and Red Cards
     if(yellow_cards==1):
-        print("Yellow card -1")
         score = score - 1
     if(red_cards == 1):
         score = score - 3
@@ -371,7 +275,6 @@ def calculate_score(player_position,goals_scored,goals_conceded,assists_provided
     
     if(assists_provided > 0):
         if(player_position == "goalkeeper"):
-            print("Assists 15")
             score = score + (5 * assists_provided)
         elif player_position == "defender":
              score = score + (4 * assists_provided)
@@ -392,7 +295,6 @@ def calculate_score(player_position,goals_scored,goals_conceded,assists_provided
             
     if(goals_conceded > 0):
         if(player_position == "goalkeeper"):
-            print("GC 0")
             score = score - (3 * goals_conceded)
         elif player_position == "defender":
              score = score - (3 * goals_conceded)
@@ -439,13 +341,28 @@ class Reset(Resource):
         else:
             return {"message":"Unauthorized Access"} , 403
         
-# Update on Player ID
+# End and Start Gameweek
 @admin.route("/gameweek")
-class gameweek(Resource):
+class gameweeks(Resource):
     # Active gameweek
     def put(self):
-        # If Active Gameweek 
-        upcoming_gameweek = Gameweek.query.filter_by(status="ALL_UPCOMING").first()
-        upcoming_gameweek.status = "ACTIVE"
-        db.session.add(upcoming_gameweek)
+        # Active a gameweek
+        upcoming_gw = Gameweek.query.filter_by(status="ALL_UPCOMING").first()
+        upcoming_gw.status = "ACTIVE"
+        db.session.add(upcoming_gw)
         db.session.commit()
+        print("Done")
+           
+    def patch(self):
+        active_gw = Gameweek.query.filter_by(status="ACTIVE").first()
+        active_gw.status = "PAST"
+        db.session.add(active_gw)
+        db.session.commit()
+        print("Done")
+            
+            
+        # # If Active Gameweek 
+        # upcoming_gameweek = Gameweek.query.filter_by(status="ALL_UPCOMING").first()
+        # upcoming_gameweek.status = "ACTIVE"
+        # db.session.add(upcoming_gameweek)
+        # db.session.commit()

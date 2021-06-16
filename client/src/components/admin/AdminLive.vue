@@ -267,9 +267,23 @@ export default {
   },
   async mounted() {
     // Get current gameweek
-    await this.get_current_gameweek();
+    // await this.get_current_gameweek();
     // Get All Matches
-    await this.get_all_matches();
+    // Get Token from Local Storage
+    let access_token = localStorage.getItem("token");
+
+    // Prepare a header config
+    let config = {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    };
+
+    axios.get(`${path}/activegameweek`, config).then((response) => {
+      this.current_gameweek = response.data.activeGW;
+      this.get_all_matches();
+    });
+
     // Get Teams
     await this.get_teams();
     // Get Team IDs
@@ -334,6 +348,8 @@ export default {
         red_cards: this.red_cards,
       };
       let config = this.get_access_token();
+      console.log(this.current_gameweek);
+
       axios
         .patch(
           `${path}/events/${this.current_gameweek}`,
@@ -399,14 +415,19 @@ export default {
     },
     // Method to get team names
     get_teams: function () {
-      this.teams = [
-        "Information Tech",
-        "Mechanical",
-        "Electrical",
-        "Software Eng",
-        "Chemical",
-        "Biomedical",
-      ];
+      let config = this.get_access_token();
+      axios
+        .get(`${path}/teams`, config)
+        .then((response) => {
+          // Load Team Names
+          for (let i = 0; i < response.data.length; i++) {
+            this.teams.push(response.data[i].team_name);
+          }
+          this.number_of_game_weeks = this.teams.length - 2;
+        })
+        .catch((err) => {
+          this.handle_error(err);
+        });
     },
 
     // Method to get players

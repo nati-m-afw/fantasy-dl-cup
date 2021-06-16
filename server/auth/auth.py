@@ -51,29 +51,17 @@ class Register(Resource):
             team_name=post_data['team_name']
             if(post_data['lname']):
                 lname = post_data['lname']
-            # print(firebase_id,fname,lname,team_name);
             new_user = Users(firebase_id=firebase_id,fname=fname,lname=lname,teamname=team_name);
             db.session.add(new_user)
-            db.session.commit()
-                
-            # *****************
-            print("USER ADDED")
-                
-            # *****************
-                
+            db.session.commit()                
             return (response_object) , 200
         except:
-            print("ERRORRRR")
             return ({}) 
    
 # Route to get User ID
 @auth_route.route("/getUserID/<firebase_id>")
 class UserId(Resource):
     def post(self,firebase_id):
-        # ******************
-        print("GET USER ID")
-        # ******************
-        
         user = Users.query.filter_by(firebase_id=firebase_id).first()
         if(user):
             access_token = create_access_token(identity=user.id)
@@ -92,12 +80,8 @@ class UserId(Resource):
 @auth_route.route("/getuser/<firebase_id>")
 class User(Resource):
     def get(self,firebase_id):
-        # **************
-        print("GET USER")
-        # **************
         user = Users.query.filter_by(firebase_id=firebase_id).first()
         if(user):
-            print("User Exists");
             response_object = {
                 "code": "Error",
                 "message": "firebase_id already in database"

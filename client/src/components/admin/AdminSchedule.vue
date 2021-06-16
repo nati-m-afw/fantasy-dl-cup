@@ -117,6 +117,12 @@
         </div>
       </div>
     </div>
+    <div class="gameweek-buttons">
+      <button class="end-gameweek" @click="end_gameweek">End Gameweek</button>
+      <button class="start-gameweek" @click="start_gameweek">
+        Start Gameweek
+      </button>
+    </div>
     <!-- Display Section -->
   </div>
 </template>
@@ -321,6 +327,23 @@ export default {
         this.$refs.prev_icon.classList.add("unclickable");
       }
     },
+    // End Gameweek
+    end_gameweek: function () {
+      let config = this.get_access_token();
+      axios.patch(`${path}/gameweek`, config).then(() => {
+        this.flashMessage.success({
+          message: `Gameweek ${this.game_week} ended.`,
+        });
+      });
+    },
+    start_gameweek: function () {
+      let config = this.get_access_token();
+      axios.put(`${path}/gameweek`, config).then(() => {
+        this.flashMessage.success({
+          message: `Gameweek started.`,
+        });
+      });
+    },
 
     handle_error: function (err) {
       // 401 UnAuthorized
@@ -508,5 +531,19 @@ select {
 .navigation-prev,
 .navigation-next {
   cursor: pointer;
+}
+.gameweek-buttons {
+  margin-top: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.gameweek-buttons button {
+  outline: none !important;
+  padding: 0.75% 2% 0.75% 2%;
+  font-size: 20px;
 }
 </style>
