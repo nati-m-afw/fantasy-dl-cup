@@ -40,7 +40,7 @@ export default {
   methods: {
     // Logout
     logout() {
-      localStorage.removeItem("user-id");
+      sessionStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");
     },

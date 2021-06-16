@@ -231,7 +231,7 @@ export default {
     // Function to get access token
     get_access_token: function () {
       // Get Token from Local Storage
-      let access_token = localStorage.getItem("token");
+      let access_token = sessionStorage.getItem("token");
 
       // Prepare a header config
       let config = {
@@ -367,7 +367,7 @@ export default {
 
     // Logout
     logout() {
-      localStorage.removeItem("user-id");
+      sessionStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");
     },
