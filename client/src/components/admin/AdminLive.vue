@@ -310,21 +310,20 @@ export default {
       this.opponent_id = main_info.getAttribute("opponent_id");
     },
     handle_error: function (err) {
-      // // 401 UnAuthorized
-      // if (err.response.status == 401) {
-      //   console.log("401 Error Handling");
-      // }
-      // // Tampered with JWT
-      // else if (err.response.status == 422) {
-      //   console.log("422 Error Handling");
-      // }
-      // // Non Admin Access
-      // else if (err.response.status == 403) {
-      //   console.log("403 Error Handling");
-      // } else {
-      //   console.log(err);
-      // }
-      console.log(err);
+      // 401 UnAuthorized
+      if (err.response.status == 401) {
+        console.log("401 Error Handling");
+      }
+      // Tampered with JWT
+      else if (err.response.status == 422) {
+        console.log("422 Error Handling");
+      }
+      // Non Admin Access
+      else if (err.response.status == 403) {
+        console.log("403 Error Handling");
+      } else {
+        console.log(err);
+      }
     },
     // Function to update score auto
     update_score: function (update_info) {
@@ -348,7 +347,6 @@ export default {
         red_cards: this.red_cards,
       };
       let config = this.get_access_token();
-      console.log(this.current_gameweek);
 
       axios
         .patch(

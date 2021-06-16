@@ -542,7 +542,6 @@ export default {
     // Edit Player Info
     save_player: function (e) {
       let player_id = this.get_id(e).getAttribute("player-id");
-      console.log("Editing Player " + player_id);
       this.editing = !this.editing;
       let current_player_container = this.get_id(e);
       let current_player_id =
@@ -559,7 +558,6 @@ export default {
         lname: current_player_lname,
       };
       let config = this.get_access_token();
-      console.log(player_id);
       axios
         .patch(`${path}/players/${player_id}`, { updated_player_data }, config)
         .then(() => {
@@ -573,7 +571,6 @@ export default {
         });
     },
     edit_player: function () {
-      console.log("Enabling edit");
       this.editing = !this.editing;
     },
     save_new_player: function () {
@@ -606,7 +603,6 @@ export default {
         });
     },
     cancel_new_player: function () {
-      console.log("Canceling");
       this.showDetails = !this.showDetails;
       this.flashMessage.warning({
         message: "Canceled Adding New Player",

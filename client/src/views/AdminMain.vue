@@ -38,14 +38,12 @@ import axios from "axios";
 import AdminSchedule from "../components/admin/AdminSchedule.vue";
 import AdminLive from "../components/admin/AdminLive";
 import AdminPlayers from "../components/admin/AdminPlayers";
-import AdminSeason from "../components/admin/AdminSeason";
 let path = "http://localhost:5000";
 export default {
   components: {
     "admin-matches": AdminSchedule,
     "admin-live": AdminLive,
     "admin-players": AdminPlayers,
-    "admin-season": AdminSeason,
   },
   data() {
     return {
@@ -71,7 +69,6 @@ export default {
       axios
         .delete(`${path}/admin/reset`, config)
         .then(() => {
-          console.log("Reset Done");
           location.reload();
         })
         .catch((err) => {

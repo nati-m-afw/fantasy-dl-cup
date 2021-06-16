@@ -207,7 +207,7 @@ class Events(Resource):
             curr_match.yellow_cards=response_data['yellow_cards'],  
             curr_match.red_cards=response_data['red_cards'], 
             db.session.commit()
-            print("Here")
+            
         
             return {"message":"Update Successful"} , 204
         else:
@@ -351,14 +351,14 @@ class gameweeks(Resource):
         upcoming_gw.status = "ACTIVE"
         db.session.add(upcoming_gw)
         db.session.commit()
-        print("Done")
+        
            
     def patch(self):
         active_gw = Gameweek.query.filter_by(status="ACTIVE").first()
         active_gw.status = "PAST"
         db.session.add(active_gw)
         db.session.commit()
-        print("Done")
+       
             
             
         # # If Active Gameweek 
