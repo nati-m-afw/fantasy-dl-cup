@@ -239,7 +239,6 @@ export default {
     return {
       // Keep track of current gameweek
       current_gameweek: "",
-
       // Keep track of all matches
       all_matches: [""],
 
@@ -277,26 +276,50 @@ export default {
   },
 
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
+
     set_id: function () {
       let main_info = document.querySelectorAll(".main-info")[0];
       this.team_id = main_info.getAttribute("team_id");
       this.opponent_id = main_info.getAttribute("opponent_id");
     },
     handle_error: function (err) {
-      // 401 UnAuthorized
-      if (err.response.status == 401) {
-        console.log("401 Error Handling");
-      }
-      // Tampered with JWT
-      else if (err.response.status == 422) {
-        console.log("422 Error Handling");
-      }
-      // Non Admin Access
-      else if (err.response.status == 403) {
-        console.log("403 Error Handling");
-      } else {
-        console.log(err);
-      }
+      // // 401 UnAuthorized
+      // if (err.response.status == 401) {
+      //   console.log("401 Error Handling");
+      // }
+      // // Tampered with JWT
+      // else if (err.response.status == 422) {
+      //   console.log("422 Error Handling");
+      // }
+      // // Non Admin Access
+      // else if (err.response.status == 403) {
+      //   console.log("403 Error Handling");
+      // } else {
+      //   console.log(err);
+      // }
+      console.log(err);
+    },
+    // Function to update score auto
+    update_score: function (update_info) {
+      axios
+        .post(`${path}/score/${update_info.gameweek_id}`, { update_info })
+        .then()
+        .catch((err) => {
+          console.log(err);
+        });
     },
     // Function to save data after edit
     save_data: function () {
@@ -310,12 +333,17 @@ export default {
         yellow_cards: this.yellow_cards,
         red_cards: this.red_cards,
       };
-
+      let config = this.get_access_token();
       axios
-        .post(`${path}/event/matches/${this.current_gameweek}`, {
-          updated_stats,
-        })
+        .patch(
+          `${path}/events/${this.current_gameweek}`,
+          {
+            updated_stats,
+          },
+          config
+        )
         .then(() => {
+          this.update_score(updated_stats);
           this.get_player_event();
           this.flashMessage.success({
             message: "Information Updated Successfully",
@@ -353,9 +381,10 @@ export default {
     },
     // Method to get all matches
     get_all_matches: function () {
+      let config = this.get_access_token();
       // Get Matches by ID
       axios
-        .get(`${path}/schedule/${this.current_gameweek}`)
+        .get(`${path}/schedule/${this.current_gameweek}`, config)
         .then((response) => {
           this.all_matches = response.data;
           this.current_match = this.all_matches[0];
@@ -382,13 +411,14 @@ export default {
 
     // Method to get players
     get_players: function (dept_id, state) {
+      let config = this.get_access_token();
       axios
-        .get(`${path}/players/${dept_id}`)
+        .get(`${path}/players/${dept_id}`, config)
         .then((response) => {
           if (state == "team") {
-            this.team = response.data;
+            this.team = response.data.response_data;
           } else {
-            this.opponent = response.data;
+            this.opponent = response.data.response_data;
           }
         })
         .catch((err) => {
@@ -397,10 +427,11 @@ export default {
     },
     // Method to get player event info
     get_player_event: function () {
+      let config = this.get_access_token();
       axios
-        .get(`${path}/event/player/${this.current_player_id}`)
+        .get(`${path}/events/${this.current_player_id}`, config)
         .then((response) => {
-          let data = response.data[0];
+          let data = response.data.response_data[0];
           this.current_player = data;
           this.current_goal_scored = data.goals_scored;
           this.current_goals_conceded = data.goals_conceded;

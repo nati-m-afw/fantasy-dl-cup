@@ -442,6 +442,19 @@ export default {
     await this.get_all_teams();
   },
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = localStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     work: function () {
       this.loader = 1;
       this.get_selected_team_name();
@@ -472,8 +485,9 @@ export default {
     },
     // Get all teams for drop down
     get_all_teams: function () {
+      let config = this.get_access_token();
       axios
-        .get(`${path}/teams`)
+        .get(`${path}/teams`, config)
         .then((response) => {
           this.all_teams = response.data;
         })
@@ -483,10 +497,11 @@ export default {
     },
     // Get Players By department
     get_players: function () {
+      let config = this.get_access_token();
       axios
-        .get(`${path}/players/${this.selected_team}`)
+        .get(`${path}/players/${this.selected_team}`, config)
         .then((response) => {
-          this.all_players = response.data;
+          this.all_players = response.data.response_data;
           this.loader = 0;
         })
         .catch((err) => {
@@ -510,9 +525,9 @@ export default {
     // Remove Player
     delete_player: function (e) {
       let player_id = this.get_id(e).getAttribute("player-id");
-
+      let config = this.get_access_token();
       axios
-        .delete(`${path}/player/delete/${player_id}`)
+        .delete(`${path}/players/${player_id}`, config)
         .then(() => {
           this.flashMessage.warning({
             message: "Player Removed",
@@ -543,8 +558,10 @@ export default {
         fname: current_player_fname,
         lname: current_player_lname,
       };
+      let config = this.get_access_token();
+      console.log(player_id);
       axios
-        .post(`${path}/player/update`, { updated_player_data })
+        .patch(`${path}/players/${player_id}`, { updated_player_data }, config)
         .then(() => {
           this.flashMessage.success({
             message: "Player Inforamtion Updated Successfully!",
@@ -566,9 +583,10 @@ export default {
         lname: this.new_player_lname,
         team: this.new_player_team,
       };
+      let config = this.get_access_token();
 
       axios
-        .post(`${path}/player/new`, { new_player })
+        .post(`${path}/players/1`, { new_player }, config)
         .then((response) => {
           // If Duplicate Resource
           if (response.status == 209) {

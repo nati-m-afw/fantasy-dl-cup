@@ -1,4 +1,5 @@
 # Importing Essentials
+from operator import pos
 import re
 from flask import Blueprint, request,json,jsonify
 
@@ -79,8 +80,6 @@ class Schedule(Resource):
         else:
              return {"message":"Forbidden Access"}, 403
 
-   
-
 # Route to Generate Matches at start of season
 @admin.route("/matches")
 class GenerateMatch(Resource):
@@ -122,18 +121,18 @@ class GenerateMatch(Resource):
 @admin.route("/players/<id>")      
 class Player(Resource):
     # Get Players by Department ID
-    # @jwt_required()
+    @jwt_required()
     def get(self,id):
-        # if(check_admin() == "Admin"):
+        if(check_admin() == "Admin"):
             curr_players = Players.query.filter_by(dept_id=id).all()
             curr_players = list(map(lambda p: p.serialize(), curr_players))
         
             return {"response_data":curr_players} , 200
-        # else:
-        #     return {"message":"Forbidden Access"}, 403
+        else:
+            return {"message":"Forbidden Access"}, 403
     
     # Update Player Info
-    # @jwt_required()
+    @jwt_required()
     def patch(self,id):
         if(check_admin() == "Admin"):
             response_data = request.get_json()['updated_player_data']
@@ -143,11 +142,10 @@ class Player(Resource):
             current_player[0].position = response_data['position']
             db.session.commit()
             current_player =  list(map(lambda p: p.serialize(), current_player))
-            print(current_player)
             return {"message":"Update Successful"} , 204
         
-        # else:
-        #     return {"message":"Forbidden Access"}, 403
+        else:
+            return {"message":"Forbidden Access"}, 403
         
         
     # Add New Player
@@ -174,7 +172,7 @@ class Player(Resource):
     @jwt_required()
     def delete(self,id):
         if(check_admin() == "Admin"):
-            print("Invoked for",id)  
+    
             # Players.query.filter_by(id=id).delete()
             # db.session.commit()
             return {"message":"Player Successfully Deleted"} , 204
@@ -185,7 +183,7 @@ class Player(Resource):
 @admin.route("/events/<id>")       
 class Events(Resource):
     # Get Player Info From Event Table
-    # @jwt_required()
+    @jwt_required()
     def get(self,id):
         if(check_admin() == "Admin"):
             curr_data = Event.query.filter_by(players_id=id).all()
@@ -208,6 +206,7 @@ class Events(Resource):
             curr_match.yellow_cards=response_data['yellow_cards'],  
             curr_match.red_cards=response_data['red_cards'], 
             db.session.commit()
+            print("Here")
         
             return {"message":"Update Successful"} , 204
         else:
@@ -324,50 +323,93 @@ class ActiveGameweek(Resource):
     
 
 # Route to Handle Scores 
-@admin.route("/score/<player_id>")
+@admin.route("/score/<gameweek_id>")
 class Score(Resource):
-    def post(self,player_id):
-        game_week = request.get_json()['event_info']['game_week']
-    
-        any_score = Scores.query.filter_by(players_id=player_id,gameweek_id=game_week).first()
-        if(any_score):
-            current_player_score = Scores.query.filter_by(players_id=player_id,gameweek_id=game_week).first()
-            current_player_score.score = 500
-            db.session.add(current_player_score)
+    def post(self,gameweek_id):
+        curr_data = request.get_json()['update_info']
+        player_id = curr_data['player_id']
+        gameweek_id = curr_data['gameweek_id']
+       
+        
+        score_db = Scores.query.filter_by(players_id=player_id,gameweek_id=gameweek_id).first()
+        player_position = Players.query.filter_by(id=player_id).first().position
+        # If Score already Exists
+        if score_db:
+            final_score = calculate_score(player_position,curr_data['goals_scored'],curr_data['goals_conceded'],curr_data['assists_provided'],curr_data['minutes_played'],curr_data['yellow_cards'],curr_data['red_cards'],score_db.score)
+            score_db.score = final_score
             db.session.commit()
-            print("Updated")
-        else:
             
-            all_players = Players.query.filter_by().all()
-            print(all_players)
-            for player in all_players:
-                current_event = Scores(players_id=player.id,match_id=1,gameweek_id=game_week,score=0)
-                db.session.add(current_event)
-                db.session.commit()
-            print("Done")
+        # If new Score
+        else:
+            final_score = calculate_score(player_position,curr_data['goals_scored'],curr_data['goals_conceded'],curr_data['assists_provided'],curr_data['minutes_played'],curr_data['yellow_cards'],curr_data['red_cards'])
+            new_score = Scores(players_id=player_id,match_id=1,gameweek_id=gameweek_id,score=final_score)
+            db.session.add(new_score)
+            db.session.commit()
+            
 
+# Helper To Calculate Scores   
+def calculate_score(player_position,goals_scored,goals_conceded,assists_provided,minutes_played,yellow_cards,red_cards,score=0):
+    # Non Variables
+    goals_conceded = int(goals_conceded)
+    goals_scored = int(goals_scored)
+    assists_provided = int(assists_provided)
+    minutes_played = int(minutes_played)
+    yellow_cards = int(yellow_cards)
+    red_cards = int(red_cards)
 
-
-# Set Zero to all scores
-# Update on Player ID
-@admin.route("/gameweek")
-class gameweek(Resource):
-    # Active gameweek
-    def put(self):
-        # If Active Gameweek 
-        upcoming_gameweek = Gameweek.query.filter_by(status="ALL_UPCOMING").first()
-        upcoming_gameweek.status = "ACTIVE"
-        db.session.add(upcoming_gameweek)
-        db.session.commit()
-        
-        
-        
+    score = int(score)
+    # Yellow and Red Cards
+    if(yellow_cards==1):
+        print("Yellow card -1")
+        score = score - 1
+    if(red_cards == 1):
+        score = score - 3
+    if(minutes_played >= 45 and minutes_played > 0):
+        score = score + 1
+    if(minutes_played > 45):
+         score = score + 1
+    
+    if(assists_provided > 0):
+        if(player_position == "goalkeeper"):
+            print("Assists 15")
+            score = score + (5 * assists_provided)
+        elif player_position == "defender":
+             score = score + (4 * assists_provided)
+        elif player_position == "midfielder":
+            score = score + (3 * assists_provided)
+        else:
+            score = score + (3 * assists_provided)
+    
+    if(goals_scored > 0):
+        if(player_position == "goalkeeper"):
+            score = score + (6 * goals_scored)
+        elif player_position == "defender":
+             score = score + (5 * goals_scored)
+        elif player_position == "midfielder":
+            score = score + (4 * goals_scored)
+        else:
+            score = score + (3 * goals_scored)
+            
+    if(goals_conceded > 0):
+        if(player_position == "goalkeeper"):
+            print("GC 0")
+            score = score - (3 * goals_conceded)
+        elif player_position == "defender":
+             score = score - (3 * goals_conceded)
+        elif player_position == "midfielder":
+            score = score - (2 * goals_conceded)
+        else:
+            score = score - (1 * goals_conceded)
+            
+    return score
+            
+# Set Zero to all scores               
 @admin.route("/reset")
 class Reset(Resource):
     @jwt_required()
     def delete(self):
         if(check_admin()=="Admin"):
-            print("Invoked")
+          
             # Delete Stats
             db.session.query(StatInfo).delete()
             db.session.commit()
@@ -396,3 +438,14 @@ class Reset(Resource):
             return {"message":"Reset Successfully"} , 204
         else:
             return {"message":"Unauthorized Access"} , 403
+        
+# Update on Player ID
+@admin.route("/gameweek")
+class gameweek(Resource):
+    # Active gameweek
+    def put(self):
+        # If Active Gameweek 
+        upcoming_gameweek = Gameweek.query.filter_by(status="ALL_UPCOMING").first()
+        upcoming_gameweek.status = "ACTIVE"
+        db.session.add(upcoming_gameweek)
+        db.session.commit()
