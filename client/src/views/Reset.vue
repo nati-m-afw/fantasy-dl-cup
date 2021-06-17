@@ -1,5 +1,5 @@
 <template>
-  <div class="fbody">
+  <div class="body">
     <!-- Allows for Message Flashing -->
     <FlashMessage :position="'top'"></FlashMessage>
     <div class="form-container">

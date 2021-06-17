@@ -1,12 +1,13 @@
 <template>
   <div class="body">
+    <player-stats-modal :player="playerModalInfo" v-if="showModal" @close="closeModal" />
     <nav>
       <h1>DL Cup Fantasy</h1>
     </nav>
     <navigation :activePage="'Transfers'" />
     <div id="info"></div>
     <alert :msg="alertMsg" v-if="showMsg" />
-    <FlashMessage :position="'top'" style="position: relative; z-index: 10;" />
+    <FlashMessage :position="'top'" style="position: relative; z-index: 10" />
 
     <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
@@ -168,6 +169,7 @@
             :key="index"
             :class="checkSelected(player) ? 'disabled' : ''"
             class="player-options"
+            @click="launchModal($event, player)"
           >
             <img
               @click="getPlayers($event, i)"
@@ -222,6 +224,7 @@
 import axios from "axios";
 import Alert from "../components/Alert.vue";
 import Navigation from "../components/Navigation.vue";
+import PlayerStatsModal from "../components/PlayerStatsModal.vue";
 
 export default {
   data() {
@@ -255,19 +258,24 @@ export default {
 
       // Team Limit Counter
       teamCounter: {
-        "1":0,
-        "2":0,
-        "3":0,
-        "4":0,
-        "5":0,
-        "6":0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
       },
+
+      showModal: false,
+
+      playerModalInfo: "",
     };
   },
 
   components: {
     alert: Alert,
     navigation: Navigation,
+    playerStatsModal: PlayerStatsModal,
   },
 
   methods: {
@@ -351,15 +359,16 @@ export default {
       // Check team limit
       if (this.teamCounter[player.dept_id] > 3) {
         this.teamCounter[player.dept_id] -= 1;
-        this.flashMessage.error({message: "Can not pick more than three players from the same team!"});
+        this.flashMessage.error({
+          message: "Can not pick more than three players from the same team!",
+        });
         return;
       }
       player["status"] =
         this.myTeam[player.position][this.selectedPlayerIndex].status;
       this.$set(this.myTeam[player.position], this.selectedPlayerIndex, player);
-      
     },
-    
+
     // Check if player is in myTeam.<position>
     checkSelected(player) {
       let check = false;
@@ -414,6 +423,15 @@ export default {
           this.msg = "An error occured. Please try again!";
           this.showMsg = true;
         });
+    },
+
+    launchModal(e, player) {
+      this.playerModalInfo = player;
+      this.showModal = true;
+    },
+
+    closeModal() {
+      this.showModal = false;
     },
 
     // Logout
@@ -552,6 +570,7 @@ div.disabled {
   align-content: center;
   background: var(--secondary-color);
   margin-bottom: 5%;
+  cursor: pointer;
 }
 
 .player-options * {
@@ -578,7 +597,7 @@ div.disabled {
   color: var(--secondary-color);
 }
 
-#team_selection .sidebar-img{
+#team_selection .sidebar-img {
   width: 50px !important;
 }
 
