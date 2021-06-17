@@ -29,7 +29,6 @@
                 <!-- Goals Scored -->
                 <div
                   class="goals-scored-container"
-                  v-if="current_player.goals_scored"
                 >
                   <label for="goals-scored">Goals Scored:</label>
                   <input
@@ -94,6 +93,7 @@
                   <input
                     @click="give_card"
                     
+                    
                     :checked="red_cards"
                     type="checkbox"
                     name="red-card"
@@ -122,7 +122,7 @@
                 <!-- Goals Scored -->
                 <div
                   class="goals-scored-container"
-                  v-if="current_player.goals_scored"
+                
                 >
                   <label for="goals-scored">Goals Scored:</label>
                   <input
@@ -171,34 +171,27 @@
                 <div class="yellow-card-container">
                   <label for="yellow-card">Yellow Card :</label>
                   <input
+                    @click="give_card"
                     type="checkbox"
-                    checked
-                    name="yellow-card"
-                    v-if="yellow_cards == 1"
-                  />
+                    :checked = "yellow_cards"
 
-                  <input
-                    type="checkbox"
                     name="yellow-card"
-                    v-if="yellow_cards == 0"
+                    
                   />
                 </div>
+                  
 
                 <!-- Red Cards -->
                 <div class="red-card-container">
                   <label for="red-card">Red Card :</label>
                   <input
-                    checked
+                    @click="give_card"
                     type="checkbox"
-                    name="yellow-card"
-                    v-if="red_cards == 1"
+                    :checked = "red_cards"
+                    name="red-card"
+                    
                   />
 
-                  <input
-                    type="checkbox"
-                    name="yellow-card"
-                    v-if="red_cards == 0"
-                  />
                 </div>
 
                 <button class="save" @click="save_data">Save</button>
@@ -333,6 +326,7 @@ export default {
         });
     },
     give_card: function(e){
+      //give card
       let check_card = e.target.name
       if(check_card=="red-card"){
         if(e.target.checked==true){
@@ -343,6 +337,7 @@ export default {
         }
       }else{
         if(e.target.checked==true){
+          console.log('what');
           this.yellow_cards=1;
         }
         else{

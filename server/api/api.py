@@ -366,34 +366,138 @@ class Stat(Resource):
         most_red_cards =  list(map(lambda p: p.serialize(), most_red_cards))
         most_yellow_cards =  list(map(lambda p: p.serialize(), most_yellow_cards))
         most_clean_sheets =  list(map(lambda p: p.serialize(), most_clean_sheets))
-        
-        def get_player_info(player_id):
-            current_player_info = Players.query.filter_by(id=player_id).first()
-            current_team_id = current_player_info.dept_id
-            current_player_name = current_player_info.fname + " " + current_player_info.lname
-            current_team_name = Dept.query.filter_by(id=current_team_id).first().dName
-            return {"team_id":current_team_id,"player_name":current_player_name,"team_name":current_team_name}
+
+        # print(most_goals[0]['player_id'])
+        # current_player = Players.query.filter_by(id=most_goals[0]['player_id']).first()
+        # current_stat = StatInfo.query.filter_by(players_id= most_goals[0]['player_id']).first()
+        goals_scored = []
+        assists_provided = []
+        yellow_cards = []
+        red_cards = []
+        clean_sheets = []
+
+
+        def get_goals(player_id):
+            current_player = Players.query.filter_by(id=player_id).first()
+            current_stat = StatInfo.query.filter_by(players_id= player_id).first()
+            current_team = Dept.query.filter_by(id=current_player.dept_id).first()
+            current_info = {
+                "player_name":current_player.fname,
+                "player_id":player_id,
+                "goals_scored":current_stat.goals_scored,
+                "team_name":current_team.dName,
+                "position":current_player.position
+            }
+            goals_scored.append(current_info)
+
+        def get_assist(player_id):
+            current_player = Players.query.filter_by(id=player_id).first()
+            current_stat = StatInfo.query.filter_by(players_id= player_id).first()
+            current_team = Dept.query.filter_by(id=current_player.dept_id).first()
+            current_info = {
+                "player_name":current_player.fname,
+
+                "player_id":player_id,
+                "assists_provided":current_stat.assists_provided,
+                "team_name":current_team.dName,
+                "position":current_player.position
+            }
+            assists_provided.append(current_info)
             
+        def goals_conceded(player_id):
+            current_player = Players.query.filter_by(id=player_id).first()
+            current_stat = StatInfo.query.filter_by(players_id= player_id).first()
+            current_team = Dept.query.filter_by(id=current_player.dept_id).first()
+            current_info = {
+                "player_name":current_player.fname,
+
+                "player_id":player_id,
+                "clean_sheets":current_stat.clean_sheets,
+                "team_name":current_team.dName,
+                "position":current_player.position
+            }
+            clean_sheets.append(current_info)
+            
+        def yellow_card(player_id):
+            current_player = Players.query.filter_by(id=player_id).first()
+            current_stat = StatInfo.query.filter_by(players_id= player_id).first()
+            current_team = Dept.query.filter_by(id=current_player.dept_id).first()
+            current_info = {
+                "player_name":current_player.fname,
+
+                "player_id":player_id,
+                "yellow_cards":current_stat.yellow_cards,
+                "team_name":current_team.dName,
+                "position":current_player.position
+            }
+            yellow_cards.append(current_info)
+            
+        def red_card(player_id):
+            current_player = Players.query.filter_by(id=player_id).first()
+            current_stat = StatInfo.query.filter_by(players_id= player_id).first()
+            current_team = Dept.query.filter_by(id=current_player.dept_id).first()
+            current_info = {
+                "player_name":current_player.fname,
+
+                "player_id":player_id,
+                "red_cards":current_stat.red_cards,
+                "team_name":current_team.dName,
+                "position":current_player.position
+            }
+            red_cards.append(current_info)
+
+        for i in most_goals:
+             get_goals(i['player_id'])
+        for i in most_assists:
+             get_assist(i['player_id'])   
+        for i in most_clean_sheets:
+             goals_conceded(i['player_id']) 
+        for i in most_red_cards:
+             red_card(i['player_id']) 
+        for i in most_yellow_cards:
+             yellow_card(i['player_id']) 
+        
+            
+        # get_goals(most_goals[0]['player_id'])
+        # get_assist(most_assists[0]['player_id'])
+        # goals_conceded(most_clean_sheets[0]['player_id'])
+        # print(current_player.fname)
+        # print(current_stat.goals_scored)
+        # print(most_goals[2].players_id)
+        # print(most_goals[3].players_id)
+        # print(most_goals[4].players_id)
+        # print(most_goals[5].players_id)
+        
+
+        # def get_player_info(player_id):
+        #     current_player_info = Players.query.filter_by(id=player_id).first()
+        #     current_team_id = current_player_info.dept_id
+        #     current_player_name = current_player_info.fname + " " + current_player_info.lname
+        #     current_team_name = Dept.query.filter_by(id=current_team_id).first().dName
+        #     print(current_player_named)
+        #     return {"team_id":current_team_id,"player_name":current_player_name,"team_name":current_team_name}
+        
         all_data = {
-            "goals_scored":[],
-            "assists_provided":[],
-            "yellow_cards":[],
-            "red_cards":[],
-            "clean_sheets":[],
+            "goals_scored":goals_scored,
+            "assists_provided":assists_provided,
+            "yellow_cards":yellow_cards,
+            "red_cards":red_cards,
+            "clean_sheets":clean_sheets,
         }
-        def get_stat_data(type,data):
-            all_goals_info = []
-            for i in range(len(data)):
-                extra_info = get_player_info(data[i]['id'])
-                current_goal_info = {
-                "player_id":data[i]['id'],
-                "player_name":extra_info['player_name'],
-                type:data[i][type],
-                "team_name":extra_info['team_name']
-                }
+        print(all_data)
+        # def get_stat_data(type,data):
+        #     all_goals_info = []
+        #     for i in range(len(data)):
+        #         extra_info = get_player_info(data[i]['id'])
+        #         current_goal_info = {
+        #         "player_id":data[i]['id'],
+        #         "player_name":extra_info['player_name'],
+        #         type:data[i][type],
+        #         "team_name":extra_info['team_name']
+        #         }
                 
-                all_goals_info.append(current_goal_info)
-            all_data[type] = all_goals_info
+            #     all_goals_info.append(current_goal_info)
+            # all_data[type] = all_goals_info
             
             
                 
@@ -401,11 +505,11 @@ class Stat(Resource):
                 
                 
                 
-        get_stat_data("goals_scored",most_goals)
-        get_stat_data("assists_provided",most_goals)
-        get_stat_data("yellow_cards",most_yellow_cards)
-        get_stat_data("red_cards",most_red_cards)
-        get_stat_data("clean_sheets",most_clean_sheets)
+        # get_stat_data("goals_scored",most_goals)
+        # get_stat_data("assists_provided",most_goals)
+        # get_stat_data("yellow_cards",most_yellow_cards)
+        # get_stat_data("red_cards",most_red_cards)
+        # get_stat_data("clean_sheets",most_clean_sheets)
         
         
         return all_data , 200
