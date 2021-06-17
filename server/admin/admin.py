@@ -366,3 +366,38 @@ class gameweeks(Resource):
         # upcoming_gameweek.status = "ACTIVE"
         # db.session.add(upcoming_gameweek)
         # db.session.commit()
+
+@admin.route("/statistics/<int:player_id>")
+class statUpdate(Resource):
+    def put(self,player_id):
+        request_stat = request.get_json()['update_info']
+        stat = StatInfo.query.filter_by(players_id=player_id).first()
+       
+        if(stat):
+            stat.goals_scored=stat.goals_scored + int(request_stat['goals_scored'])
+            stat.assists_provided = stat.assists_provided + int(request_stat['assists_provided'])
+            if(int(request_stat['goals_conceded']) == 0):
+                stat.clean_sheets= stat.clean_sheets + 1
+            if(int(request_stat['yellow_cards'])==1):
+           
+                stat.yellow_cards= stat.yellow_cards + 1
+            if(int(request_stat['red_cards']) == 1):
+                stat.red_cards= stat.red_cards + 1
+            db.session.add(stat)
+            db.session.commit()
+        else:
+            clean_sheets_current=0
+            yellow_card_current=0
+            red_card_current=0
+
+            if(int(request_stat['goals_conceded']) == 0):
+                clean_sheets_current=1
+            if(int(request_stat['yellow_cards'])==1):
+                yellow_card_current=1
+            if(int(request_stat['yellow_cards'])==1):
+                red_card_current=1
+            
+            stat_new = StatInfo(players_id=player_id, goals_scored=request_stat['goals_scored'],clean_sheets=clean_sheets_current,assists_provided=request_stat['assists_provided'], yellow_cards=yellow_card_current, red_cards=red_card_current)
+            db.session.add(stat_new)
+            db.session.commit()
+        print('Completed!')

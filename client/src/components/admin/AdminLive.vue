@@ -78,34 +78,28 @@
                 <div class="yellow-card-container">
                   <label for="yellow-card">Yellow Card :</label>
                   <input
+                    @click="give_card"
+                    
                     type="checkbox"
-                    checked
+                    :checked="yellow_cards"
                     name="yellow-card"
-                    v-if="yellow_cards == 1"
                   />
 
-                  <input
-                    type="checkbox"
-                    name="yellow-card"
-                    v-if="yellow_cards == 0"
-                  />
+                  
                 </div>
 
                 <!-- Red Cards -->
                 <div class="red-card-container">
                   <label for="red-card">Red Card :</label>
                   <input
-                    checked
+                    @click="give_card"
+                    
+                    :checked="red_cards"
                     type="checkbox"
-                    name="yellow-card"
-                    v-if="red_cards == 1"
+                    name="red-card"
                   />
 
-                  <input
-                    type="checkbox"
-                    name="yellow-card"
-                    v-if="red_cards == 0"
-                  />
+                
                 </div>
 
                 <button class="save" @click="save_data">Save</button>
@@ -270,7 +264,7 @@ export default {
     // await this.get_current_gameweek();
     // Get All Matches
     // Get Token from Local Storage
-    let access_token = localStorage.getItem("token");
+    let access_token = sessionStorage.getItem("token");
 
     // Prepare a header config
     let config = {
@@ -293,7 +287,7 @@ export default {
     // Function to get access token
     get_access_token: function () {
       // Get Token from Local Storage
-      let access_token = localStorage.getItem("token");
+      let access_token = sessionStorage.getItem("token");
 
       // Prepare a header config
       let config = {
@@ -329,10 +323,32 @@ export default {
     update_score: function (update_info) {
       axios
         .post(`${path}/score/${update_info.gameweek_id}`, { update_info })
-        .then()
+        .then(()=>{
+          console.log(update_info.yellow_cards);
+          axios.put(`${path}/statistics/${update_info.player_id}`,{update_info})
+        })
         .catch((err) => {
           console.log(err);
         });
+    },
+    give_card: function(e){
+      let check_card = e.target.name
+      if(check_card=="red-card"){
+        if(e.target.checked==true){
+          this.red_cards=1;
+        }
+        else{
+          this.red_cards=0;
+        }
+      }else{
+        if(e.target.checked==true){
+          this.yellow_cards=1;
+        }
+        else{
+          this.yellow_cards=0;
+        }
+      }
+      
     },
     // Function to save data after edit
     save_data: function () {
