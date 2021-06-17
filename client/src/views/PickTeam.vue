@@ -175,9 +175,7 @@
           </div>
         </div>
         <div class="submit-button-container">
-          <!-- <router-link to="Registration" @click.native="submit"> -->
           <button @click="submit" class="team-submit-button">Save</button>
-          <!-- </router-link> -->
         </div>
       </div>
     </div>
