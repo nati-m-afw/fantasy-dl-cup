@@ -147,20 +147,26 @@
         <div id="info">
           <h1>{{ myTeamName }}</h1>
         </div>
-        <div
-          v-for="(player, index) in playersApi"
-          :key="index"
-          :class="checkSelected(player) ? 'disabled' : ''"
-        >
-          <span>{{ player.fname }}</span>
-          <span>{{ player.lname }}</span>
-          <span>{{ player.position }}</span>
-          <button
-            @click="addPlayer($event, player)"
-            :disabled="checkSelected(player)"
+        <div class="skewed">
+          <div
+            v-for="(player, index) in playersApi"
+            :key="index"
+            :class="checkSelected(player) ? 'disabled' : ''"
+            class="player-options"
           >
-            +
-          </button>
+            <p v-if="player.position == 'goalkeeper'">GK</p>
+            <p v-else-if="player.position == 'defender'">DEF</p>
+            <p v-else-if="player.position == 'midfielder'">MID</p>
+            <p v-else>ST</p>
+            <p>{{ player.fname + " " + player.lname }}</p>
+            <button
+              @click="addPlayer($event, player)"
+              :disabled="checkSelected(player)"
+              class="player-options-add"
+            >
+              Add +
+            </button>
+          </div>
         </div>
         <div class="sumbit-button">
           <!-- <router-link to="Registration" @click.native="submit"> -->
@@ -288,6 +294,8 @@ export default {
 </script>
 
 <style scoped>
+@import "../assets/css/sidebar.css";
+
 * {
   box-sizing: border-box;
 }
@@ -311,8 +319,8 @@ body {
   display: grid;
   grid-template-rows: repeat(4, 150px);
   grid-gap: 1rem;
-  background-color: var(--secondary-color);
-  background-image: url("../assets/img/fields/Field4.0.png");
+  background-image: url("../assets/img/fields/Field4.0.png"),
+    url("../assets/img/field-background.jpg");
   background-repeat: no-repeat;
   animation: rise 1s forwards;
 }
@@ -335,10 +343,8 @@ body {
   display: block;
 }
 
-#transfer_sidebar {
-  background-color: white;
-  display: flex;
-  flex-direction: column;
+#info {
+  color: var(--secondary-color);
 }
 
 div.disabled {
@@ -395,5 +401,15 @@ div.disabled {
 .details > p {
   background-color: var(--secondary-color);
   color: var(--accent-color);
+}
+
+.player-options {
+  display: flex;
+  padding: 0 10%;
+  justify-content: space-evenly;
+}
+
+.player-options p {
+  padding: 5px;
 }
 </style>

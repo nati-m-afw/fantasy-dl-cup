@@ -1,5 +1,5 @@
 <template>
-  <div class="body">
+  <div class="fbody">
     <!-- Allows for Message Flashing -->
     <FlashMessage :position="'top'"></FlashMessage>
     <div class="form-container">
@@ -129,4 +129,18 @@ export default {
 
 <style scoped>
 @import "../assets/css/form-styles.css";
+
+.body {
+  min-height: 100vh;
+
+  background: url("../assets/img/epic_waves.jpg");
+
+  background-repeat: no-repeat;
+  background-size: 150%;
+  background-position: 10% 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 </style>
