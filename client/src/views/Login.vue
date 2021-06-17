@@ -46,6 +46,11 @@
         <button @click="email_login" class="login-button">Login</button>
       </div>
 
+      <!-- Alert -->
+      <div style="position:relative;">
+        <alert :msg="alertMsg" v-if="showMsg" />
+      </div>
+
       <div class="sso-container">
         <button @click="google_login" class="google-login"></button>
 
@@ -67,6 +72,7 @@
 
 <script>
 import firebase from "firebase";
+import Alert from "../components/Alert.vue";
 import "firebase/auth";
 
 // Random Word Generator
@@ -82,8 +88,17 @@ export default {
       email: "",
       password: "",
       providerName: "",
+
+      alertMsg: "",
+
+      showMsg: false,
     };
   },
+
+  components: {
+    alert: Alert,
+  },
+
   methods: {
     // For Email Live
     validate_email_live: function (e) {
@@ -151,8 +166,14 @@ export default {
         .post(`${path}/signuser`, { user_info })
         .then(() => {})
         .catch((err) => {
-          this.flashMessage.error({
-            message: err.message,
+          // this.flashMessage.error({
+          //   message: err.message,
+          // });
+          this.alertMsg = err.message;
+          this.showMsg = false;
+          this.$nextTick (() => {
+          // add my-component component in DOM
+            this.showMsg = true;
           });
         });
     },
@@ -177,8 +198,14 @@ export default {
           this.$router.push("/myteam");
         })
         .catch((err) => {
-          this.flashMessage.error({
-            message: err.message,
+          // this.flashMessage.error({
+          //   message: err.message,
+          // });
+          this.alertMsg = err.message;
+          this.showMsg = false;
+          this.$nextTick (() => {
+          // add my-component component in DOM
+            this.showMsg = true;
           });
         });
     },
@@ -215,14 +242,26 @@ export default {
             },
             // If User email is already in use in firebase
             (err) => {
-              this.flashMessage.error({
-                message: `${err.message}`,
+              // this.flashMessage.error({
+              //   message: `${err.message}`,
+              // });
+              this.alertMsg = err.message;
+              this.showMsg = false;
+              this.$nextTick (() => {
+              // add my-component component in DOM
+                this.showMsg = true;
               });
             }
           );
       } else {
-        this.flashMessage.error({
-          message: "Please check your input.",
+        // this.flashMessage.error({
+        //   message: "Please check your input.",
+        // });
+        this.alertMsg = "Please check your input.";
+        this.showMsg = false;
+        this.$nextTick (() => {
+        // add my-component component in DOM
+          this.showMsg = true;
         });
       }
     },
@@ -285,15 +324,27 @@ export default {
                 }
               })
               .catch((err) => {
-                this.flashMessage.error({
-                  message: err.message,
+                // this.flashMessage.error({
+                //   message: err.message,
+                // });
+                this.alertMsg = err.message;
+                this.showMsg = false;
+                this.$nextTick (() => {
+                // add my-component component in DOM
+                  this.showMsg = true;
                 });
               });
           },
           () => {
             // Call Error Handler Function
-            this.flashMessage.error({
-              message: `Email ${this.email} with a different Provider`,
+            // this.flashMessage.error({
+            //   message: `Email ${this.email} with a different Provider`,
+            // });
+            this.alertMsg = `Email ${this.email} with a different Provider`;
+            this.showMsg = false;
+            this.$nextTick (() => {
+            // add my-component component in DOM
+              this.showMsg = true;
             });
           }
         );
