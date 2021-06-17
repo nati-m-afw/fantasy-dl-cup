@@ -1,6 +1,7 @@
 <template>
   <div class="body">
     <!-- <pre>{{ $data }}</pre> -->
+    <h1 class="page-title">Pick team</h1>
     <div id="team_selection">
       <div id="transfer_field">
         <div class="goalkeeper">
@@ -154,23 +155,27 @@
             :class="checkSelected(player) ? 'disabled' : ''"
             class="player-options"
           >
-            <p v-if="player.position == 'goalkeeper'">GK</p>
-            <p v-else-if="player.position == 'defender'">DEF</p>
-            <p v-else-if="player.position == 'midfielder'">MID</p>
-            <p v-else>ST</p>
-            <p>{{ player.fname + " " + player.lname }}</p>
+            <img
+              @click="getPlayers($event, i)"
+              class="i sidebar-img"
+              :src="
+                require('@/assets/img/jerseys/' + player.department + '.png')
+              "
+              alt=""
+            />
+            <p class="player-name">{{ player.fname }}</p>
             <button
               @click="addPlayer($event, player)"
               :disabled="checkSelected(player)"
               class="player-options-add"
             >
-              Add +
+              Add
             </button>
           </div>
         </div>
-        <div class="sumbit-button">
+        <div class="submit-button-container">
           <!-- <router-link to="Registration" @click.native="submit"> -->
-          <button @click="submit">Save</button>
+          <button @click="submit" class="team-submit-button">Save</button>
           <!-- </router-link> -->
         </div>
       </div>
@@ -305,6 +310,20 @@ body {
   font-family: futura-pt;
 }
 
+.body {
+  min-height: 100vh;
+  background: url("../assets/img/epic_waves.jpg");
+}
+
+.page-title {
+  color: var(--secondary-color);
+  padding: 2% 0 0;
+  text-align: center;
+  font-size: 3rem;
+  font-family: limelight;
+  margin-bottom: -1%;
+}
+
 #team_selection {
   padding: 2% 7%;
   display: grid;
@@ -348,8 +367,8 @@ body {
 }
 
 div.disabled {
-  background-color: #696969;
-  color: black;
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .active {
@@ -404,12 +423,97 @@ div.disabled {
 }
 
 .player-options {
-  display: flex;
+  display: grid;
+  grid-template-columns: 20px 3fr 50px;
+  grid-column-gap: 1em;
   padding: 0 10%;
-  justify-content: space-evenly;
+  align-content: center;
+  background: var(--secondary-color);
+  margin-bottom: 5%;
 }
 
-.player-options p {
-  padding: 5px;
+.player-options * {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: montserrat-light;
+  color: var(--primary-color);
+}
+
+.player-name {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.player-options button {
+  font-family: futura-pt;
+  /* border-radius: solid thin; */
+  outline: none;
+  border-top: none;
+  border-bottom: none;
+  background: var(--accent-color);
+  color: var(--secondary-color);
+}
+
+.sidebar-img {
+  width: 50px;
+}
+
+.submit-button-container {
+  position: relative;
+  margin-top: 30px;
+}
+
+.team-submit-button {
+  font-size: 1.5rem;
+  letter-spacing: 0.8px;
+  width: 100%;
+  padding: 2% 0;
+  margin-bottom: 10%;
+  position: relative;
+  border: 1px solid black;
+  border-radius: 0 0 5px 5px;
+  /* background: var(--primary-color); */
+  color: var(--primary-color);
+}
+
+.team-submit-button:after {
+  content: "";
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(
+    40deg,
+    #dc143c,
+    #e22f72,
+    #c071c7,
+    #8d9fed,
+    #78b0f6,
+    #5ffbf1
+  );
+  background-size: 400%;
+  position: absolute;
+  /* z-index: -1; */
+  top: 99%;
+  left: 0;
+  border-radius: inherit;
+  animation: glimmer 20s infinite alternate;
+}
+
+.team-submit-button:active {
+  transform: translateY(5px);
+}
+
+.team-submit-button:active:after {
+  width: 0;
+}
+
+@keyframes glimmer {
+  0% {
+    background-position: 0;
+  }
+  100% {
+    background-position: 100%;
+  }
 }
 </style>
