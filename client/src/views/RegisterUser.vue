@@ -264,7 +264,7 @@ export default {
         this.validate_email() &&
         this.validate_team() &&
         this.validate_name()
-        // && this.validate_password()
+        && this.validate_password()
       ) {
         // Call Firebase API
         firebase

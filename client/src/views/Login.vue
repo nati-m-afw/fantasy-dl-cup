@@ -214,7 +214,7 @@ export default {
       // If Data is valid
       if (
         this.validate_email()
-        // && this.validate_password()
+        && this.validate_password()
       ) {
         // Call Firebase API
         firebase
