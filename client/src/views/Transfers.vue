@@ -6,6 +6,8 @@
     <navigation :activePage="'Transfers'" />
     <div id="info"></div>
     <alert :msg="alertMsg" v-if="showMsg" />
+    <FlashMessage :position="'top'" style="position: relative; z-index: 10;" />
+
     <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
       <div class="team">
@@ -250,6 +252,16 @@ export default {
 
       // Active player order number and playing position
       selected: [],
+
+      // Team Limit Counter
+      teamCounter: {
+        "1":0,
+        "2":0,
+        "3":0,
+        "4":0,
+        "5":0,
+        "6":0,
+      },
     };
   },
 
@@ -307,6 +319,7 @@ export default {
           }
           for (const player of res.data.team) {
             this.myTeam[player.position].push(player);
+            this.teamCounter[player.dept_id] += 1;
           }
           // this.myTeam = res.data.team
         })
@@ -334,11 +347,19 @@ export default {
 
     // Add selected player to myTeam based on position
     addPlayer(e, player) {
+      this.teamCounter[player.dept_id] += 1;
+      // Check team limit
+      if (this.teamCounter[player.dept_id] > 3) {
+        this.teamCounter[player.dept_id] -= 1;
+        this.flashMessage.error({message: "Can not pick more than three players from the same team!"});
+        return;
+      }
       player["status"] =
         this.myTeam[player.position][this.selectedPlayerIndex].status;
       this.$set(this.myTeam[player.position], this.selectedPlayerIndex, player);
+      
     },
-
+    
     // Check if player is in myTeam.<position>
     checkSelected(player) {
       let check = false;

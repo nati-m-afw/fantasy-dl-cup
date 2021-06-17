@@ -1,6 +1,7 @@
 <template>
   <div class="body">
     <!-- <pre>{{ $data }}</pre> -->
+    <FlashMessage :position="'top'" />
     <h1 class="page-title">Pick team</h1>
     <div id="team_selection">
       <div id="transfer_field">
@@ -210,6 +211,15 @@ export default {
 
       // Active player order number and playing position
       selected: [],
+
+      teamCounter: {
+        "1":0,
+        "2":0,
+        "3":0,
+        "4":0,
+        "5":0,
+        "6":0,
+      },
     };
   },
 
@@ -247,6 +257,13 @@ export default {
 
     // Add selected player to myTeam based on position
     addPlayer(e, player) {
+      this.teamCounter[player.dept_id] += 1;
+      // Check team limit
+      if (this.teamCounter[player.dept_id] > 3) {
+        this.teamCounter[player.dept_id] -= 1;
+        this.flashMessage.error({message: "Can not pick more than three players from the same team!"});
+        return;
+      }
       this.$set(this.myTeam[player.position], this.selectedPlayerIndex, player);
     },
 
@@ -256,6 +273,7 @@ export default {
       this.myTeam[player.position].filter(function (myPlayer) {
         if (myPlayer && myPlayer.id == player.id) check = true;
       });
+
       return check;
     },
 
