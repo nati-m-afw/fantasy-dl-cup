@@ -445,7 +445,7 @@ export default {
     // Function to get access token
     get_access_token: function () {
       // Get Token from Local Storage
-      let access_token = localStorage.getItem("token");
+      let access_token = sessionStorage.getItem("token");
 
       // Prepare a header config
       let config = {
@@ -467,20 +467,21 @@ export default {
         }
       }
     },
-    handle_error: function (err) {
-      // 401 UnAuthorized
-      if (err.response.status == 401) {
-        console.log("401 Error Handling");
-      }
+     handle_error: function (err) {
+      // 401 UnAuthorized or 
       // Tampered with JWT
-      else if (err.response.status == 422) {
-        console.log("422 Error Handling");
+      if (err.response.status == 401 || err.response.status == 422)   {
+        sessionStorage.clear()
+        location.reload()
       }
+    
       // Non Admin Access
       else if (err.response.status == 403) {
-        console.log("403 Error Handling");
+        sessionStorage.clear()
+        location.reload()
+        this.flashMessage.warning({message:"Error You is not an Admin"})
       } else {
-        console.log(err);
+        console.log(err)
       }
     },
     // Get all teams for drop down

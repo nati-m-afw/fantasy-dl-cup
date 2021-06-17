@@ -231,6 +231,25 @@ export default {
   },
 
   methods: {
+    //Handle Errors
+      handle_error: function (err) {
+      
+      // 401 UnAuthorized or 
+      // Tampered with JWT
+      if (err.response.status == 401 || err.response.status == 422)   {
+        sessionStorage.clear()
+        location.reload()
+      }
+    
+      // Non Admin Access
+      else if (err.response.status == 403) {
+        sessionStorage.clear()
+        location.reload()
+        this.flashMessage.warning({message:"Error You is not an Admin"})
+      } else {
+        console.log(err)
+      }
+    },
     // Get Access token
     get_access_token: function () {
       // Get Token from Local Storage
@@ -253,7 +272,7 @@ export default {
           this.activeGameweek = res.data.activeGW + 1;
           this.getTeam();
         })
-        .catch((err) => console.error(err));
+        .catch((err) => this.handle_error(err));
     },
 
     // Get user Team API
@@ -273,7 +292,7 @@ export default {
           }
           // this.myTeam = res.data.team
         })
-        .catch((err) => console.error(err));
+        .catch((err) => this.handle_error(err));
     },
 
     // Change player status
@@ -342,7 +361,7 @@ export default {
           // this.$router.push("/myteam");
         })
         .catch((err) => {
-          console.error(err);
+          this.handle_error(err);
           this.msg = "An error occured. Please try again!";
           this.showMsg = true;
         });

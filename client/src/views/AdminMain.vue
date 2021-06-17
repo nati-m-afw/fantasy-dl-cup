@@ -59,7 +59,7 @@ export default {
     // Methods to reset Season
     reset_season: function () {
       // Get Token from Local Storage
-      let access_token = localStorage.getItem("token");
+      let access_token = sessionStorage.getItem("token");
       // Prepare a header config
       let config = {
         headers: {
@@ -72,7 +72,7 @@ export default {
           location.reload();
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
   },

@@ -223,7 +223,7 @@ export default {
           });
         })
         .catch((err) => {
-          console.log(err);
+          this.handle_error(err)
         });
     },
     // Function to get schedules from DB
@@ -345,20 +345,21 @@ export default {
       });
     },
 
-    handle_error: function (err) {
-      // 401 UnAuthorized
-      if (err.response.status == 401) {
-        console.log("401 Error Handling");
-      }
+     handle_error: function (err) {
+      // 401 UnAuthorized or 
       // Tampered with JWT
-      else if (err.response.status == 422) {
-        console.log("422 Error Handling");
+      if (err.response.status == 401 || err.response.status == 422)   {
+        sessionStorage.clear()
+        location.reload()
       }
+    
       // Non Admin Access
       else if (err.response.status == 403) {
-        console.log("403 Error Handling");
+        sessionStorage.clear()
+        location.reload()
+        this.flashMessage.warning({message:"Error You is not an Admin"})
       } else {
-        console.log(err);
+        console.log(err)
       }
     },
   },
