@@ -31,7 +31,7 @@
 }
 
 body {
-  overflow-y: scroll;
+  overflow-y: hidden;
   font-family: futura-pt;
 }
 

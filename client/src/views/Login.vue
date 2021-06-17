@@ -347,7 +347,7 @@ export default {
 }
 
 .body {
-  min-height: 100vh;
+  height: 100vh;
 
   background: url("../assets/img/epic_waves.jpg");
 
