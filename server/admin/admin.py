@@ -220,12 +220,19 @@ class ActiveGameweek(Resource):
     def get(self):
         response = { 'status': 'success' }
         gw = Gameweek.query.filter_by(status='ACTIVE').first()
-        if gw is None:
-            response['activeGW'] = 0
-        else:
+        #  If gameweek active exists
+        if gw is not None:
             response['activeGW'] = gw.id
-
-        return response
+        # If GW active does not exists
+        else:
+            gw = Gameweek.query.filter_by(status='PAST').first()
+            # If Past GW Exists
+            if gw is not None:
+                response['activeGW'] = gw.id
+            # If Past GW does not Exist
+            else:
+                response['activeGW'] = 0
+        return response , 200
 
 # Route to Handle Scores 
 @admin.route("/score/<gameweek_id>")
@@ -344,7 +351,7 @@ class Reset(Resource):
 # End and Start Gameweek
 @admin.route("/gameweek")
 class gameweeks(Resource):
-    # Active gameweek
+    # Activate gameweek
     def put(self):
         # Active a gameweek
         upcoming_gw = Gameweek.query.filter_by(status="ALL_UPCOMING").first()
@@ -353,12 +360,50 @@ class gameweeks(Resource):
         db.session.commit()
         
            
+    #    ENDS ACTIVE GW
     def patch(self):
         active_gw = Gameweek.query.filter_by(status="ACTIVE").first()
         active_gw.status = "PAST"
         db.session.add(active_gw)
         db.session.commit()
        
+        ## Add score to match
+        gw = Gameweek.query.filter_by(status="ALL_UPCOMING").first()
+        gw = gw.id - 1
+        matches = Match.query.filter_by(game_week=gw).all()
+        # Loop every match in GW
+        for match in matches:
+            homeScore = 0
+            awayScore = 0
+            
+            # Get players of team
+            homeTeamPlayers = Players.query.filter_by(dept_id=match.team).all()
+            awayTeamPlayers = Players.query.filter_by(dept_id=match.opponent).all()
+
+            # Loop every player of home team
+            for player in homeTeamPlayers:
+                # Get goals for player
+                goals = Event.query.filter_by(players_id=player.id).first()
+                # Add goal to home team
+                homeScore += goals.goals_scored
+
+            # Loop every player of away team
+            for player in awayTeamPlayers:
+                # Get goals for player
+                goals = Event.query.filter_by(players_id=player.id).first()
+                # Add goal to away team
+                awayScore += goals.goals_scored
+
+            score = str(homeScore) + "v" + str(awayScore)
+            match.state = 1
+            match.score = score
+            db.session.add(match)
+            db.session.commit()
+
+            
+            
+        # Add score
+
             
             
         # # If Active Gameweek 

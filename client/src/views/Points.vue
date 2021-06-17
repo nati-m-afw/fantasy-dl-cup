@@ -5,7 +5,8 @@
     </nav>
     <navigation :activePage="'Points'" />
     <div id="info"></div>
-    <alert :msg="alertMsg" v-if="showMsg" />
+    <FlashMessage :position="'top'" />
+    <!-- <alert :msg="alertMsg" v-if="showMsg" /> -->
     <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
       <div class="team">
@@ -183,7 +184,7 @@
 
 <script>
 import axios from "axios";
-import Alert from "../components/Alert.vue";
+// import Alert from "../components/Alert.vue";
 import Navigation from "../components/Navigation.vue";
 
 export default {
@@ -202,9 +203,9 @@ export default {
 
       selectedGameweek: "",
 
-      alertMsg: "",
+      // alertMsg: "",
 
-      showMsg: false,
+      // showMsg: false,
     };
   },
 
@@ -233,7 +234,7 @@ export default {
   },
 
   components: {
-    alert: Alert,
+    // alert: Alert,
     navigation: Navigation,
   },
 
@@ -267,7 +268,6 @@ export default {
 
     getTeam() {
       let userId = this.$store.state.userId;
-
       // Clear myTeam
       this.myTeam = {
         goalkeeper: [],
@@ -285,11 +285,14 @@ export default {
         )
         .then((res) => {
           if (res.data.team == false && this.activeGameweek == 0) {
-            this.alertMsg = "Gameweek has not started!";
-            this.showMsg = true;
+            // this.alertMsg = "Gameweek has not started!";
+            // this.showMsg = true;
+            this.flashMessage.info({message: "Season has not started!"});
           } else if (res.data.team == false) {
-            this.alertMsg = "No team for current GW in DB";
-            this.showMsg = true;
+            // this.alertMsg = "No team for current GW in DB";
+            // this.showMsg = true;
+            this.flashMessage.error({message: `Did not register in time for GW${this.selectedGameweek}`});
+            return;
           }
           for (const player of res.data.team) {
             this.myTeam[player.position].push(player);

@@ -6,7 +6,8 @@
     <navigation :activePage="'MyTeam'" />
     <div id="info"></div>
     <!-- <pre>{{ $data }}</pre> -->
-    <alert :msg="msg" v-if="showMsg" />
+    <FlashMessage :position="'top'" />
+    <!-- <alert :msg="msg" v-if="showMsg" /> -->
     <div id="team_selection">
       <div class="team">
         <div class="starting_team">
@@ -189,7 +190,7 @@
 
 <script>
 import axios from "axios";
-import Alert from "../components/Alert.vue";
+// import Alert from "../components/Alert.vue";
 import Navigation from "../components/Navigation.vue";
 
 export default {
@@ -211,9 +212,9 @@ export default {
       // Active player order number and playing position
       selected: [],
 
-      msg: "",
+      // msg: "",
 
-      showMsg: false,
+      // showMsg: false,
     };
   },
 
@@ -226,7 +227,7 @@ export default {
   },
 
   components: {
-    alert: Alert,
+    // alert: Alert,
     navigation: Navigation,
   },
 
@@ -287,8 +288,10 @@ export default {
           .length == 1 &&
         playerPos != "striker"
       ) {
-        this.msg = "Minimum of one striker required!";
-        this.showMsg = true;
+        this.flashMessage.error({message: "Minimum of one striker required!"});
+
+        // this.msg = "Minimum of one striker required!";
+        // this.showMsg = true;
         return;
       }
       // Make bench player active
@@ -337,8 +340,10 @@ export default {
         .post("http://localhost:5000/updateuserplayers", payload, config)
         .then(() => {
           this.isRegistered = true;
-          this.msg = "Team Updated!";
-          this.showMsg = true;
+        this.flashMessage.success({message: "Team Updated!"});
+
+          // this.msg = "Team Updated!";
+          // this.showMsg = true;
           // this.$router.push("/myteam");
         })
         .catch((err) => {
