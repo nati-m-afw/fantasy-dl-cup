@@ -482,3 +482,19 @@ class Team(Resource):
         all_teams = Dept.query.all()
         all_teams =  list(map(lambda p: p.serialize(), all_teams))
         return all_teams , 200
+    
+    
+@api.route("/stat/<player_id>")
+class PlayerStat(Resource):
+    def get(self,player_id):
+        score_info = Scores.query.filter_by(players_id=player_id).first()
+        player_stats = StatInfo.query.filter_by(players_id=player_id).first()
+        player_info = {
+            "total_points":score_info.score,
+            "total_goals":player_stats.goals_scored,
+            "total_assists":player_stats.assists_provided,
+            "clean_sheets":player_stats.clean_sheets,
+            "yellow_cards":player_stats.yellow_cards,
+            "red_cards":player_stats.red_cards,
+        }
+        return player_info
