@@ -468,7 +468,7 @@ li.disabled {
 }
 
 .active {
-  background-color: tomato;
+  background: url('../assets/img/epic_waves.jpg');
   border-radius: 10%;
 }
 

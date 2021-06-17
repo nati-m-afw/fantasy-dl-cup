@@ -1,17 +1,14 @@
 <template>
   <div class="body">
-    <div id="info">
-      <h1>{{ myTeamName }}</h1>
-    </div>
     <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
       <div id="transfer_field">
         <div class="goalkeeper">
-          <i></i>
           <!-- Render two placeholders -->
           <div
             v-for="i in [0, 1]"
             :key="i"
+            class="player-details"
             :class="{ active: selected[0] == i && selected[1] == 'gk' }"
             @click="toggleActive($event, i, 'gk')"
           >
@@ -25,23 +22,31 @@
             <img
               @click="getPlayers($event, i)"
               class="i"
-              :src="require('@/assets/img/jerseys/placeholdershirt.png')"
+              :src="
+                myTeam.goalkeeper[i]
+                  ? require('@/assets/img/jerseys/' +
+                      myTeam.goalkeeper[i].department +
+                      '.png')
+                  : require('@/assets/img/jerseys/placeholdershirt.png')
+              "
               alt=""
             />
-            <span>GK</span>
-            <!-- Check if any selected players in myTeam -->
-            <!-- If so display name -->
-            <span v-if="myTeam.goalkeeper[i]">{{
-              myTeam.goalkeeper[i].fname
-            }}</span>
+            <div class="details">
+              <span>GK</span>
+              <!-- Check if any selected players in myTeam -->
+              <!-- If so display name -->
+              <p v-if="myTeam.goalkeeper[i]">
+                {{ myTeam.goalkeeper[i].fname }}
+              </p>
+            </div>
           </div>
-          <i></i>
         </div>
         <div class="defender">
           <!-- Render three placeholders -->
           <div
             v-for="i in [0, 1, 2]"
             :key="i"
+            class="player-details"
             :class="{ active: selected[0] == i && selected[1] == 'df' }"
             @click="toggleActive($event, i, 'df')"
           >
@@ -54,19 +59,26 @@
             <img
               @click="getPlayers($event, i)"
               class="i"
-              :src="require('@/assets/img/jerseys/placeholdershirt.png')"
+              :src="
+                myTeam.defender[i]
+                  ? require('@/assets/img/jerseys/' +
+                      myTeam.defender[i].department +
+                      '.png')
+                  : require('@/assets/img/jerseys/placeholdershirt.png')
+              "
               alt=""
             />
-            <span>DEF</span>
-            <span v-if="myTeam.defender[i]">{{
-              myTeam.defender[i].fname
-            }}</span>
+            <div class="details">
+              <span>DEF</span>
+              <p v-if="myTeam.defender[i]">{{ myTeam.defender[i].fname }}</p>
+            </div>
           </div>
         </div>
         <div class="midfielder">
           <div
             v-for="i in [0, 1, 2]"
             :key="i"
+            class="player-details"
             :class="{ active: selected[0] == i && selected[1] == 'md' }"
             @click="toggleActive($event, i, 'md')"
           >
@@ -79,20 +91,28 @@
             <img
               @click="getPlayers($event, i)"
               class="i"
-              :src="require('@/assets/img/jerseys/placeholdershirt.png')"
+              :src="
+                myTeam.midfielder[i]
+                  ? require('@/assets/img/jerseys/' +
+                      myTeam.midfielder[i].department +
+                      '.png')
+                  : require('@/assets/img/jerseys/placeholdershirt.png')
+              "
               alt=""
             />
-            <span>MID</span>
-            <span v-if="myTeam.midfielder[i]">{{
-              myTeam.midfielder[i].fname
-            }}</span>
+            <div class="details">
+              <span>MID</span>
+              <p v-if="myTeam.midfielder[i]">
+                {{ myTeam.midfielder[i].fname }}
+              </p>
+            </div>
           </div>
         </div>
         <div class="striker">
-          <i></i>
           <div
             v-for="i in [0, 1]"
             :key="i"
+            class="player-details"
             :class="{ active: selected[0] == i && selected[1] == 'st' }"
             @click="toggleActive($event, i, 'st')"
           >
@@ -105,40 +125,48 @@
             <img
               @click="getPlayers($event, i)"
               class="i"
-              :src="require('@/assets/img/jerseys/placeholdershirt.png')"
+              :src="
+                myTeam.striker[i]
+                  ? require('@/assets/img/jerseys/' +
+                      myTeam.striker[i].department +
+                      '.png')
+                  : require('@/assets/img/jerseys/placeholdershirt.png')
+              "
               alt=""
             />
-            <span>ST</span>
-            <span v-if="myTeam.striker[i]">{{ myTeam.striker[i].fname }}</span>
+            <div class="details">
+              <span>ST</span>
+              <p v-if="myTeam.striker[i]">{{ myTeam.striker[i].fname }}</p>
+            </div>
           </div>
-          <i></i>
         </div>
       </div>
       <div id="transfer_sidebar" class="sidebar">
         <!-- Show if server status is false or down -->
         <h2 v-if="!serverStatus">Server could not be reached.</h2>
-        <ul>
-          <li
-            v-for="(player, index) in playersApi"
-            :key="index"
-            :class="checkSelected(player) ? 'disabled' : ''"
+        <div id="info">
+          <h1>{{ myTeamName }}</h1>
+        </div>
+        <div
+          v-for="(player, index) in playersApi"
+          :key="index"
+          :class="checkSelected(player) ? 'disabled' : ''"
+        >
+          <span>{{ player.fname }}</span>
+          <span>{{ player.lname }}</span>
+          <span>{{ player.position }}</span>
+          <button
+            @click="addPlayer($event, player)"
+            :disabled="checkSelected(player)"
           >
-            <span>{{ player.fname }}</span>
-            <span>{{ player.lname }}</span>
-            <span>{{ player.position }}</span>
-            <button
-              @click="addPlayer($event, player)"
-              :disabled="checkSelected(player)"
-            >
-              +
-            </button>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <!-- <router-link to="Registration" @click.native="submit"> -->
-        <button @click="submit">Save</button>
-        <!-- </router-link> -->
+            +
+          </button>
+        </div>
+        <div class="sumbit-button">
+          <!-- <router-link to="Registration" @click.native="submit"> -->
+          <button @click="submit">Save</button>
+          <!-- </router-link> -->
+        </div>
       </div>
     </div>
   </div>
@@ -260,72 +288,112 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/sidebar.css";
-
 * {
   box-sizing: border-box;
 }
 
-.body {
-  margin: 0;
-  min-height: 100vh;
-
-  background-color: #696969;
-
-  padding: 5%;
-}
-
-#info {
-  width: 100%;
-  display: flex;
+body {
+  overflow-y: scroll;
+  font-family: futura-pt;
 }
 
 #team_selection {
+  padding: 2% 7%;
   display: grid;
-  grid-template-columns: 65vw 20vw;
-  grid-template-rows: 800px;
-  grid-column-gap: 2vw;
+  grid-template-columns: 3fr 1fr;
+  grid-column-gap: 2rem;
+  width: 100%;
+  min-height: 100%;
 }
 
 #transfer_field {
-  background-color: black;
+  padding: 2% 0;
   display: grid;
-  color: white;
+  grid-template-rows: repeat(4, 150px);
+  grid-gap: 1rem;
+  background-color: var(--secondary-color);
+  background-image: url("../assets/img/fields/Field4.0.png");
+  background-repeat: no-repeat;
+  animation: rise 1s forwards;
+}
 
-  grid-template-rows: repeat(4, 1fr);
+@keyframes rise {
+  0% {
+    background-position: 50% -50%;
+  }
+  100% {
+    background-position: 50%;
+  }
 }
 
 #transfer_field > div {
   display: flex;
-
-  justify-content: space-around;
-  align-items: center;
+  justify-content: center;
 }
 
 #transfer_field > div > div > img {
   display: block;
 }
 
-.i {
-  color: white;
-  cursor: pointer;
-}
-
 #transfer_sidebar {
   background-color: white;
   display: flex;
+  flex-direction: column;
 }
 
-li.disabled {
+div.disabled {
   background-color: #696969;
   color: black;
 }
 
 .active {
-  background-color: tomato;
+  border-radius: 10%;
+  background: url("../assets/img/epic_waves.jpg");
+  animation: pop 0.4s forwards;
 }
-#team_selection img {
-  width: 15vw;
+
+@keyframes pop {
+  0% {
+    margin: 0;
+  }
+  100% {
+    margin: 10px 10px 0;
+  }
+}
+
+.starting_team div,
+.substitutes div {
+  position: relative;
+}
+
+.player-details {
+  position: relative;
+  text-align: center;
+}
+
+.details {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
+
+#team_selection .player-details img {
+  width: 200px;
   cursor: pointer;
+}
+
+.details > span {
+  display: block;
+  background-color: var(--accent-color);
+  color: var(--secondary-color);
+}
+
+.details > p {
+  background-color: var(--secondary-color);
+  color: var(--accent-color);
 }
 </style>

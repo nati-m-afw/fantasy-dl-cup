@@ -414,7 +414,7 @@ export default {
 }
 
 .active {
-  background-color: tomato;
+  background: url('../assets/img/epic_waves.jpg');
   animation: pop 0.4s forwards;
   border-radius: 10%;
 }
@@ -427,6 +427,7 @@ export default {
     margin: 10px 10px 0;
   }
 }
+
 .starting_team div,
 .substitutes div {
   position: relative;
