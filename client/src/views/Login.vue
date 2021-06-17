@@ -7,7 +7,7 @@
       <h1 class="header">
         Welcome <br />
         Back
-        <img class="cool-text" src="../assets/img/cool-text.png" alt="">
+        <img class="cool-text" src="../assets/img/cool-text.png" alt="" />
       </h1>
 
       <!-- Email Input -->
@@ -64,265 +64,6 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Defining Fonts */
-@font-face {
-  font-family: "Poppins";
-  src: local("Poppins"),
-    url("../assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
-}
-@font-face {
-  font-family: "SourceSans";
-  src: local("SourceSans"),
-    url("../assets/fonts/SourceSans/SourceSansPro-Regular.ttf")
-      format("truetype");
-}
-/* Styling for dynamic stuff */
-.flash-message {
-  margin-left: auto;
-  margin-right: auto;
-  background-color: #37fd12 !important;
-}
-.error {
-  border-bottom: #ff0800 2px solid !important;
-}
-.success {
-  border-bottom: #37fd12 2px solid !important;
-}
-input:focus {
-  outline: none;
-}
-
-/* Main Styles */
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-.body {
-  min-height: 100vh;
-
-  background: url("../assets/img/epic_waves.jpg");
-
-  background-repeat: no-repeat;
-  background-size: 150%;
-  background-position: 10% 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.form-container {
-  width: 500px;
-  min-height: 640px;
-  background: radial-gradient(circle, #009bde1c, #926fd66c, #003087ac 115%);
-  backdrop-filter: blur(8px);
-  /* background: var(--secondary-color); */
-  color: var(--secondary-color);
-  padding: 5% 3%;
-}
-
-.header {
-  font-family: Poppins;
-  font-size: 2rem;
-  letter-spacing: 2px;
-  font-weight: bold;
-  line-height: 1.2;
-  position: relative;
-}
-
-.header > img {
-  position: absolute;
-  right: 0;
-  bottom: -25%;
-  width: 10vmax;
-  animation: rotate 4s infinite ease-in-out;
-}
-
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  80% {
-    transform: rotate(360deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.email-area,
-.password-area {
-  margin-bottom: 5%;
-  margin-top: 5%;
-  padding: 1%;
-  display: flex;
-  flex-direction: column;
-}
-
-.label {
-  font-family: "Poppins";
-  font-size: 16px;
-  margin-bottom: 2%;
-}
-
-.email-input-container,
-.password-input-container {
-  display: flex;
-  align-items: center;
-}
-
-.i {
-  margin-top: 2%;
-  color: gray;
-  opacity: 60%;
-  width: 18px !important;
-  height: auto;
-}
-
-.email-input,
-.password-input {
-  outline: none;
-  border: none;
-  border-bottom: 1px solid black;
-  width: 100%;
-  font-size: 18px;
-  font-family: "SourceSans";
-  padding: 2%;
-  border-radius: 0 0 10px 10px;
-}
-
-.submit-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.forgot-password {
-  align-self: flex-end;
-
-  font-family: "Poppins";
-  width: fit-content;
-  margin-bottom: 30px;
-}
-
-.login-button {
-  font-family: "Poppins";
-  font-size: 20px;
-  letter-spacing: 0.8px;
-  width: 100%;
-  padding: 2% 0;
-  margin-bottom: 10%;
-  position: relative;
-  border: 1px solid black;
-  border-radius: 0 0 5px 5px;
-  background: var(--primary-color);
-  color: var(--secondary-color);
-}
-
-.login-button:after {
-  content: "";
-  width: 100%;
-  height: 5px;
-  background: linear-gradient(
-    40deg,
-    #dc143c,
-    #e22f72,
-    #c071c7,
-    #8d9fed,
-    #78b0f6,
-    #5ffbf1
-  );
-  background-size: 400%;
-  position: absolute;
-  z-index: -1;
-  top: 99%;
-  left: 0;
-  border-radius: inherit;
-  animation: glimmer 20s infinite alternate;
-}
-
-.login-button:active {
-  transform: translateY(5px);
-}
-
-.login-button:active:after {
-  width: 0;
-}
-
-@keyframes glimmer {
-  0% {
-    background-position: 0;
-  }
-  100% {
-    background-position: 100%;
-  }
-}
-
-.form-container a {
-  color: hsl(348, 100%, 60%);
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.sso-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  margin-bottom: 10%;
-}
-
-.google-login,
-.github-login,
-.facebook-login {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  border: none;
-  padding: 0px !important;
-  margin: 0px;
-  transition: 1s all;
-  background-color: rgba(255, 255, 255, 0);
-}
-
-.google-login,
-.github-login,
-.facebook-login {
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-}
-
-.google-login:hover,
-.github-login:hover,
-.facebook-login:hover {
-  transform: scale(1.2);
-}
-.google-login {
-  background-image: url("../assets/icons/Google_Icon.svg");
-}
-.github-login {
-  background-image: url("../assets/icons/Github_Icon.svg");
-}
-.facebook-login {
-  background-image: url("../assets/icons/Facebook_Icon.svg");
-}
-
-.form-footer {
-  text-align: center;
-}
-
-.redirect-info,
-.redirect-link {
-  font-family: "Poppins";
-  font-size: 1rem;
-}
-.redirect-info {
-  margin-right: 1%;
-}
-</style>
 
 <script>
 import firebase from "firebase";
@@ -577,3 +318,31 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@import "../assets/css/form-styles.css";
+
+.header {
+  position: relative;
+}
+
+.header > img {
+  position: absolute;
+  right: 0;
+  bottom: -25%;
+  width: 10vmax;
+  animation: rotate 4s infinite ease-in-out;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
