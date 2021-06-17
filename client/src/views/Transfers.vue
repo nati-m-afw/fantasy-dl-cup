@@ -136,6 +136,9 @@
         </div>
       </div>
       <div class="sidebar">
+        <!-- Show if server status is false or down -->
+        <h2 v-if="!serverStatus">Server could not be reached.</h2>
+
         <h3>{{ myTeamName }}</h3>
         <div class="quick-info">
           <div>
@@ -158,8 +161,36 @@
           </div>
         </div>
         <div class="skewed">
-          <!-- Show if server status is false or down -->
-          <h2 v-if="!serverStatus">Server could not be reached.</h2>
+          <div
+            v-for="(player, index) in playersApi"
+            :key="index"
+            :class="checkSelected(player) ? 'disabled' : ''"
+            class="player-options"
+          >
+            <img
+              @click="getPlayers($event, i)"
+              class="i sidebar-img"
+              :src="
+                require('@/assets/img/jerseys/' + player.department + '.png')
+              "
+              alt=""
+            />
+            <p class="player-name">{{ player.fname }}</p>
+            <button
+              @click="addPlayer($event, player)"
+              :disabled="checkSelected(player)"
+              class="player-options-add"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+        <div class="submit-button-container">
+          <button @click="updateTeamApi" class="team-submit-button">
+            Save
+          </button>
+        </div>
+        <!-- <div class="skewed">
           <ul>
             <li
               v-for="(player, index) in playersApi"
@@ -179,7 +210,7 @@
           </ul>
           <br />
           <button @click="updateTeamApi">SAVE</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -287,7 +318,6 @@ export default {
       const position = e.path[2].className;
       // console.log(e.path);
       let config = this.get_access_token();
-
 
       axios
         .get("http://localhost:5000/getplayers/" + position, config)
@@ -428,25 +458,15 @@ export default {
   display: block;
 }
 
-.i {
-  color: white;
-  cursor: pointer;
-}
-
 #transfer_sidebar {
   background-color: white;
   display: flex;
 }
 
-li {
-  list-style: none;
+div.disabled {
+  pointer-events: none;
+  opacity: 0.7;
 }
-
-li.disabled {
-  background-color: var(--secondary-color);
-  color: black;
-}
-
 .active {
   background-color: tomato;
   animation: pop 0.4s forwards;
@@ -462,13 +482,8 @@ li.disabled {
   }
 }
 
-#team_selection img {
-  width: 15vw;
-  cursor: pointer;
-}
-
 .active {
-  background: url('../assets/img/epic_waves.jpg');
+  background: url("../assets/img/epic_waves.jpg");
   border-radius: 10%;
 }
 
@@ -506,5 +521,100 @@ li.disabled {
 .details > p {
   background-color: var(--secondary-color);
   color: var(--accent-color);
+}
+
+.player-options {
+  display: grid;
+  grid-template-columns: 20px 3fr 50px;
+  grid-column-gap: 1em;
+  padding: 0 10%;
+  align-content: center;
+  background: var(--secondary-color);
+  margin-bottom: 5%;
+}
+
+.player-options * {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: montserrat-light;
+  color: var(--primary-color);
+}
+
+.player-name {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.player-options button {
+  font-family: futura-pt;
+  /* border-radius: solid thin; */
+  outline: none;
+  border-top: none;
+  border-bottom: none;
+  background: var(--accent-color);
+  color: var(--secondary-color);
+}
+
+#team_selection .sidebar-img{
+  width: 50px !important;
+}
+
+.submit-button-container {
+  position: relative;
+  margin-top: 30px;
+}
+
+.team-submit-button {
+  font-size: 1.5rem;
+  letter-spacing: 0.8px;
+  width: 100%;
+  padding: 2% 0;
+  margin-bottom: 10%;
+  position: relative;
+  border: 1px solid black;
+  border-radius: 0 0 5px 5px;
+  /* background: var(--primary-color); */
+  color: var(--primary-color);
+}
+
+.team-submit-button:after {
+  content: "";
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(
+    40deg,
+    #dc143c,
+    #e22f72,
+    #c071c7,
+    #8d9fed,
+    #78b0f6,
+    #5ffbf1
+  );
+  background-size: 400%;
+  position: absolute;
+  /* z-index: -1; */
+  top: 99%;
+  left: 0;
+  border-radius: inherit;
+  animation: glimmer 20s infinite alternate;
+}
+
+.team-submit-button:active {
+  transform: translateY(5px);
+}
+
+.team-submit-button:active:after {
+  width: 0;
+}
+
+@keyframes glimmer {
+  0% {
+    background-position: 0;
+  }
+  100% {
+    background-position: 100%;
+  }
 }
 </style>
