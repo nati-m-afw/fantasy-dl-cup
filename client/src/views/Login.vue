@@ -1,15 +1,19 @@
 <template>
   <div class="body">
     <!-- Allows for Message Flashing -->
-    <FlashMessage :position="'top'"></FlashMessage>
     <div class="form-container">
-      <h1 class="header">Login</h1>
+      <FlashMessage></FlashMessage>
+
+      <h1 class="header">
+        Welcome <br />
+        Back
+      </h1>
 
       <!-- Email Input -->
       <div class="email-area">
         <label for="email" class="label">Email</label>
         <div class="email-input-container">
-          <fa class="i" icon="user" size="1x" ref="username_icon" />
+          <!-- <fa class="i" icon="user" size="1x" ref="username_icon" /> -->
           <input
             class="email-input"
             type="text"
@@ -24,7 +28,7 @@
       <div class="password-area">
         <label for="password" class="label">Password</label>
         <div class="password-input-container">
-          <fa class="i" icon="unlock" size="1x" ref="password_icon" />
+          <!-- <fa class="i" icon="unlock" size="1x" ref="password_icon" /> -->
           <input
             class="password-input"
             type="password"
@@ -41,6 +45,11 @@
         <button @click="email_login" class="login-button">Login</button>
       </div>
 
+      <!-- Alert -->
+      <div style="position:relative;">
+        <alert :msg="alertMsg" v-if="showMsg" />
+      </div>
+
       <div class="sso-container">
         <button @click="google_login" class="google-login"></button>
 
@@ -49,7 +58,7 @@
         <button @click="facebook_login" class="facebook-login"></button>
       </div>
       <!-- <fa icon="facebook" class="i" size="7x" /> -->
-      <div>
+      <div class="form-footer">
         <span class="redirect-info">Don't have an account yet?</span>
 
         <router-link to="/register">
@@ -60,218 +69,9 @@
   </div>
 </template>
 
-<style scoped>
-/* Defining Fonts */
-@font-face {
-  font-family: "Poppins";
-  src: local("Poppins"),
-    url("../../public/fonts/Poppins-Regular.ttf") format("truetype");
-}
-@font-face {
-  font-family: "SourceSans";
-  src: local("SourceSans"),
-    url("../../public/fonts/SourceSansPro-Regular.ttf") format("truetype");
-}
-/* Styling for dynamic stuff */
-.flash-message {
-  margin-left: auto;
-  margin-right: auto;
-  background-color: green !important;
-}
-.error {
-  border-bottom: red 2px solid !important;
-}
-.success {
-  border-bottom: green 2px solid !important;
-}
-input:focus {
-  outline: none;
-}
-
-/* Main Styles */
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-.body {
-  width: 100%;
-  padding-botton: 5%;
-
-  /* background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
-    url("../../public/img/5273776.jpg"); */
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.45)),
-    url("../../public/img/4799045.jpg");
-  /* background-image: url("../../public/img/5295526.jpg"); */
-  color: black;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  display: flex;
-  z-index: -1;
-}
-.form-container {
-  width: 500px;
-  min-height: 640px;
-  /* background-color: rgba(255, 255, 255, 0.7);
-   */
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 3%;
-  padding: 5%;
-  margin-bottom: 3%;
-}
-.header {
-  font-family: "Poppins";
-  letter-spacing: 2px;
-  font-weight: 400;
-  margin-bottom: 10%;
-}
-
-.email-area,
-.password-area {
-  margin-bottom: 5%;
-  margin-top: 5%;
-  padding: 1%;
-  display: flex;
-  flex-direction: column;
-}
-
-.label {
-  font-family: "Poppins";
-  font-size: 16px;
-  margin-bottom: 2%;
-}
-.email-input-container,
-.password-input-container {
-  display: flex;
-  align-items: center;
-}
-.i {
-  margin-top: 2%;
-  color: gray;
-  opacity: 60%;
-  width: 18px !important;
-  height: auto;
-}
-.email-input,
-.password-input {
-  background-color: rgba(255, 255, 255, 0);
-
-  outline: none;
-  border-inline-color: none;
-
-  border: none;
-  border-bottom: 1px solid black;
-  width: 100%;
-  height: 32px;
-  font-size: 18px;
-  font-family: "SourceSans";
-  font-weight: 100;
-  padding-left: 0%;
-  padding-right: 2%;
-  margin-left: 2.5%;
-}
-.email-input {
-  font-style: italic;
-}
-.submit-container {
-  display: flex;
-  flex-direction: column;
-}
-.forgot-password {
-  width: 94%;
-  text-align: right;
-
-  margin-left: 6%;
-  font-family: "Poppins";
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  opacity: 0.9;
-  margin-bottom: 10%;
-}
-.login-button {
-  background-color: rgba(255, 255, 255, 0);
-  backdrop-filter: blur(5px);
-  font-family: "Poppins";
-  font-size: 20px;
-  letter-spacing: 0.8px;
-  width: 80%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-top: 2%;
-  padding-bottom: 2%;
-  border-radius: 15px;
-  border: 1px solid black;
-  margin-bottom: 10%;
-  transition: 0.85s all;
-}
-.login-button:hover {
-  transform: scale(1.1);
-  background-color: teal;
-}
-
-.sso-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  margin-bottom: 10%;
-}
-
-.google-login,
-.github-login,
-.facebook-login {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  border: none;
-  padding: 0px !important;
-  margin: 0px;
-  transition: 1s all;
-  background-color: rgba(255, 255, 255, 0);
-}
-
-.google-login,
-.github-login,
-.facebook-login {
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-}
-
-.google-login:hover,
-.github-login:hover,
-.facebook-login:hover {
-  transform: scale(1.2);
-}
-.google-login {
-  background-image: url("../../public/icons/icons8-google.svg");
-}
-.github-login {
-  background-image: url("../../public/icons/icons8-github.svg");
-}
-.facebook-login {
-  background-image: url("../../public/icons/icons8-facebook (1).svg");
-}
-.redirect-info,
-.redirect-link {
-  font-family: "Poppins";
-  font-size: 14px;
-}
-.redirect-info {
-  text-decoration: none;
-  color: black;
-  margin-right: 1%;
-}
-.redirect-link {
-}
-</style>
-
 <script>
 import firebase from "firebase";
+import Alert from "../components/Alert.vue";
 import "firebase/auth";
 
 // Random Word Generator
@@ -287,8 +87,17 @@ export default {
       email: "",
       password: "",
       providerName: "",
+
+      alertMsg: "",
+
+      showMsg: false,
     };
   },
+
+  components: {
+    alert: Alert,
+  },
+
   methods: {
     // For Email Live
     validate_email_live: function (e) {
@@ -297,13 +106,13 @@ export default {
       ) {
         e.target.classList.remove("error");
         e.target.classList.add("success");
-        this.$refs.username_icon.style.color = "green";
+        this.$refs.username_icon.style.color = "#37FD12";
       } else {
         e.target.classList.remove("success");
         e.target.classList.remove("error");
         e.target.classList.add("error");
 
-        this.$refs.username_icon.style.color = "red";
+        this.$refs.username_icon.style.color = "#FF0800";
       }
     },
 
@@ -328,13 +137,13 @@ export default {
       ) {
         e.target.classList.remove("error");
         e.target.classList.add("success");
-        this.$refs.password_icon.style.color = "green";
+        this.$refs.password_icon.style.color = "#37FD12";
       } else {
         e.target.classList.remove("success");
         e.target.classList.remove("error");
         e.target.classList.add("error");
 
-        this.$refs.password_icon.style.color = "red";
+        this.$refs.password_icon.style.color = "#FF0800";
       }
     },
 
@@ -356,8 +165,14 @@ export default {
         .post(`${path}/signuser`, { user_info })
         .then(() => {})
         .catch((err) => {
-          this.flashMessage.error({
-            message: err.message,
+          // this.flashMessage.error({
+          //   message: err.message,
+          // });
+          this.alertMsg = err.message;
+          this.showMsg = false;
+          this.$nextTick (() => {
+          // add my-component component in DOM
+            this.showMsg = true;
           });
         });
     },
@@ -375,15 +190,21 @@ export default {
             // Update store state
             this.$store.commit("setCurrentUserID", this.user_id);
             this.$store.commit("setMyTeamName", this.team_name);
+            sessionStorage.setItem("token", response.data.token);
             // this.$store.dispatch("getActiveGameweek");
           }
 
-          // Redirect to myTeam
           this.$router.push("/myteam");
         })
         .catch((err) => {
-          this.flashMessage.error({
-            message: err.message,
+          // this.flashMessage.error({
+          //   message: err.message,
+          // });
+          this.alertMsg = err.message;
+          this.showMsg = false;
+          this.$nextTick (() => {
+          // add my-component component in DOM
+            this.showMsg = true;
           });
         });
     },
@@ -393,7 +214,7 @@ export default {
       // If Data is valid
       if (
         this.validate_email()
-        // && this.validate_password()
+        && this.validate_password()
       ) {
         // Call Firebase API
         firebase
@@ -420,14 +241,26 @@ export default {
             },
             // If User email is already in use in firebase
             (err) => {
-              this.flashMessage.error({
-                message: `${err.message}`,
+              // this.flashMessage.error({
+              //   message: `${err.message}`,
+              // });
+              this.alertMsg = err.message;
+              this.showMsg = false;
+              this.$nextTick (() => {
+              // add my-component component in DOM
+                this.showMsg = true;
               });
             }
           );
       } else {
-        this.flashMessage.error({
-          message: "Please check your input.",
+        // this.flashMessage.error({
+        //   message: "Please check your input.",
+        // });
+        this.alertMsg = "Please check your input.";
+        this.showMsg = false;
+        this.$nextTick (() => {
+        // add my-component component in DOM
+          this.showMsg = true;
         });
       }
     },
@@ -490,15 +323,27 @@ export default {
                 }
               })
               .catch((err) => {
-                this.flashMessage.error({
-                  message: err.message,
+                // this.flashMessage.error({
+                //   message: err.message,
+                // });
+                this.alertMsg = err.message;
+                this.showMsg = false;
+                this.$nextTick (() => {
+                // add my-component component in DOM
+                  this.showMsg = true;
                 });
               });
           },
           () => {
             // Call Error Handler Function
-            this.flashMessage.error({
-              message: `Email ${this.email} with a different Provider`,
+            // this.flashMessage.error({
+            //   message: `Email ${this.email} with a different Provider`,
+            // });
+            this.alertMsg = `Email ${this.email} with a different Provider`;
+            this.showMsg = false;
+            this.$nextTick (() => {
+            // add my-component component in DOM
+              this.showMsg = true;
             });
           }
         );
@@ -523,3 +368,45 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@import "../assets/css/form-styles.css";
+
+.header {
+  position: relative;
+}
+
+.header > img {
+  position: absolute;
+  right: 0;
+  bottom: -25%;
+  width: 10vmax;
+  animation: rotate 4s infinite ease-in-out;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.body {
+  height: 100vh;
+
+  background: url("../assets/img/epic_waves.jpg");
+
+  background-repeat: no-repeat;
+  background-size: 150%;
+  background-position: 10% 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+</style>

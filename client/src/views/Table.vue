@@ -10,21 +10,23 @@
           <tr>
             <th></th>
             <th>Last 5</th>
-            <th id="Pts" title="Total Points">Pts</th>
-            <th id="Pl" title="Games Played">Pl</th>
-            <th id="W" title="Won">W</th>
-            <th id="D" title="Drawn">D</th>
-            <th id="L" title="Lost">L</th>
-            <th><abbr title="Goals for">GF</abbr></th>
-            <th><abbr title="Goals against">GA</abbr></th>
-            <th><abbr title="Goal Difference">GD</abbr></th>
+            <th @click="sortTable(2)" id="Pts" title="Total Points">Pts</th>
+            <th @click="sortTable(3)" id="Pl" title="Games Played">Pl</th>
+            <th @click="sortTable(4)" id="W" title="Won">W</th>
+            <th @click="sortTable(5)" id="D" title="Drawn">D</th>
+            <th @click="sortTable(6)" id="L" title="Lost">L</th>
+            <th @click="sortTable(7)"><abbr title="Goals for">GF</abbr></th>
+            <th @click="sortTable(8)"><abbr title="Goals against">GA</abbr></th>
+            <th @click="sortTable(9)">
+              <abbr title="Goal Difference">GD</abbr>
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="team in table" :key="team">
             <td>{{ team.teamName }}<i class="fas fa-minus"></i></td>
             <td>
-              <span v-for="result in team.last5" :key="result">
+              <span v-for="(result, index) in team.last5" :key="result + index">
                 <fa v-if="result == 'W'" class="i fas" icon="check-circle" />
                 <fa
                   v-else-if="result == 'L'"
@@ -57,12 +59,12 @@ export default {
   data() {
     return {
       table: {
-        Biomed: [],
-        Chemical: [],
-        Elec: [],
-        IT: [],
-        Mech: [],
-        SE: [],
+        team1: [],
+        team2: [],
+        team3: [],
+        team4: [],
+        team5: [],
+        team6: [],
       },
     };
   },
@@ -70,21 +72,94 @@ export default {
     navigation: Navigation,
   },
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = sessionStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
+
     getTableData() {
-      axios.get("http://127.0.0.1:5000/gettable").then((res) => {
+      let config = this.get_access_token();
+      axios.get("http://127.0.0.1:5000/gettable", config).then((res) => {
         let i = 1;
         for (let team in this.table) {
           this.table[team] = res.data[i++];
         }
       });
     },
+    sortTable(n) {
+      let table,
+        rows,
+        switching,
+        i,
+        x,
+        y,
+        shouldSwitch,
+        dir,
+        switchcount = 0;
+
+      table = document.querySelector("table");
+      switching = true;
+
+      dir = "desc";
+
+      while (switching) {
+        switching = false;
+        rows = table.rows;
+
+        for (i = 1; i < rows.length - 1; i++) {
+          shouldSwitch = false;
+
+          x = rows[i].getElementsByTagName("td")[n];
+          y = rows[i + 1].getElementsByTagName("td")[n];
+
+          if (dir == "asc") {
+            if (+x.innerHTML > +y.innerHTML) {
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (+x.innerHTML < +y.innerHTML) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+
+          switchcount++;
+        } else {
+          if (switchcount == 0 && dir == "desc") {
+            dir = "asc";
+            switching = true;
+          }
+        }
+      }
+    },
   },
   created() {
     this.getTableData();
+  },
+  updated() {
+    this.sortTable(2);
   },
 };
 </script>
 <style scoped>
 @import "../assets/css/styles.css";
 @import "../assets/css/table.css";
+
+th {
+  cursor: pointer;
+}
 </style>

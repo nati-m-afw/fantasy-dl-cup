@@ -8,19 +8,24 @@ import Points from "../views/Points.vue";
 import Transfers from "../views/Transfers.vue";
 import Table from "../views/Table.vue";
 import Stats from "../views/Stats.vue";
+import League from "../views/League.vue";
+import Fixtures from "../views/Fixtures.vue";
 
 // Imports for Auth
 import Login from "../views/Login.vue";
 import RegisterUser from "../views/RegisterUser.vue";
 import Reset from "../views/Reset.vue";
+import Profile from "../views/Profile.vue";
 
 // Imports for Admin
 import AdminMain from "../views/AdminMain.vue";
 
 // If authenticated continue / Else goto login
+// if admin goto admin
 const ifAuthenticated = (to, from, next) => {
   // next()
-  if (store.getters.isAuthenticated) next();
+  if(store.getters.isAuthenticated && store.getters.userId == 1) next("/admin");
+  else if (store.getters.isAuthenticated) next();
   else next("/");
 };
 
@@ -32,6 +37,11 @@ const ifNotAuthenticated = (to, from, next) => {
   else next("/myteam");
 };
 
+// If authenticated and admin continue / Else go to login
+const ifAdmin = (to, from, next) => {
+  if (store.getters.isAuthenticated && store.getters.userId == 1) next();
+  else next("/");
+}
 const routes = [
   {
     path: "/pickteam",
@@ -83,6 +93,20 @@ const routes = [
     meta: { title: "DL Stats" },
     beforeEnter: ifAuthenticated,
   },
+  {
+    path: "/league",
+    name: "Global League",
+    component: League,
+    meta: { title: "DL Global League" },
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: "/fixtures",
+    name: "Fixtures",
+    component: Fixtures,
+    meta: { title: "Fixtures" },
+    beforeEnter: ifAuthenticated,
+  },
 
   // Routes For Auth
   {
@@ -107,6 +131,13 @@ const routes = [
     meta: { title: "Reset" },
     // add nav guard
   },
+  {
+    path: "/profile",
+    name: "Customize Profile",
+    component: Profile,
+    meta: { title: "Profile" },
+    // add nav guard
+  },
 
   // Route for Admin
   {
@@ -114,6 +145,7 @@ const routes = [
     name: "Admin Dash",
     component: AdminMain,
     meta: { title: "Admin Dashboard" },
+    beforeEnter: ifAdmin,
   },
 ];
 

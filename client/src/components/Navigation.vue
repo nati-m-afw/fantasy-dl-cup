@@ -11,13 +11,13 @@
       :class="activePage == 'Transfers' ? 'active' : ''"
       >Transfers</router-link
     >
-    <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
+    <router-link to="/league" :class="activePage == 'League' ? 'active' : ''"
       >League</router-link
     >
     <router-link to="/table" :class="activePage == 'Table' ? 'active' : ''"
       >Table</router-link
     >
-    <router-link to="" :class="activePage == 'myTeam' ? 'active' : ''"
+    <router-link to="/fixtures" :class="activePage == 'Fixtures' ? 'active' : ''"
       >Fixtures</router-link
     >
     <router-link to="/statistics" :class="activePage == 'Stats' ? 'active' : ''"
@@ -26,7 +26,7 @@
     <div class="dropdown">
       <div class="dropdiv"></div>
       <div class="dropdown-content">
-        <a href="#">Profile</a>
+        <router-link to="/profile">Profile</router-link>
         <a href="#" @click.prevent="logout">Log Out</a>
       </div>
     </div>
@@ -40,7 +40,7 @@ export default {
   methods: {
     // Logout
     logout() {
-      localStorage.removeItem("user-id");
+      sessionStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");
     },

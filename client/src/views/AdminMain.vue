@@ -14,15 +14,12 @@
         <fa class="i" icon="users" size="1x" />
         <span class="side-nav-component-text">Players</span>
       </div>
-      <div class="side-nav-component" @click="component = 'admin-departments'">
-        <fa class="i" icon="building" size="1x" />
-        <span class="side-nav-component-text">Departments</span>
-      </div>
-      <div class="side-nav-component" @click="component = 'admin-season'">
+
+      <div class="side-nav-component" @click="reset_season">
         <fa class="i" icon="play-circle" size="1x" />
         <span class="side-nav-component-text">Season</span>
       </div>
-      <div class="side-nav-component">
+      <div class="side-nav-component" @click="logout">
         <fa class="i" icon="sign-out-alt" size="1x" />
         <span class="side-nav-component-text">Logout</span>
       </div>
@@ -37,23 +34,47 @@
 </template>
 
 <script>
-import AdminMatches from "../components/admin/AdminMatches";
+import axios from "axios";
+import AdminSchedule from "../components/admin/AdminSchedule.vue";
 import AdminLive from "../components/admin/AdminLive";
 import AdminPlayers from "../components/admin/AdminPlayers";
-import AdminDepartments from "../components/admin/AdminDepartments";
-import AdminSeason from "../components/admin/AdminSeason";
+let path = "http://localhost:5000";
 export default {
   components: {
-    "admin-matches": AdminMatches,
+    "admin-matches": AdminSchedule,
     "admin-live": AdminLive,
     "admin-players": AdminPlayers,
-    "admin-departments": AdminDepartments,
-    "admin-season": AdminSeason,
   },
   data() {
     return {
       component: "admin-matches",
     };
+  },
+  methods: {
+    logout() {
+      sessionStorage.removeItem("user-id");
+      this.$store.commit("setCurrentUserID");
+      this.$router.push("/");
+    },
+    // Methods to reset Season
+    reset_season: function () {
+      // Get Token from Local Storage
+      let access_token = sessionStorage.getItem("token");
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      axios
+        .delete(`${path}/admin/reset`, config)
+        .then(() => {
+          location.reload();
+        })
+        .catch((err) => {
+          this.handle_error(err)
+        });
+    },
   },
 };
 </script>
@@ -64,12 +85,13 @@ export default {
 @font-face {
   font-family: "Poppins";
   src: local("Poppins"),
-    url("../../public/fonts/Poppins-Regular.ttf") format("truetype");
+    url("../assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
 }
 @font-face {
   font-family: "SourceSans";
   src: local("SourceSans"),
-    url("../../public/fonts/SourceSansPro-Regular.ttf") format("truetype");
+    url("../assets/fonts/SourceSans/SourceSansPro-Regular.ttf")
+      format("truetype");
 }
 /* Styling for dynamic stuff */
 .body {
@@ -81,7 +103,7 @@ export default {
       rgba(0, 0, 0, 0.5),
       rgba(0, 0, 0, 0.55)
     ),
-    url("../../public/img/jj-ying-7JX0-bfiuxQ-unsplash.jpg");
+    url("../assets/img/Admin_Backround.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -127,7 +149,6 @@ export default {
   padding: 5% 3% 5% 10%;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.25);
   transition: all 0.75s ease 0s;
 }

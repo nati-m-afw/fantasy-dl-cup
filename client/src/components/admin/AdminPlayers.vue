@@ -442,6 +442,19 @@ export default {
     await this.get_all_teams();
   },
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = sessionStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     work: function () {
       this.loader = 1;
       this.get_selected_team_name();
@@ -454,43 +467,46 @@ export default {
         }
       }
     },
-    handle_error: function (err) {
-      // 401 UnAuthorized
-      if (err.response.status == 401) {
-        console.log("401 Error Handling");
-      }
+     handle_error: function (err) {
+      // 401 UnAuthorized or 
       // Tampered with JWT
-      else if (err.response.status == 422) {
-        console.log("422 Error Handling");
+      if (err.response.status == 401 || err.response.status == 422)   {
+        sessionStorage.clear()
+        location.reload()
       }
+    
       // Non Admin Access
       else if (err.response.status == 403) {
-        console.log("403 Error Handling");
+        sessionStorage.clear()
+        location.reload()
+        this.flashMessage.warning({message:"Error You is not an Admin"})
       } else {
-        console.log(err);
+        console.log(err)
       }
     },
     // Get all teams for drop down
     get_all_teams: function () {
+      let config = this.get_access_token();
       axios
-        .get(`${path}/teams`)
+        .get(`${path}/teams`, config)
         .then((response) => {
           this.all_teams = response.data;
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     // Get Players By department
     get_players: function () {
+      let config = this.get_access_token();
       axios
-        .get(`${path}/players/${this.selected_team}`)
+        .get(`${path}/players/${this.selected_team}`, config)
         .then((response) => {
-          this.all_players = response.data;
+          this.all_players = response.data.response_data;
           this.loader = 0;
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
 
@@ -510,9 +526,9 @@ export default {
     // Remove Player
     delete_player: function (e) {
       let player_id = this.get_id(e).getAttribute("player-id");
-
+      let config = this.get_access_token();
       axios
-        .delete(`${path}/player/delete/${player_id}`)
+        .delete(`${path}/players/${player_id}`, config)
         .then(() => {
           this.flashMessage.warning({
             message: "Player Removed",
@@ -521,13 +537,12 @@ export default {
           this.get_players();
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     // Edit Player Info
     save_player: function (e) {
       let player_id = this.get_id(e).getAttribute("player-id");
-      console.log("Editing Player " + player_id);
       this.editing = !this.editing;
       let current_player_container = this.get_id(e);
       let current_player_id =
@@ -543,8 +558,9 @@ export default {
         fname: current_player_fname,
         lname: current_player_lname,
       };
+      let config = this.get_access_token();
       axios
-        .post(`${path}/player/update`, { updated_player_data })
+        .patch(`${path}/players/${player_id}`, { updated_player_data }, config)
         .then(() => {
           this.flashMessage.success({
             message: "Player Inforamtion Updated Successfully!",
@@ -552,11 +568,10 @@ export default {
           this.get_players();
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     edit_player: function () {
-      console.log("Enabling edit");
       this.editing = !this.editing;
     },
     save_new_player: function () {
@@ -566,9 +581,10 @@ export default {
         lname: this.new_player_lname,
         team: this.new_player_team,
       };
+      let config = this.get_access_token();
 
       axios
-        .post(`${path}/player/new`, { new_player })
+        .post(`${path}/players/1`, { new_player }, config)
         .then((response) => {
           // If Duplicate Resource
           if (response.status == 209) {
@@ -584,11 +600,10 @@ export default {
           }
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     cancel_new_player: function () {
-      console.log("Canceling");
       this.showDetails = !this.showDetails;
       this.flashMessage.warning({
         message: "Canceled Adding New Player",

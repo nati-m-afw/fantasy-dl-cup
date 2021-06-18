@@ -6,7 +6,8 @@
     <navigation :activePage="'MyTeam'" />
     <div id="info"></div>
     <!-- <pre>{{ $data }}</pre> -->
-    <alert :msg="msg" v-if="showMsg" />
+    <FlashMessage :position="'top'" />
+    <!-- <alert :msg="msg" v-if="showMsg" /> -->
     <div id="team_selection">
       <div class="team">
         <div class="starting_team">
@@ -189,7 +190,7 @@
 
 <script>
 import axios from "axios";
-import Alert from "../components/Alert.vue";
+// import Alert from "../components/Alert.vue";
 import Navigation from "../components/Navigation.vue";
 
 export default {
@@ -211,9 +212,9 @@ export default {
       // Active player order number and playing position
       selected: [],
 
-      msg: "",
+      // msg: "",
 
-      showMsg: false,
+      // showMsg: false,
     };
   },
 
@@ -226,29 +227,63 @@ export default {
   },
 
   components: {
-    alert: Alert,
+    // alert: Alert,
     navigation: Navigation,
   },
 
   methods: {
+    //Handle Errors
+      handle_error: function (err) {
+      
+      // 401 UnAuthorized or 
+      // Tampered with JWT
+      if (err.response.status == 401 || err.response.status == 422)   {
+        sessionStorage.clear()
+        location.reload()
+      }
+    
+      // Non Admin Access
+      else if (err.response.status == 403) {
+        sessionStorage.clear()
+        location.reload()
+        this.flashMessage.warning({message:"Error You is not an Admin"})
+      } else {
+        console.log(err)
+      }
+    },
+    // Get Access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = sessionStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     getActiveGameweek() {
+      let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getactivegw")
+        .get("http://localhost:5000/getactivegw", config)
         .then((res) => {
           // Team Selection for the coming Gameweek
           this.activeGameweek = res.data.activeGW + 1;
           this.getTeam();
         })
-        .catch((err) => console.error(err));
+        .catch((err) => this.handle_error(err));
     },
 
     // Get user Team API
     getTeam() {
       let userId = this.$store.state.userId;
-
+      let config = this.get_access_token();
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek
+          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek,
+          config
         )
         .then((res) => {
           // Check if user has picked team
@@ -258,7 +293,7 @@ export default {
           }
           // this.myTeam = res.data.team
         })
-        .catch((err) => console.error(err));
+        .catch((err) => this.handle_error(err));
     },
 
     // Change player status
@@ -272,8 +307,10 @@ export default {
           .length == 1 &&
         playerPos != "striker"
       ) {
-        this.msg = "Minimum of one striker required!";
-        this.showMsg = true;
+        this.flashMessage.error({message: "Minimum of one striker required!"});
+
+        // this.msg = "Minimum of one striker required!";
+        // this.showMsg = true;
         return;
       }
       // Make bench player active
@@ -316,18 +353,20 @@ export default {
           });
         }
       }
-
+      let config = this.get_access_token();
       // Send myTeam to api
       axios
-        .post("http://localhost:5000/updateuserplayers", payload)
+        .post("http://localhost:5000/updateuserplayers", payload, config)
         .then(() => {
           this.isRegistered = true;
-          this.msg = "Team Updated!";
-          this.showMsg = true;
-          this.$router.push("/myteam");
+        this.flashMessage.success({message: "Team Updated!"});
+
+          // this.msg = "Team Updated!";
+          // this.showMsg = true;
+          // this.$router.push("/myteam");
         })
         .catch((err) => {
-          console.error(err);
+          this.handle_error(err);
           this.msg = "An error occured. Please try again!";
           this.showMsg = true;
         });
@@ -335,7 +374,7 @@ export default {
 
     // Logout
     logout() {
-      localStorage.removeItem("user-id");
+      sessionStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");
     },
@@ -399,7 +438,7 @@ export default {
 }
 
 .active {
-  background-color: tomato;
+  background: url('../assets/img/epic_waves.jpg');
   animation: pop 0.4s forwards;
   border-radius: 10%;
 }
@@ -412,6 +451,7 @@ export default {
     margin: 10px 10px 0;
   }
 }
+
 .starting_team div,
 .substitutes div {
   position: relative;

@@ -68,8 +68,18 @@ export default {
     };
   },
   async mounted() {
+    // Get Token from Local Storage
+    let access_token = sessionStorage.getItem("token");
+
+    // Prepare a header config
+    let config = {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    };
+
     axios
-      .get(`${path}/statistics`)
+      .get(`${path}/statistics`, config)
       .then((response) => {
         console.log(response.data.goals_scored);
         this.stat_info_all = response.data;

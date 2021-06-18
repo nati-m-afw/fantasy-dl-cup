@@ -192,7 +192,6 @@ class Events(Resource):
         else:
             return {"message":"Forbidden Access"}, 403
         
-        
     # Update Player info on Events Table
     @jwt_required()
     def patch(self,id):

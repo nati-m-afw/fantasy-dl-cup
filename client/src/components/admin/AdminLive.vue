@@ -29,7 +29,6 @@
                 <!-- Goals Scored -->
                 <div
                   class="goals-scored-container"
-                  v-if="current_player.goals_scored"
                 >
                   <label for="goals-scored">Goals Scored:</label>
                   <input
@@ -78,34 +77,29 @@
                 <div class="yellow-card-container">
                   <label for="yellow-card">Yellow Card :</label>
                   <input
+                    @click="give_card"
+                    
                     type="checkbox"
-                    checked
+                    :checked="yellow_cards"
                     name="yellow-card"
-                    v-if="yellow_cards == 1"
                   />
 
-                  <input
-                    type="checkbox"
-                    name="yellow-card"
-                    v-if="yellow_cards == 0"
-                  />
+                  
                 </div>
 
                 <!-- Red Cards -->
                 <div class="red-card-container">
                   <label for="red-card">Red Card :</label>
                   <input
-                    checked
+                    @click="give_card"
+                    
+                    
+                    :checked="red_cards"
                     type="checkbox"
-                    name="yellow-card"
-                    v-if="red_cards == 1"
+                    name="red-card"
                   />
 
-                  <input
-                    type="checkbox"
-                    name="yellow-card"
-                    v-if="red_cards == 0"
-                  />
+                
                 </div>
 
                 <button class="save" @click="save_data">Save</button>
@@ -128,7 +122,7 @@
                 <!-- Goals Scored -->
                 <div
                   class="goals-scored-container"
-                  v-if="current_player.goals_scored"
+                
                 >
                   <label for="goals-scored">Goals Scored:</label>
                   <input
@@ -177,34 +171,27 @@
                 <div class="yellow-card-container">
                   <label for="yellow-card">Yellow Card :</label>
                   <input
+                    @click="give_card"
                     type="checkbox"
-                    checked
-                    name="yellow-card"
-                    v-if="yellow_cards == 1"
-                  />
+                    :checked = "yellow_cards"
 
-                  <input
-                    type="checkbox"
                     name="yellow-card"
-                    v-if="yellow_cards == 0"
+                    
                   />
                 </div>
+                  
 
                 <!-- Red Cards -->
                 <div class="red-card-container">
                   <label for="red-card">Red Card :</label>
                   <input
-                    checked
+                    @click="give_card"
                     type="checkbox"
-                    name="yellow-card"
-                    v-if="red_cards == 1"
+                    :checked = "red_cards"
+                    name="red-card"
+                    
                   />
 
-                  <input
-                    type="checkbox"
-                    name="yellow-card"
-                    v-if="red_cards == 0"
-                  />
                 </div>
 
                 <button class="save" @click="save_data">Save</button>
@@ -239,7 +226,6 @@ export default {
     return {
       // Keep track of current gameweek
       current_gameweek: "",
-
       // Keep track of all matches
       all_matches: [""],
 
@@ -268,35 +254,97 @@ export default {
   },
   async mounted() {
     // Get current gameweek
-    await this.get_current_gameweek();
+    // await this.get_current_gameweek();
     // Get All Matches
-    await this.get_all_matches();
+    // Get Token from Local Storage
+    let access_token = sessionStorage.getItem("token");
+
+    // Prepare a header config
+    let config = {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    };
+
+    axios.get(`${path}/activegameweek`, config).then((response) => {
+      this.current_gameweek = response.data.activeGW;
+      this.get_all_matches();
+    });
+
     // Get Teams
     await this.get_teams();
     // Get Team IDs
   },
 
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = sessionStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
+
     set_id: function () {
       let main_info = document.querySelectorAll(".main-info")[0];
       this.team_id = main_info.getAttribute("team_id");
       this.opponent_id = main_info.getAttribute("opponent_id");
     },
-    handle_error: function (err) {
-      // 401 UnAuthorized
-      if (err.response.status == 401) {
-        console.log("401 Error Handling");
-      }
+     handle_error: function (err) {
+      // 401 UnAuthorized or 
       // Tampered with JWT
-      else if (err.response.status == 422) {
-        console.log("422 Error Handling");
+      if (err.response.status == 401 || err.response.status == 422)   {
+        sessionStorage.clear()
+        location.reload()
       }
+    
       // Non Admin Access
       else if (err.response.status == 403) {
-        console.log("403 Error Handling");
+        sessionStorage.clear()
+        location.reload()
+        this.flashMessage.warning({message:"Error You is not an Admin"})
       } else {
-        console.log(err);
+        console.log(err)
       }
+    },
+    // Function to update score auto
+    update_score: function (update_info) {
+      axios
+        .post(`${path}/score/${update_info.gameweek_id}`, { update_info })
+        .then(()=>{
+          console.log(update_info.yellow_cards);
+          axios.put(`${path}/statistics/${update_info.player_id}`,{update_info})
+        })
+        .catch((err) => {
+          this.handle_error(err);
+        });
+    },
+    give_card: function(e){
+      //give card
+      let check_card = e.target.name
+      if(check_card=="red-card"){
+        if(e.target.checked==true){
+          this.red_cards=1;
+        }
+        else{
+          this.red_cards=0;
+        }
+      }else{
+        if(e.target.checked==true){
+          console.log('what');
+          this.yellow_cards=1;
+        }
+        else{
+          this.yellow_cards=0;
+        }
+      }
+      
     },
     // Function to save data after edit
     save_data: function () {
@@ -310,21 +358,26 @@ export default {
         yellow_cards: this.yellow_cards,
         red_cards: this.red_cards,
       };
+      let config = this.get_access_token();
 
       axios
-        .post(`${path}/event/matches/${this.current_gameweek}`, {
-          updated_stats,
-        })
+        .patch(
+          `${path}/events/${this.current_gameweek}`,
+          {
+            updated_stats,
+          },
+          config
+        )
         .then(() => {
+          this.update_score(updated_stats);
           this.get_player_event();
           this.flashMessage.success({
             message: "Information Updated Successfully",
           });
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
-         
     },
     // Method for setting up score form for clicks
     get_scoring_system: function (e) {
@@ -354,9 +407,10 @@ export default {
     },
     // Method to get all matches
     get_all_matches: function () {
+      let config = this.get_access_token();
       // Get Matches by ID
       axios
-        .get(`${path}/schedule/${this.current_gameweek}`)
+        .get(`${path}/schedule/${this.current_gameweek}`, config)
         .then((response) => {
           this.all_matches = response.data;
           this.current_match = this.all_matches[0];
@@ -366,42 +420,49 @@ export default {
           this.get_players(this.opponent_id, "");
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     // Method to get team names
     get_teams: function () {
-      this.teams = [
-        "Information Tech",
-        "Mechanical",
-        "Electrical",
-        "Software Eng",
-        "Chemical",
-        "Biomedical",
-      ];
+      let config = this.get_access_token();
+      axios
+        .get(`${path}/teams`, config)
+        .then((response) => {
+          // Load Team Names
+          for (let i = 0; i < response.data.length; i++) {
+            this.teams.push(response.data[i].team_name);
+          }
+          this.number_of_game_weeks = this.teams.length - 2;
+        })
+        .catch((err) => {
+          this.handle_error(err);
+        });
     },
 
     // Method to get players
     get_players: function (dept_id, state) {
+      let config = this.get_access_token();
       axios
-        .get(`${path}/players/${dept_id}`)
+        .get(`${path}/players/${dept_id}`, config)
         .then((response) => {
           if (state == "team") {
-            this.team = response.data;
+            this.team = response.data.response_data;
           } else {
-            this.opponent = response.data;
+            this.opponent = response.data.response_data;
           }
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
     // Method to get player event info
     get_player_event: function () {
+      let config = this.get_access_token();
       axios
-        .get(`${path}/event/player/${this.current_player_id}`)
+        .get(`${path}/events/${this.current_player_id}`, config)
         .then((response) => {
-          let data = response.data[0];
+          let data = response.data.response_data[0];
           this.current_player = data;
           this.current_goal_scored = data.goals_scored;
           this.current_goals_conceded = data.goals_conceded;
@@ -411,7 +472,7 @@ export default {
           this.red_cards = data.red_cards;
         })
         .catch((err) => {
-          this.handle_error(err)
+          this.handle_error(err);
         });
     },
 
@@ -448,7 +509,6 @@ export default {
         this.get_player_event();
       }
     },
-   
   },
 };
 </script>

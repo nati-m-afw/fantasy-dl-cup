@@ -5,7 +5,8 @@
     </nav>
     <navigation :activePage="'Points'" />
     <div id="info"></div>
-    <alert :msg="alertMsg" v-if="showMsg" />
+    <FlashMessage :position="'top'" />
+    <!-- <alert :msg="alertMsg" v-if="showMsg" /> -->
     <!-- <pre>{{ $data }}</pre> -->
     <div id="team_selection">
       <div class="team">
@@ -121,7 +122,11 @@
 
           <div class="reserve-outfield">
             <!-- SUB Players -->
-            <div v-for="(player, i) in benchedPlayers" :key="i" class="player-details">
+            <div
+              v-for="(player, i) in benchedPlayers"
+              :key="i"
+              class="player-details"
+            >
               <img
                 :src="
                   require('@/assets/img/jerseys/' + player.department + '.png')
@@ -145,13 +150,29 @@
           </div>
           <div>
             <p>Active GW</p>
-            <select name="gameweek" id="gameweek" v-model="activeGameweek" @change="getTeam">
+            <select
+              name="gameweek"
+              id="gameweek"
+              v-model="selectedGameweek"
+              @change="getTeam"
+            >
               <!-- <option v-for="i in availabeGameweeks" :key="i" value="i">GW {{ i }}</option> -->
-              <option value="1" v-if="this.activeGameweek >= 1">Gameweek 1</option>
-              <option value="2" v-if="this.activeGameweek >= 2">Gameweek 2</option>
-              <option value="3" v-if="this.activeGameweek >= 3">Gameweek 3</option>
-              <option value="4" v-if="this.activeGameweek >= 4">Gameweek 4</option>
-              <option value="5" v-if="this.activeGameweek >= 5">Gameweek 5</option>
+              <!-- Show options if earlier or on the active gameweek -->
+              <option value="1" v-if="this.activeGameweek >= 1">
+                Gameweek 1
+              </option>
+              <option value="2" v-if="this.activeGameweek >= 2">
+                Gameweek 2
+              </option>
+              <option value="3" v-if="this.activeGameweek >= 3">
+                Gameweek 3
+              </option>
+              <option value="4" v-if="this.activeGameweek >= 4">
+                Gameweek 4
+              </option>
+              <option value="5" v-if="this.activeGameweek >= 5">
+                Gameweek 5
+              </option>
             </select>
           </div>
         </div>
@@ -163,7 +184,7 @@
 
 <script>
 import axios from "axios";
-import Alert from "../components/Alert.vue";
+// import Alert from "../components/Alert.vue";
 import Navigation from "../components/Navigation.vue";
 
 export default {
@@ -180,9 +201,11 @@ export default {
 
       activeGameweek: "",
 
-      alertMsg: "",
+      selectedGameweek: "",
 
-      showMsg: false,
+      // alertMsg: "",
+
+      // showMsg: false,
     };
   },
 
@@ -197,7 +220,7 @@ export default {
       let score = 0;
       for (const position in this.myTeam) {
         for (const player of this.myTeam[position]) {
-          score += player.score;
+          if (player.status == "active") score += player.score;
         }
       }
 
@@ -211,16 +234,33 @@ export default {
   },
 
   components: {
-    alert: Alert,
+    // alert: Alert,
     navigation: Navigation,
   },
 
   methods: {
+    // Function to get access token
+    get_access_token: function () {
+      // Get Token from Local Storage
+      let access_token = sessionStorage.getItem("token");
+
+      // Prepare a header config
+      let config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      };
+      return config;
+    },
     getActiveGameweek() {
+      let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getactivegw")
+        .get("http://localhost:5000/getactivegw", config)
         .then((res) => {
+          // Set active gameweek
           this.activeGameweek = res.data.activeGW;
+          // Set selected gameweek to current (activeGameweek)
+          this.selectedGameweek = this.activeGameweek;
           this.getTeam();
         })
         .catch((err) => console.error(err));
@@ -228,7 +268,6 @@ export default {
 
     getTeam() {
       let userId = this.$store.state.userId;
-
       // Clear myTeam
       this.myTeam = {
         goalkeeper: [],
@@ -236,18 +275,24 @@ export default {
         midfielder: [],
         striker: [],
       };
-
+      
+      let config = this.get_access_token();
+      
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek
+          "http://localhost:5000/getteam/" + userId + "/" + this.selectedGameweek,
+          config
         )
         .then((res) => {
           if (res.data.team == false && this.activeGameweek == 0) {
-            this.alertMsg = "Gameweek has not started!";
-            this.showMsg = true;
+            // this.alertMsg = "Gameweek has not started!";
+            // this.showMsg = true;
+            this.flashMessage.info({message: "Season has not started!"});
           } else if (res.data.team == false) {
-            this.alertMsg = "No team for current GW in DB";
-            this.showMsg = true;
+            // this.alertMsg = "No team for current GW in DB";
+            // this.showMsg = true;
+            this.flashMessage.error({message: `Did not register in time for GW${this.selectedGameweek}`});
+            return;
           }
           for (const player of res.data.team) {
             this.myTeam[player.position].push(player);
@@ -261,6 +306,7 @@ export default {
     },
 
     getPoints() {
+      let config = this.get_access_token();
       for (const position in this.myTeam) {
         for (const [index, player] of this.myTeam[position].entries()) {
           axios
@@ -268,10 +314,11 @@ export default {
               "http://localhost:5000/score/" +
                 player.id +
                 "/" +
-                this.activeGameweek
+                this.selectedGameweek,
+                config
             )
             .then((res) => {
-              player["score"] = res.data.score;
+              player["score"] = res.data.score || 0;
               this.$set(this.myTeam[position], index, player);
             });
         }
@@ -280,7 +327,7 @@ export default {
 
     // Logout
     logout() {
-      localStorage.removeItem("user-id");
+      sessionStorage.removeItem("user-id");
       this.$store.commit("setCurrentUserID");
       this.$router.push("/");
     },
