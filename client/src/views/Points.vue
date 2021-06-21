@@ -186,6 +186,8 @@
 import axios from "axios";
 // import Alert from "../components/Alert.vue";
 import Navigation from "../components/Navigation.vue";
+const path = "https://fantasydl.pythonanywhere.com";
+
 
 export default {
   data() {
@@ -255,7 +257,7 @@ export default {
     getActiveGameweek() {
       let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getactivegw", config)
+        .get(`${path}/getactivegw`, config)
         .then((res) => {
           // Set active gameweek
           this.activeGameweek = res.data.activeGW;
@@ -280,7 +282,7 @@ export default {
       
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.selectedGameweek,
+          `${path}/getteam/` + userId + "/" + this.selectedGameweek,
           config
         )
         .then((res) => {
@@ -311,7 +313,7 @@ export default {
         for (const [index, player] of this.myTeam[position].entries()) {
           axios
             .get(
-              "http://localhost:5000/score/" +
+              `${path}/score/` +
                 player.id +
                 "/" +
                 this.selectedGameweek,

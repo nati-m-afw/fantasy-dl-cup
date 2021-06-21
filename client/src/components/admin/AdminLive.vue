@@ -220,7 +220,8 @@
 
 <script>
 import axios from "axios";
-let path = "http://localhost:5000/admin";
+const path = "https://fantasydl.pythonanywhere.com/admin";
+
 export default {
   data() {
     return {

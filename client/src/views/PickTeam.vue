@@ -241,7 +241,7 @@ export default {
       // console.log(e.path);
       let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getplayers/" + position, config)
+        .get("https://fantasydl.pythonanywhere.com/getplayers/" + position, config)
         .then((res) => {
           this.playersApi = res.data.players;
           this.serverStatus = true;
@@ -304,7 +304,7 @@ export default {
     this.myTeamName = this.$store.state.myTeamName;
 
     axios
-      .get("http://localhost:5000/getteam/" + this.$store.state.userId + "/5")
+      .get("https://fantasydl.pythonanywhere.com/getteam/" + this.$store.state.userId + "/5")
       .then((res) => {
         // Check if user has picked team
         if (res.data.team.length != 0) this.$router.push("/myteam");

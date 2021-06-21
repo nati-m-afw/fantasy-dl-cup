@@ -101,7 +101,7 @@ import axios from "axios";
 
 // Random Words Library
 import randomWords from "random-words";
-let path = "http://localhost:5000/auth";
+let path = "https://fantasydl.pythonanywhere.com/auth";
 
 export default {
   name: "Register",

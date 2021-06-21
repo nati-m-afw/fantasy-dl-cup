@@ -29,6 +29,9 @@
 <script>
 import axios from "axios";
 import Navigation from "../components/Navigation.vue";
+const path = "https://fantasydl.pythonanywhere.com";
+
+
 export default {
   data() {
 		return {
@@ -61,7 +64,7 @@ export default {
       let config = this.get_access_token();
 
       axios
-        .get("http://localhost:5000/getactivegw", config)
+        .get(`${path}/getactivegw`, config)
         .then((res) => {
           this.activeGameweek = res.data.activeGW;
         })
@@ -71,7 +74,7 @@ export default {
     getGlobalLeague() {
       let config = this.get_access_token();
 
-      axios.get("http://localhost:5000/globalleague", config)
+      axios.get(`${path}/globalleague`, config)
       .then(res => {
 				this.table = res.data.teams;
       });

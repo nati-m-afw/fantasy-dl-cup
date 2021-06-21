@@ -130,8 +130,9 @@
 <script>
 // Imports
 import axios from "axios";
-let path = "http://localhost:5000/admin";
 import Spinner from "../Spinner.vue";
+const path = "https://fantasydl.pythonanywhere.com/admin";
+
 
 export default {
   name: "AdminDash",

@@ -192,6 +192,8 @@
 import axios from "axios";
 // import Alert from "../components/Alert.vue";
 import Navigation from "../components/Navigation.vue";
+const path = "https://fantasydl.pythonanywhere.com";
+
 
 export default {
   data() {
@@ -267,7 +269,7 @@ export default {
     getActiveGameweek() {
       let config = this.get_access_token();
       axios
-        .get("http://localhost:5000/getactivegw", config)
+        .get(`${path}/getactivegw`, config)
         .then((res) => {
           // Team Selection for the coming Gameweek
           this.activeGameweek = res.data.activeGW + 1;
@@ -282,7 +284,7 @@ export default {
       let config = this.get_access_token();
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek,
+          `${path}/getteam/` + userId + "/" + this.activeGameweek,
           config
         )
         .then((res) => {
@@ -356,7 +358,7 @@ export default {
       let config = this.get_access_token();
       // Send myTeam to api
       axios
-        .post("http://localhost:5000/updateuserplayers", payload, config)
+        .post(`${path}/updateuserplayers`, payload, config)
         .then(() => {
           this.isRegistered = true;
         this.flashMessage.success({message: "Team Updated!"});

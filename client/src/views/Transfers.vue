@@ -225,6 +225,8 @@ import axios from "axios";
 import Alert from "../components/Alert.vue";
 import Navigation from "../components/Navigation.vue";
 import PlayerStatsModal from "../components/PlayerStatsModal.vue";
+const path = "https://fantasydl.pythonanywhere.com";
+
 
 export default {
   data() {
@@ -299,7 +301,7 @@ export default {
       let config = this.get_access_token();
 
       axios
-        .get("http://localhost:5000/getactivegw", config)
+        .get(`${path}/getactivegw`, config)
         .then((res) => {
           this.activeGameweek = res.data.activeGW + 1;
           this.getTeam();
@@ -314,7 +316,7 @@ export default {
 
       axios
         .get(
-          "http://localhost:5000/getteam/" + userId + "/" + this.activeGameweek,
+          `${path}/getteam/` + userId + "/" + this.activeGameweek,
           config
         )
         .then((res) => {
@@ -341,7 +343,7 @@ export default {
       let config = this.get_access_token();
 
       axios
-        .get("http://localhost:5000/getplayers/" + position, config)
+        .get(`${path}/getplayers/` + position, config)
         .then((res) => {
           this.playersApi = res.data.players;
           this.serverStatus = true;
@@ -411,7 +413,7 @@ export default {
 
       // Send myTeam to api
       axios
-        .post("http://localhost:5000/updateuserplayers", payload, config)
+        .post(`${path}/updateuserplayers`, payload, config)
         .then(() => {
           this.isRegistered = true;
           this.msg = "Team Updated!";

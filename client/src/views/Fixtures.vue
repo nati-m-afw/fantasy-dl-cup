@@ -28,7 +28,7 @@
     <!-- Match Info Section -->
     <div class="matches-display" v-show="dataLoaded">
       <!-- Gameweek and Date Section -->
-      <div class="matches-gameweek">{{ game_week }}</div>
+      <!-- <div class="matches-gameweek">{{ game_week }}</div> -->
       <div class="matches-date">{{ game_week_date }}</div>
       <!-- Gameweek and Date Section -->
 
@@ -52,7 +52,7 @@
 
             <!-- Show Score if match is played -->
             <div class="match-time" v-if="match_schedule.state == 1">
-              {{ match_schedule.score }}
+              {{ match_schedule.score[0] + " - " + match_schedule.score[2] }}
             </div>
 
             <div class="match-team-two">
@@ -69,7 +69,8 @@
 <script>
 import axios from "axios";
 import Navigation from "../components/Navigation.vue";
-let path = "http://localhost:5000";
+const path = "https://fantasydl.pythonanywhere.com";
+
 
 export default {
   data() {
@@ -113,7 +114,7 @@ export default {
       let config = this.get_access_token();
 
       axios
-        .get("http://localhost:5000/getactivegw", config)
+        .get(`${path}/getactivegw`, config)
         .then((res) => {
           this.selectedGameweek = res.data.activeGW;
           this.get_schedule();
@@ -337,8 +338,12 @@ select {
 
 .gw-select{
 	margin: 0 13vw;
+  text-align: center;
 }
 .gw-select p{
 	margin: 0;
+  font-size: 3rem;
+  font-family: poppins;
+  margin-top: 10px;
 }
 </style>

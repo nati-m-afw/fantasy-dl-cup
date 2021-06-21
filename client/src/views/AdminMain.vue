@@ -38,7 +38,8 @@ import axios from "axios";
 import AdminSchedule from "../components/admin/AdminSchedule.vue";
 import AdminLive from "../components/admin/AdminLive";
 import AdminPlayers from "../components/admin/AdminPlayers";
-let path = "http://localhost:5000";
+const path = "https://fantasydl.pythonanywhere.com";
+
 export default {
   components: {
     "admin-matches": AdminSchedule,

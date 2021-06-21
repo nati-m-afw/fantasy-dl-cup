@@ -8,6 +8,7 @@
 <script>
 import axios from "axios";
 import Alert from "../components/Alert.vue";
+const path = "https://fantasydl.pythonanywhere.com";
 
 export default {
   data() {
@@ -70,7 +71,7 @@ export default {
       let config = this.get_access_token();
       // Send myTeam to API
       axios
-        .post("http://localhost:5000/updateuserplayers", payload, config)
+        .post(`${path}/updateuserplayers`, payload, config)
         .then(() => {
           this.isRegistered = true;
           this.msg = "Successfully registered!";
@@ -91,13 +92,13 @@ export default {
     // ge active gameweek
     let config = this.get_access_token();
     axios
-      .get("http://localhost:5000/getactivegw", config)
+      .get(`${path}/getactivegw`, config)
       .then((res) => {
         // Add team on upcoming GW
         let data = res.data;
         axios
           .get(
-            "http://localhost:5000/getteam/" + this.$store.state.userId + "/5",
+            `${path}/getteam/` + this.$store.state.userId + "/5",
             config
           )
           .then((res) => {

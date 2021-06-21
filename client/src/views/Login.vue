@@ -77,7 +77,7 @@ import "firebase/auth";
 // Random Word Generator
 import randomWords from "random-words";
 import axios from "axios";
-let path = "http://localhost:5000/auth";
+let path = "https://fantasydl.pythonanywhere.com/auth";
 
 export default {
   name: "Login",

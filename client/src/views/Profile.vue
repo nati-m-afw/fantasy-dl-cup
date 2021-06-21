@@ -200,7 +200,8 @@ import "firebase/auth";
 import Spinner from "../components/Spinner.vue";
 import Navigation from "../components/Navigation.vue";
 
-let path = "http://localhost:5000";
+const path = "https://fantasydl.pythonanywhere.com";
+
 export default {
   data() {
     return {

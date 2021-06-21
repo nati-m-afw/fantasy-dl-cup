@@ -54,6 +54,8 @@
 <script>
 import axios from "axios";
 import Navigation from "../components/Navigation.vue";
+const path = "https://fantasydl.pythonanywhere.com";
+
 
 export default {
   data() {
@@ -88,7 +90,7 @@ export default {
 
     getTableData() {
       let config = this.get_access_token();
-      axios.get("http://127.0.0.1:5000/gettable", config).then((res) => {
+      axios.get(`${path}/gettable`, config).then((res) => {
         let i = 1;
         for (let team in this.table) {
           this.table[team] = res.data[i++];
