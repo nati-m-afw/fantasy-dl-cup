@@ -6,3 +6,7 @@ FLASK_APP = main.py
 JWT_SECRET_KEY = '7ythigjyalm'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = '' <======= Enter your database credentials here
+
+
+#Hosted at
+https://fantasydl.netlify.app/
