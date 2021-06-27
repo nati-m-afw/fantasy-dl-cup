@@ -419,7 +419,8 @@ input[type="text"] {
 </style>
 
 <script>
-let path = "http://localhost:5000/admin";
+let path = "https://fantasydl.pythonanywhere.com";
+
 import axios from "axios";
 export default {
   data() {
