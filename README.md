@@ -8,5 +8,5 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = '' <======= Enter your database credentials here
 
 
-#Hosted at
+# Hosted at
 https://fantasydl.netlify.app/
