@@ -385,14 +385,16 @@ class gameweeks(Resource):
                 # Get goals for player
                 goals = Event.query.filter_by(players_id=player.id).first()
                 # Add goal to home team
-                homeScore += goals.goals_scored
+                if goals is not None:
+                    homeScore += goals.goals_scored
 
             # Loop every player of away team
             for player in awayTeamPlayers:
                 # Get goals for player
                 goals = Event.query.filter_by(players_id=player.id).first()
                 # Add goal to away team
-                awayScore += goals.goals_scored
+                if goals is not None:
+                    awayScore += goals.goals_scored
 
             score = str(homeScore) + "v" + str(awayScore)
             match.state = 1
