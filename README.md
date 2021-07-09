@@ -9,4 +9,4 @@ SQLALCHEMY_DATABASE_URI = '' <======= Enter your database credentials here
 
 
 # Hosted at
-https://fantasydl.netlify.app/
+https://www.fantasydl.tk/
