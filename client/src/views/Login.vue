@@ -7,6 +7,7 @@
       <h1 class="header">
         Welcome <br />
         Back
+        <img class="cool-text" src="../assets/img/cool-text.png" alt="" />
       </h1>
 
       <!-- Email Input -->
