@@ -594,11 +594,11 @@ class PlayerStat(Resource):
         score_info = Scores.query.filter_by(players_id=player_id).first()
         player_stats = StatInfo.query.filter_by(players_id=player_id).first()
         player_info = {
-            "total_points":score_info.score,
-            "total_goals":player_stats.goals_scored,
-            "total_assists":player_stats.assists_provided,
-            "clean_sheets":player_stats.clean_sheets,
-            "yellow_cards":player_stats.yellow_cards,
-            "red_cards":player_stats.red_cards,
+            "total_points":score_info.score if score_info else 0,
+            "total_goals":player_stats.goals_scored if player_stats else 0,
+            "total_assists":player_stats.assists_provided if player_stats else 0,
+            "clean_sheets":player_stats.clean_sheets if player_stats else 0,
+            "yellow_cards":player_stats.yellow_cards if player_stats else 0,
+            "red_cards":player_stats.red_cards if player_stats else 0,
         }
         return player_info
