@@ -161,8 +161,8 @@ export default {
     },
 
     // Function to update db with firebase id
-    update_api: function (user_info) {
-      axios
+    update_api: async function (user_info) {
+      await axios
         .post(`${path}/signuser`, { user_info })
         .then(() => {})
         .catch((err) => {
@@ -176,6 +176,7 @@ export default {
             this.showMsg = true;
           });
         });
+      console.log("Updated Server");
     },
 
     // Function to get id from firebase_id
@@ -185,7 +186,7 @@ export default {
         .then(async (response) => {
           this.user_id = await response.data.id;
           this.team_name = await response.data.team_name;
-
+          
           // Check if valid user_id returned
           if (this.user_id) {
             // Update store state
@@ -194,7 +195,7 @@ export default {
             sessionStorage.setItem("token", response.data.token);
             // this.$store.dispatch("getActiveGameweek");
           }
-
+          
           this.$router.push("/myteam");
         })
         .catch((err) => {
@@ -227,7 +228,7 @@ export default {
               let user = firebase.auth().currentUser;
               this.firebase_id = user.uid;
               // Function to call api route for adding to db (Incase the call during registration was inturrepted)
-              this.update_api({
+              await this.update_api({
                 firebase_id: this.firebase_id,
                 fname: "Full",
                 lname: "Name",
