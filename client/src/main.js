@@ -41,13 +41,13 @@ Vue.use(randomWords);
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 var firebaseConfig = {
-  apiKey: "AIzaSyAPzaJUfLJvCD_PtUjMovLA-pIPOwYS0WY",
-  authDomain: "dl-cup-fantasy.firebaseapp.com",
-  projectId: "dl-cup-fantasy",
-  storageBucket: "dl-cup-fantasy.appspot.com",
-  messagingSenderId: "956033126965",
-  appId: "1:956033126965:web:660f34e0a535539d37177c",
-  measurementId: "G-P841MCPGP4",
+  apiKey: "AIzaSyBLB2icbiv5GzDUtn6eX2ZOH43dOvR21wk",
+  authDomain: "fantasydl.firebaseapp.com",
+  projectId: "fantasydl",
+  storageBucket: "fantasydl.appspot.com",
+  messagingSenderId: "163019177991",
+  appId: "1:163019177991:web:1428a373f0483db953aaa2",
+  measurementId: "G-EX2N5G3XCF"
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
